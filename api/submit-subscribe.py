@@ -1,4 +1,4 @@
-from email_utils import send_email, create_email_template, parse_json_request
+from email_utils import send_email, create_email_template, parse_json_request, EMAIL_USER
 
 def handler(request):
     """Handle subscription requests via Vercel serverless."""
@@ -14,16 +14,20 @@ def handler(request):
             }
         
         print(f"Subscription request received: {subscriber_email}")
+
+        if not EMAIL_USER:
+            return {
+                'statusCode': 500,
+                'headers': {'Content-Type': 'application/json'},
+                'body': '{"success": false, "message": "Email credentials are not configured"}'
+            }
         
         # Send confirmation to subscriber
-            consumer_template = create_email_template('subscribe', {'email': subscriber_email}, 'consumer')
-            send_email(subscriber_email, consumer_template['subject'], consumer_template['html'])
-        
-        # Get admin email from environment
-        import os
-        EMAIL_USER = os.getenv('EMAIL_USER')
-            owner_template = create_email_template('subscribe', {'email': subscriber_email}, 'owner')
-            send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
+        consumer_template = create_email_template('subscribe', {'email': subscriber_email, 'name': data.get('name', '')}, 'consumer')
+        send_email(subscriber_email, consumer_template['subject'], consumer_template['html'])
+
+        owner_template = create_email_template('subscribe', {'email': subscriber_email, 'name': data.get('name', '')}, 'owner')
+        send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
         
         return {
             'statusCode': 200,
