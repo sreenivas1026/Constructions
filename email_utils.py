@@ -6,8 +6,8 @@ from pathlib import Path
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-EMAIL_USER = os.getenv('EMAIL_USER')
-EMAIL_PASS = os.getenv('EMAIL_PASS')
+EMAIL_USER = os.getenv('EMAIL_USER', '').strip()
+EMAIL_PASS = os.getenv('EMAIL_PASS', '').strip()
 
 if not EMAIL_USER or not EMAIL_PASS:
     print('Warning: EMAIL_USER or EMAIL_PASS not set in environment. Email sending will fail.')
@@ -66,6 +66,8 @@ def parse_json_request(request):
 def send_email(to_email, subject, html_content):
     if not EMAIL_USER or not EMAIL_PASS:
         raise RuntimeError('Email credentials are not configured.')
+
+    to_email = (to_email or '').strip()
 
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
