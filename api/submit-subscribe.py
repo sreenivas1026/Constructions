@@ -22,8 +22,16 @@ def handler(request):
                 'body': '{"success": false, "message": "Email credentials are not configured"}'
             }
         
-        owner_template = create_email_template('subscribe', {'email': subscriber_email, 'name': data.get('name', '')}, 'owner')
-        send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
+        try:
+            owner_template = create_email_template('subscribe', {'email': subscriber_email, 'name': data.get('name', '')}, 'owner')
+            send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
+        except Exception as owner_exc:
+            print(f"Owner email send failed for subscribe request: {owner_exc}")
+            return {
+                'statusCode': 500,
+                'headers': {'Content-Type': 'application/json'},
+                'body': f'{{"success": false, "message": "Failed to send owner email: {str(owner_exc)}"}}'
+            }
 
         try:
             consumer_template = create_email_template('subscribe', {'email': subscriber_email, 'name': data.get('name', '')}, 'consumer')
