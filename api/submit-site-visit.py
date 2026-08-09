@@ -54,3 +54,7 @@ def handler(request):
             'headers': {'Content-Type': 'application/json'},
             'body': json.dumps({'success': False, 'message': f'Failed to submit site visit request: {str(exc)}'})
         }
+
+
+app = handler
+application = handler

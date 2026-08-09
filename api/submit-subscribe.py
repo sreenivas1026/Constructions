@@ -41,3 +41,7 @@ def handler(request):
             'headers': {'Content-Type': 'application/json'},
             'body': '{"success": false, "message": "Failed to subscribe"}'
         }
+
+
+app = handler
+application = handler
