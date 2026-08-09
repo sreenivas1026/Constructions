@@ -103,36 +103,135 @@ def create_email_template(template_type, data, audience='owner'):
         if template_type == 'quote':
             subject = 'We Received Your Quote Request - SLTG Builders'
             title = 'Quote Request Received'
-            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for reaching out. We have received your quote request and our team will review it shortly.</p><p style='margin: 8px 0;'><strong>Your property details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Your budget:</strong> {budget}</p>"
+            intro = f"Hi {greeting_name}, thanks for reaching out. We have received your quote request and our team will review it shortly."
+            details_rows = [
+                ('Property Details', data.get('plotSize', 'Not provided')),
+                ('Budget', budget),
+            ]
+            closing = 'We will contact you soon with the next steps.'
         elif template_type == 'visit':
             subject = 'Your Site Visit Request Is Confirmed - SLTG Builders'
             title = 'Site Visit Request Confirmed'
-            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for scheduling a site visit. We have received your request and will contact you soon with the next steps.</p><p style='margin: 8px 0;'><strong>Preferred location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Preferred date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Preferred time:</strong> {selected_time}</p>"
+            intro = f"Hi {greeting_name}, thanks for scheduling a site visit. We have received your request and will contact you soon with the next steps."
+            details_rows = [
+                ('Preferred location', visit_location),
+                ('Preferred date', visit_date),
+                ('Preferred time', selected_time),
+            ]
+            closing = 'Our team will connect with you shortly to confirm the appointment.'
         elif template_type == 'subscribe':
             subject = 'Welcome to SLTG Builders Updates!'
             title = 'Subscription Confirmed'
-            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for subscribing to SLTG Builders updates.</p><ul style='margin: 8px 0; padding-left: 20px;'><li>Project updates and completion announcements</li><li>Special offers and promotions</li><li>Industry insights and news</li></ul>"
+            intro = f"Hi {greeting_name}, thanks for subscribing to SLTG Builders updates."
+            details_rows = [
+                ('What you will receive', 'Project updates, special offers, and industry insights'),
+            ]
+            closing = 'We are glad to have you with us.'
         else:
             subject = 'We Received Your Message - SLTG Builders'
             title = 'Message Received'
-            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for contacting SLTG Builders. Our team has received your message and will get back to you soon.</p><p style='margin: 8px 0;'><strong>Your message:</strong><br>{details}</p>"
+            intro = f"Hi {greeting_name}, thanks for contacting SLTG Builders. Our team has received your message and will get back to you soon."
+            details_rows = [
+                ('Your message', details),
+            ]
+            closing = 'We will respond as soon as possible.'
+
+        rows_html = ''.join(
+            f"<tr><td style='padding: 6px 0; color: #2f2f2f; font-weight: 600; width: 38%; vertical-align: top;'>{label}</td><td style='padding: 6px 0; color: #2f2f2f;'>{value}</td></tr>"
+            for label, value in details_rows
+        )
+
+        logo_block = f"<img src='{LOGO_DATA_URI}' alt='SLTG Builders' style='display:block; width:72px; height:auto; border-radius: 10px; background:#ffffff; padding:6px;'>" if LOGO_DATA_URI else "<div style='width:72px; height:72px; border-radius:10px; background:#ffffff; border:1px solid rgba(255,255,255,0.25); display:flex; align-items:center; justify-content:center; color:#1a1a1a; font-weight:700;'>SLTG</div>"
+
+        html = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>{title}</title>
+        </head>
+        <body style="margin:0; padding:0; background-color:#f4f4f2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+            <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#f4f4f2;">
+                <tr>
+                    <td align="center" style="padding:24px 12px;">
+                        <table role="presentation" width="620" border="0" cellpadding="0" cellspacing="0" style="width:100%; max-width:620px; background-color:#ffffff; border-radius:16px; overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,0.10);">
+                            <tr>
+                                <td style="padding:0; background: linear-gradient(135deg, #0f172a 0%, #1d4ed8 52%, #8b5cf6 100%);">
+                                    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td style="width:120px; padding:20px 18px; vertical-align:middle;">{logo_block}</td>
+                                            <td style="padding:20px 24px 20px 0; vertical-align:middle; color:#ffffff; text-align:left;">
+                                                <div style="font-size:11px; letter-spacing:0.22em; text-transform:uppercase; opacity:0.85; margin-bottom:6px;">SLTG Builders</div>
+                                                <div style="font-size:24px; font-weight:700; line-height:1.2; margin-bottom:8px;">{title}</div>
+                                                <div style="font-size:14px; line-height:1.6; opacity:0.95;">Hi {greeting_name}, we have prepared your confirmation below.</div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:28px 28px 18px 28px; color:#2f2f2f; font-size:15px; line-height:1.8;">
+                                    <p style="margin:0 0 16px 0; color:#374151;">{intro}</p>
+                                    <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#fafafa; border:1px solid #ebeef5; border-radius:12px; padding:18px 18px;">
+                                        {rows_html}
+                                    </table>
+                                    <p style="margin:18px 0 0 0; color:#374151;">{closing}</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding:0 28px 28px 28px; color:#6b7280; font-size:13px; line-height:1.7;">
+                                    <p style="margin:0;">Best regards,<br><strong style="color:#111827;">Team SLTG Builders</strong></p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </body>
+        </html>
+        """
+        return {'subject': subject, 'html': html}
+
+    if template_type == 'quote':
+        subject = 'New Quote Request - SLTG Builders'
+        title = 'New Quote Request'
+        body = f"""
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Name</td><td style='padding:6px 0;'>{name}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Email</td><td style='padding:6px 0;'>{email}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Phone</td><td style='padding:6px 0;'>{phone}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Property Details</td><td style='padding:6px 0;'>{data.get('plotSize', 'Not provided')}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Budget</td><td style='padding:6px 0;'>{budget}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Requirements</td><td style='padding:6px 0;'>{details}</td></tr>
+        """
+    elif template_type == 'visit':
+        subject = 'New Site Visit Request - SLTG Builders'
+        title = 'New Site Visit Request'
+        body = f"""
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Customer Name</td><td style='padding:6px 0;'>{name}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Customer Email</td><td style='padding:6px 0;'>{email}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Phone</td><td style='padding:6px 0;'>{phone}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Location</td><td style='padding:6px 0;'>{visit_location}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Date</td><td style='padding:6px 0;'>{visit_date}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Time</td><td style='padding:6px 0;'>{selected_time}</td></tr>
+        """
+    elif template_type == 'subscribe':
+        subject = 'New Subscriber - SLTG Builders'
+        title = 'New Subscriber'
+        body = f"""
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Subscriber Email</td><td style='padding:6px 0;'>{email}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Status</td><td style='padding:6px 0;'>Added to mailing list</td></tr>
+        """
     else:
-        if template_type == 'quote':
-            subject = 'New Quote Request - SLTG Builders'
-            title = 'Quote Request'
-            body = f"<p style='margin: 8px 0;'><strong>Customer Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Customer Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Property Details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Budget:</strong> {budget}</p><p style='margin: 8px 0;'><strong>Requirements:</strong><br>{details}</p>"
-        elif template_type == 'visit':
-            subject = 'New Site Visit Request - SLTG Builders'
-            title = 'Site Visit Request'
-            body = f"<p style='margin: 8px 0;'><strong>Customer Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Customer Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Time:</strong> {selected_time}</p>"
-        elif template_type == 'subscribe':
-            subject = 'New Subscriber - SLTG Builders'
-            title = 'Subscription Lead'
-            body = f"<p style='margin: 8px 0;'><strong>Subscriber Email:</strong> {email}</p><p style='margin: 8px 0;'>A new subscriber joined the mailing list.</p>"
-        else:
-            subject = 'New Contact Form Submission - SLTG Builders'
-            title = 'Contact Form Submission'
-            body = f"<p style='margin: 8px 0;'><strong>Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Message:</strong><br>{details}</p>"
+        subject = 'New Contact Form Submission - SLTG Builders'
+        title = 'New Contact Form Submission'
+        body = f"""
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Name</td><td style='padding:6px 0;'>{name}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Email</td><td style='padding:6px 0;'>{email}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Phone</td><td style='padding:6px 0;'>{phone}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Service</td><td style='padding:6px 0;'>{service}</td></tr>
+            <tr><td style='padding:6px 0; font-weight:600; width:38%; vertical-align:top;'>Message</td><td style='padding:6px 0;'>{details}</td></tr>
+        """
 
     html = f"""
     <!DOCTYPE html>
@@ -142,39 +241,28 @@ def create_email_template(template_type, data, audience='owner'):
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{title}</title>
     </head>
-    <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f4f4f2;">
-        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color: #f4f4f2;">
+    <body style="margin:0; padding:0; background-color:#f4f4f2; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">
+        <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background-color:#f4f4f2;">
             <tr>
-                <td align="center" style="padding: 24px 0;">
-                    <table role="presentation" width="600" border="0" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
-                        <!-- Header with Logo and Title -->
+                <td align="center" style="padding:24px 12px;">
+                    <table role="presentation" width="560" border="0" cellpadding="0" cellspacing="0" style="width:100%; max-width:560px; background-color:#ffffff; border-radius:14px; overflow:hidden; box-shadow:0 10px 30px rgba(0,0,0,0.10);">
                         <tr>
-                            <td style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 40px 32px; text-align: center; color: #ffffff;">
-                                <div style="font-size: 32px; font-weight: 700; letter-spacing: 0.2em; margin-bottom: 4px; color: #FFD700;">SLTG</div>
-                                <div style="font-size: 13px; letter-spacing: 0.12em; color: rgba(255,255,255,0.9); margin-bottom: 24px; font-weight: 500;">BUILDERS</div>
-                                <h1 style="margin: 0; font-size: 26px; font-weight: 600; color: #ffffff;">{title}</h1>
+                            <td style="background:#111827; padding:18px 22px; color:#ffffff; text-align:left;">
+                                <div style="font-size:12px; letter-spacing:0.18em; text-transform:uppercase; color:#d1d5db; margin-bottom:6px;">SLTG Builders</div>
+                                <h1 style="margin:0; font-size:22px; font-weight:700; color:#ffffff;">{title}</h1>
                             </td>
                         </tr>
-                        <!-- Content -->
                         <tr>
-                            <td style="padding: 32px 32px; color: #2f2f2f; font-size: 15px; line-height: 1.8;">
-                                <p style="margin: 0 0 20px 0; color: #555555;">Dear Valued Customer,</p>
-                                <p style="margin: 0 0 24px 0; color: #555555;">Thank you for subscribing to SLTG Builders updates!</p>
-                                
-                                <!-- Details Section -->
-                                <div style="background: #faf7ee; border-left: 4px solid #FFD700; border-radius: 4px; padding: 16px 16px; margin-bottom: 24px;">
+                            <td style="padding:24px 22px 22px 22px; color:#2f2f2f; font-size:15px; line-height:1.8;">
+                                <table role="presentation" width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#f9fafb; border:1px solid #e5e7eb; border-radius:12px; padding:14px 14px;">
                                     {body}
-                                </div>
-                                
-                                <p style="margin: 0 0 8px 0; color: #555555;">Stay tuned for the latest updates from SLTG Builders.</p>
-                                <p style="margin: 0; color: #555555;">Best regards,<br><strong>Team SLTG Builders</strong></p>
+                                </table>
+                                <p style="margin:16px 0 0 0; color:#4b5563; font-size:13px;">This message was generated from the SLTG Builders website form.</p>
                             </td>
                         </tr>
-                        <!-- Footer -->
                         <tr>
-                            <td style="background: #f9f9f9; padding: 20px 32px; text-align: center; font-size: 12px; color: #999999; border-top: 1px solid #ece8de;">
-                                <p style="margin: 0;">SLTG Builders | Contracting | Constructions | Real Estate</p>
-                                <p style="margin: 8px 0 0 0; color: #b0b0b0;">© 2026 SLTG Builders. All rights reserved.</p>
+                            <td style="padding:0 22px 22px 22px; color:#6b7280; font-size:13px; line-height:1.7;">
+                                <p style="margin:0;">SLTG Builders | Contracting | Constructions | Real Estate</p>
                             </td>
                         </tr>
                     </table>
