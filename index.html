@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SLTG Builders - Contracting, Constructions, and Real Estate. We shape your dreams into reality with quality work and on-time delivery.">
+    <title>SLTG Builders | Contracting • Constructions • Real Estate</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <div class="loading-logo">
+                <div class="loading-text">SLTG</div>
+                <div class="loading-subtitle">Builders</div>
+            </div>
+            <div class="loading-line"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-container">
+            <div class="header-left">
+                <a href="#home" class="logo-link">
+                    <img src="/static/images/SLTG Logo.png" alt="SLTG Builders Logo" class="logo">
+                </a>
+            </div>
+            
+            <nav class="header-nav" id="headerNav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#home" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#about" class="nav-link">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contract" class="nav-link">Services</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#work" class="nav-link">Our Work</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#contact" class="nav-link">Contact</a>
+                    </li>
+                </ul>
+            </nav>
+            
+            <div class="header-right">
+                <button class="btn btn-primary" id="headerBookVisit">Book Visit</button>
+                <button class="btn btn-secondary" id="headerGetQuote">Get Quote</button>
+                <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+        <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+        <div class="mobile-nav-content">
+            <div class="mobile-nav-header">
+                <div class="mobile-nav-brand">
+                    <img src="/static/images/SLTG Logo.png" alt="SLTG" class="mobile-logo">
+                </div>
+                <span class="mobile-nav-close" id="mobileNavClose">&times;</span>
+            </div>
+            <nav class="mobile-nav-links">
+                <a href="#home" class="mobile-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+                <a href="#about" class="mobile-nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+                <a href="#contract" class="mobile-nav-link">
+                    <i class="fas fa-tools"></i>
+                    <span>Services</span>
+                </a>
+                <a href="#work" class="mobile-nav-link">
+                    <i class="fas fa-building"></i>
+                    <span>Our Work</span>
+                </a>
+                <a href="#contact" class="mobile-nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+            </nav>
+            <div class="mobile-nav-actions">
+                <button class="btn btn-primary mobile-full" id="mobileBookVisit">
+                    <i class="fas fa-calendar-alt"></i>
+                    Book Site Visit
+                </button>
+                <button class="btn btn-secondary mobile-full" id="mobileGetQuote">
+                    <i class="fas fa-file-invoice"></i>
+                    Get Free Quote
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-background">
+            <video class="hero-video" autoplay loop muted playsinline>
+                <source src="static\Project - 2 MP4\Concrete_Slab_Construction_Video_Ready.mp4" type="video/mp4">
+            </video>
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <div class="hero-content">
+            <div class="hero-slider" id="heroSlider">
+                <div class="hero-slide active">
+                    <h1 class="hero-title">Welcome to SLTG Builders</h1>
+                    <p class="hero-description">We prefer your happiness. We shape your dreams into real living spaces with trust, quality, and on-time delivery.</p>
+                    <div class="hero-actions">
+                        <button class="btn btn-primary btn-large" data-open-visit>
+                            <i class="fas fa-calendar-check"></i>
+                            Book a Visit
+                        </button>
+                        <a href="#about" class="btn btn-outline btn-large">
+                            <i class="fas fa-arrow-right"></i>
+                            Know Us
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-slide">
+                    <h1 class="hero-title">We Deal ~ Contracting</h1>
+                    <p class="hero-description">Build on your land with confidence. 11+ years of experience and 40+ satisfied customers with quality-focused execution.</p>
+                    <div class="hero-actions">
+                        <a href="#contract" class="btn btn-primary btn-large">
+                            <i class="fas fa-handshake"></i>
+                            Deal a Contract
+                        </a>
+                        <a href="#contact" class="btn btn-outline btn-large">
+                            <i class="fas fa-phone"></i>
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-slide">
+                    <h1 class="hero-title">We Are In ~ Constructions</h1>
+                    <p class="hero-description">Budget-friendly to luxury builds, strong materials, modern planning, and attractive designs—built for comfort and long life.</p>
+                    <div class="hero-actions">
+                        <a href="#work" class="btn btn-primary btn-large">
+                            <i class="fas fa-images"></i>
+                            Our Work
+                        </a>
+                        <a href="#flow" class="btn btn-outline btn-large">
+                            <i class="fas fa-route"></i>
+                            How We Deliver
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="hero-slide">
+                    <h1 class="hero-title">Trust In ~ Real Estate</h1>
+                    <p class="hero-description">Buying, selling, and investment guidance with genuine support—helping you choose the right property with confidence.</p>
+                    <div class="hero-actions">
+                        <a href="#contact" class="btn btn-primary btn-large">
+                            <i class="fas fa-search"></i>
+                            Enquiry
+                        </a>
+                        <a href="#about" class="btn btn-outline btn-large">
+                            <i class="fas fa-info-circle"></i>
+                            Explore
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hero-dots" id="heroDots"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about-section" id="about">
+        <div class="section-background">
+            <video class="section-video" autoplay loop muted playsinline>
+                <source src="/static/Project%20-%202%20MP4/Video_Generation_Complete.mp4" type="video/mp4">
+            </video>
+            <div class="section-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">About SLTG Builders</h2>
+                <p class="section-subtitle">We are a trusted team in contracting, constructions, and real estate—focused on clear planning, quality work, and customer happiness.</p>
+            </div>
+            
+            <div class="about-grid">
+                <div class="about-card glass-card">
+                    <h3 class="about-card-title">What makes us different</h3>
+                    <p class="about-card-text">From the first call to final handover, we organize your requirements, plan the work, and deliver with transparent updates.</p>
+                    
+                    <div class="stats-section">
+                        <h4 class="stats-title">Contracting</h4>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">11+</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">40+</div>
+                                <div class="stat-label">Contracts Delivered</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">On-Time Promise</div>
+                            </div>
+                        </div>
+                        
+                        <h4 class="stats-title">Owned Constructions</h4>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number">5+</div>
+                                <div class="stat-label">Years Experience</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">6</div>
+                                <div class="stat-label">Homes Built & Sold</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">100%</div>
+                                <div class="stat-label">Customer Satisfied</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="features-list">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-hard-hat"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="feature-title">Contracting</h4>
+                            <p class="feature-text">Build on your land with proper estimation, strong materials, and timeline commitment.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="feature-title">Constructions</h4>
+                            <p class="feature-text">From land to home: we create budget-friendly, spacious, modern constructions with premium finishing.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-home"></i>
+                        </div>
+                        <div class="feature-content">
+                            <h4 class="feature-title">Real Estate</h4>
+                            <p class="feature-text">Guidance for buying/selling/investing with genuine support and clarity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flow Section -->
+    <section class="section flow-section" id="flow">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Flow - Contracting</h2>
+                <p class="section-subtitle">We classify your requirements clearly and follow a structured process—so you get the right design, right budget, and a smooth handover.</p>
+            </div>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <div class="flow-step">Step 1</div>
+                    <div class="flow-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="flow-title">Customer Input</h3>
+                    <p class="flow-text">Your plot details, budget, floors, rooms, and design preferences.</p>
+                </div>
+                
+                <div class="flow-card">
+                    <div class="flow-step">Step 2</div>
+                    <div class="flow-icon">
+                        <i class="fas fa-sitemap"></i>
+                    </div>
+                    <h3 class="flow-title">Requirement Classification</h3>
+                    <p class="flow-text">We sort needs into plan, structure, elevation, and finishing—so nothing is missed.</p>
+                </div>
+                
+                <div class="flow-card">
+                    <div class="flow-step">Step 3</div>
+                    <div class="flow-icon">
+                        <i class="fas fa-drafting-compass"></i>
+                    </div>
+                    <h3 class="flow-title">Design & Estimate</h3>
+                    <p class="flow-text">We propose designs, calculate budget, and finalize materials with transparent clarity.</p>
+                </div>
+                
+                <div class="flow-card">
+                    <div class="flow-step">Step 4</div>
+                    <div class="flow-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="flow-title">Execution & Handover</h3>
+                    <p class="flow-text">On-site work with quality checks, updates, and final delivery with satisfaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contract Section -->
+    <section class="section contract-section" id="contract">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Deal a Contract</h2>
+                <p class="section-subtitle">We build budget-friendly to premium constructions for 100–300+ sq yards with multiple layouts and creative designs—tailored for your plot and lifestyle.</p>
+            </div>
+            
+            <div class="contract-grid">
+                <div class="contract-card">
+                    <h3 class="contract-title">What we can build</h3>
+                    <div class="tags-container">
+                        <span class="tag"><strong>Plot:</strong> 100–300+ sq yards</span>
+                        <span class="tag"><strong>Type:</strong> Independent House</span>
+                        <span class="tag"><strong>Floors:</strong> 2 / 3 / 4</span>
+                        <span class="tag"><strong>Style:</strong> Duplex / Triplex</span>
+                        <span class="tag"><strong>Rooms:</strong> Multi-bedroom</span>
+                        <span class="tag"><strong>Design:</strong> Creative Elevations</span>
+                        <span class="tag"><strong>Plan:</strong> Any dimensions</span>
+                        <span class="tag"><strong>Arch:</strong> Exclusive Architecture</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#contact" class="btn btn-primary">Contact Us</a>
+                        <a href="#work" class="btn btn-outline">View Our Work</a>
+                    </div>
+                </div>
+                
+                <div class="contract-card">
+                    <h3 class="contract-title">Best for</h3>
+                    <div class="tags-container">
+                        <span class="tag"><strong>New:</strong> Home Construction</span>
+                        <span class="tag"><strong>Smart:</strong> Budget Planning</span>
+                        <span class="tag"><strong>Modern:</strong> Layouts</span>
+                        <span class="tag"><strong>Family:</strong> Comfort Focus</span>
+                        <span class="tag"><strong>Finish:</strong> Premium Look</span>
+                        <span class="tag"><strong>Support:</strong> End-to-End</span>
+                    </div>
+                    <div class="card-actions">
+                        <a href="#contact" class="btn btn-primary">Enquiry</a>
+                        <a href="#flow" class="btn btn-outline">See Our Flow</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contract-card contract-card-full">
+                <h3 class="contract-title">Real Estate</h3>
+                <div class="tags-container">
+                    <span class="tag"><strong>Buy:</strong> Right Property</span>
+                    <span class="tag"><strong>Sell:</strong> Best Value</span>
+                    <span class="tag"><strong>Invest:</strong> Smart Guidance</span>
+                    <span class="tag"><strong>Support:</strong> End-to-End</span>
+                    <span class="tag"><strong>Docs:</strong> Clear Process</span>
+                    <span class="tag"><strong>Trust:</strong> Genuine Deal</span>
+                </div>
+                <div class="card-actions">
+                    <a href="#contact" class="btn btn-primary">Contact Us</a>
+                    <a href="#work" class="btn btn-outline">See Recent Work</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Work Section -->
+    <section class="section work-section" id="work">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Our Recent Work</h2>
+                <p class="section-subtitle">A quick showcase of our latest interiors and elevation work—smooth finishing, spacious planning, and budget-friendly comfort.</p>
+            </div>
+            
+            <div class="work-grid">
+                <div class="work-details">
+                    <h3 class="work-title">Property Details</h3>
+                    <p class="work-description">133 sq yards, east facing. Modern false ceiling design, strong elevation, spacious parking, and elegant budget-friendly interiors—finished with premium Royal Paints.</p>
+                    
+                    <div class="work-highlights">
+                        <h4 class="highlights-title">Highlights</h4>
+                        <div class="tags-container">
+                            <span class="tag"><strong>Facing:</strong> East</span>
+                            <span class="tag"><strong>Plan:</strong> Spacious Parking</span>
+                            <span class="tag"><strong>Finish:</strong> Modern Ceiling</span>
+                            <span class="tag"><strong>Design:</strong> Elegant Interiors</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button class="btn btn-primary" data-open-visit>
+                            <i class="fas fa-calendar-check"></i>
+                            Book a Visit
+                        </button>
+                        <a href="#contact" class="btn btn-outline">
+                            <i class="fas fa-envelope"></i>
+                            Enquiry
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="work-gallery">
+                    <div class="marquee">
+                        <div class="marquee-track">
+                            <div class="marquee-item">
+                                <img src="/images/Elevation.png" alt="Elevation" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Hall.png" alt="Hall" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/BR.png" alt="Bedroom" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/wall_paint.png" alt="Wall paint" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Hall_top.png" alt="Hall top" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Kitchen_aa.png" alt="Kitchen" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/BR_top.png" alt="Bedroom top" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Elevation.png" alt="Elevation" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Hall.png" alt="Hall" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/BR.png" alt="Bedroom" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/wall_paint.png" alt="Wall paint" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Hall_top.png" alt="Hall top" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/Kitchen_aa.png" alt="Kitchen" loading="lazy">
+                            </div>
+                            <div class="marquee-item">
+                                <img src="/images/BR_top.png" alt="Bedroom top" loading="lazy">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact-section" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Let's Discuss</h2>
+                <p class="section-subtitle">Tell us your requirements and we'll get back with the right plan and budget. Contracting, owned constructions, and real estate support—all in one place.</p>
+            </div>
+            
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <h3 class="contact-title">Why SLTG Builders</h3>
+                    <p class="contact-text">We listen to your inputs, classify requirements, and execute with quality focus and clear timeline commitment. From plot to final handover, we keep it transparent and customer-first.</p>
+                    
+                    <div class="tags-container">
+                        <span class="tag"><strong>Quality:</strong> Strong Materials</span>
+                        <span class="tag"><strong>Plan:</strong> Clear Estimate</span>
+                        <span class="tag"><strong>Time:</strong> On-Time Delivery</span>
+                        <span class="tag"><strong>Design:</strong> Modern Look</span>
+                        <span class="tag"><strong>Support:</strong> End-to-End</span>
+                    </div>
+                </div>
+                
+                <div class="contact-form-wrapper">
+                    <h3 class="contact-title">Contact Form</h3>
+                    <form class="contact-form" id="contactForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contactName">Full Name *</label>
+                                <input type="text" id="contactName" name="name" placeholder="Your name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contactPhone">Phone *</label>
+                                <input type="tel" id="contactPhone" name="phone" placeholder="Mobile number" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="contactEmail">Email</label>
+                                <input type="email" id="contactEmail" name="email" placeholder="Email address">
+                            </div>
+                            <div class="form-group">
+                                <label for="contactService">Service</label>
+                                <select id="contactService" name="service">
+                                    <option value="">Select service</option>
+                                    <option value="contracting">Contracting</option>
+                                    <option value="owned-construction">Owned Constructions</option>
+                                    <option value="real-estate">Real Estate</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactMessage">Message *</label>
+                            <textarea id="contactMessage" name="message" rows="4" placeholder="Tell us about your requirements..." required></textarea>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Message
+                            </button>
+                            <button type="reset" class="btn btn-outline">
+                                <i class="fas fa-undo"></i>
+                                Clear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h3 class="footer-title">SLTG Builders</h3>
+                    <p class="footer-text">Contracting, owned constructions, and real estate support with a customer-first approach. We plan clearly, build strongly, and deliver beautifully.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <nav class="footer-nav">
+                        <a href="#home">Home</a>
+                        <a href="#about">About</a>
+                        <a href="#contract">Services</a>
+                        <a href="#work">Our Work</a>
+                        <a href="#contact">Contact</a>
+                    </nav>
+                </div>
+                
+                <div class="footer-contact">
+                    <h3 class="footer-title">Get in Touch</h3>
+                    <p class="footer-text">Use the "Let's Discuss" form or book a site visit request for the next available slots.</p>
+                </div>
+            </div>
+            
+            <div class="footer-subscribe">
+                <h3 class="footer-title">Subscribe to Updates</h3>
+                <p class="footer-text">Subscribe for regular updates on our work</p>
+                <form class="subscribe-form" id="subscribeForm">
+                    <input type="email" id="subscribeEmail" name="email" placeholder="Enter your email" required>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-bell"></i>
+                        Subscribe
+                    </button>
+                </form>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; <span id="footerYear"></span> SLTG Builders. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Visit Modal -->
+    <div class="modal" id="visitModal" role="dialog" aria-modal="true" aria-labelledby="visitModalTitle">
+        <div class="modal-backdrop" id="visitModalBackdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="visitModalTitle">Site Visit Request</h3>
+                <button class="modal-close" id="visitModalClose" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle">Select a date (next 15 days) and preferred time. We'll confirm the visit as soon as possible.</p>
+                
+                <div class="date-selector">
+                    <button class="scroll-btn scroll-left" id="dateScrollLeft" aria-label="Scroll left">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="date-scroll" id="dateScroll">
+                        <div class="date-track" id="dateTrack"></div>
+                    </div>
+                    <button class="scroll-btn scroll-right" id="dateScrollRight" aria-label="Scroll right">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="time-selector">
+                    <button class="scroll-btn scroll-left" id="timeScrollLeft" aria-label="Scroll left">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="time-scroll" id="timeScroll">
+                        <div class="time-track" id="timeTrack"></div>
+                    </div>
+                    <button class="scroll-btn scroll-right" id="timeScrollRight" aria-label="Scroll right">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+                
+                <div class="selected-slot" id="selectedSlot" style="display: none;">
+                    <strong>Preferred Slot:</strong> <span id="slotDisplay"></span>
+                </div>
+                
+                <form class="modal-form" id="visitForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="visitName">Full Name</label>
+                            <input type="text" id="visitName" name="name" placeholder="Your name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitPhone">Phone Number</label>
+                            <input type="tel" id="visitPhone" name="phone" placeholder="Mobile number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="visitEmail">Email Address</label>
+                            <input type="email" id="visitEmail" name="email" placeholder="Email address" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="visitLocation">Location / Area</label>
+                            <input type="text" id="visitLocation" name="visitLocation" placeholder="Area, city" required>
+                        </div>
+                    </div>
+                    
+                    <input type="hidden" id="visitDate" name="visitDate" required>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-calendar-check"></i>
+                            Request Visit
+                        </button>
+                        <button type="button" class="btn btn-outline" id="visitModalCancel">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Get Quote Modal -->
+    <div class="modal" id="getQuoteModal" role="dialog" aria-modal="true" aria-labelledby="getQuoteModalTitle">
+        <div class="modal-backdrop" id="getQuoteModalBackdrop"></div>
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h3 class="modal-title" id="getQuoteModalTitle">Get Your Free Quote</h3>
+                <button class="modal-close" id="getQuoteModalClose" aria-label="Close modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-subtitle">Tell us your requirements and we'll provide a detailed quote within 24 hours. No hidden charges, transparent pricing.</p>
+                
+                <form class="modal-form" id="getQuoteForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="quoteName">Full Name *</label>
+                            <input type="text" id="quoteName" name="name" placeholder="Your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quotePhone">Phone Number *</label>
+                            <input type="tel" id="quotePhone" name="phone" placeholder="Mobile number" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quoteEmail">Email Address</label>
+                        <input type="email" id="quoteEmail" name="email" placeholder="your@email.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quoteService">Service Type *</label>
+                        <select id="quoteService" name="service" required onchange="updateBudgetOptions()">
+                            <option value="" selected disabled>Select service</option>
+                            <option value="contracting">Contracting (Build on your land)</option>
+                            <option value="owned-construction">Owned Constructions</option>
+                            <option value="real-estate">Real Estate (Consultation Only)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quotePlotSize">Property Details *</label>
+                        <input type="text" id="quotePlotSize" name="plotSize" placeholder="e.g., 200 sq yards, 30x40 feet, 2BHK flat" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quoteBudget">Budget Range</label>
+                        <select id="quoteBudget" name="budget">
+                            <option value="">Select service first</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quoteRequirements">Detailed Requirements *</label>
+                        <textarea id="quoteRequirements" name="requirements" rows="4" placeholder="Number of floors, rooms, facing, special requirements, etc." required></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-file-invoice"></i>
+                            Get Free Quote
+                        </button>
+                        <button type="button" class="btn btn-outline" id="getQuoteModalCancel">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/static/script.js"></script>
+</body>
+</html>
