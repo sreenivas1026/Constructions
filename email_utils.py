@@ -86,7 +86,7 @@ def send_email(to_email, subject, html_content):
     server.quit()
 
 
-def create_email_template(template_type, data):
+def create_email_template(template_type, data, audience='owner'):
     name = data.get('name', 'Customer')
     phone = data.get('phone', 'Not provided')
     email = data.get('email', 'Not provided')
@@ -97,22 +97,42 @@ def create_email_template(template_type, data):
     visit_location = data.get('visitLocation', '')
     selected_time = data.get('selectedTime', '')
 
-    if template_type == 'quote':
-        subject = 'Quote Request - SLTG Builders'
-        title = 'Quote Request'
-        body = f"<p style='margin: 8px 0;'><strong>Property Details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Budget:</strong> {budget}</p><p style='margin: 8px 0;'><strong>Requirements:</strong><br>{details}</p>"
-    elif template_type == 'visit':
-        subject = 'Site Visit Request - SLTG Builders'
-        title = 'Site Visit Request'
-        body = f"<p style='margin: 8px 0;'><strong>Location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Time:</strong> {selected_time}</p>"
-    elif template_type == 'subscribe':
-        subject = 'Welcome to SLTG Builders Updates!'
-        title = 'Subscription Confirmed'
-        body = f"<p style='margin: 8px 0;'>Welcome to our mailing list! You will now receive:</p><ul style='margin: 8px 0; padding-left: 20px;'><li>Project updates and completion announcements</li><li>Special offers and promotions</li><li>Industry insights and news</li></ul>"
+    if audience == 'consumer':
+        greeting_name = name if name != 'Customer' else 'there'
+
+        if template_type == 'quote':
+            subject = 'We Received Your Quote Request - SLTG Builders'
+            title = 'Quote Request Received'
+            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for reaching out. We have received your quote request and our team will review it shortly.</p><p style='margin: 8px 0;'><strong>Your property details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Your budget:</strong> {budget}</p>"
+        elif template_type == 'visit':
+            subject = 'Your Site Visit Request Is Confirmed - SLTG Builders'
+            title = 'Site Visit Request Confirmed'
+            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for scheduling a site visit. We have received your request and will contact you soon with the next steps.</p><p style='margin: 8px 0;'><strong>Preferred location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Preferred date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Preferred time:</strong> {selected_time}</p>"
+        elif template_type == 'subscribe':
+            subject = 'Welcome to SLTG Builders Updates!'
+            title = 'Subscription Confirmed'
+            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for subscribing to SLTG Builders updates.</p><ul style='margin: 8px 0; padding-left: 20px;'><li>Project updates and completion announcements</li><li>Special offers and promotions</li><li>Industry insights and news</li></ul>"
+        else:
+            subject = 'We Received Your Message - SLTG Builders'
+            title = 'Message Received'
+            body = f"<p style='margin: 8px 0;'>Hi {greeting_name}, thanks for contacting SLTG Builders. Our team has received your message and will get back to you soon.</p><p style='margin: 8px 0;'><strong>Your message:</strong><br>{details}</p>"
     else:
-        subject = 'Contact Form Submission - SLTG Builders'
-        title = 'Contact Form Submission'
-        body = f"<p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Message:</strong><br>{details}</p>"
+        if template_type == 'quote':
+            subject = 'New Quote Request - SLTG Builders'
+            title = 'Quote Request'
+            body = f"<p style='margin: 8px 0;'><strong>Customer Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Customer Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Property Details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Budget:</strong> {budget}</p><p style='margin: 8px 0;'><strong>Requirements:</strong><br>{details}</p>"
+        elif template_type == 'visit':
+            subject = 'New Site Visit Request - SLTG Builders'
+            title = 'Site Visit Request'
+            body = f"<p style='margin: 8px 0;'><strong>Customer Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Customer Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Time:</strong> {selected_time}</p>"
+        elif template_type == 'subscribe':
+            subject = 'New Subscriber - SLTG Builders'
+            title = 'Subscription Lead'
+            body = f"<p style='margin: 8px 0;'><strong>Subscriber Email:</strong> {email}</p><p style='margin: 8px 0;'>A new subscriber joined the mailing list.</p>"
+        else:
+            subject = 'New Contact Form Submission - SLTG Builders'
+            title = 'Contact Form Submission'
+            body = f"<p style='margin: 8px 0;'><strong>Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Message:</strong><br>{details}</p>"
 
     html = f"""
     <!DOCTYPE html>
