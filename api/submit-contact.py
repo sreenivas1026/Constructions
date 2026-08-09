@@ -1,42 +1,25 @@
-import json
-from email_utils import create_email_template, send_email, parse_json_request, EMAIL_USER
+from flask import Flask, request, jsonify
+from email_utils import create_email_template, send_email, EMAIL_USER
 
+app = Flask(__name__)
 
-def handler(request):
-    if request.method != 'POST':
-        return {
-            'statusCode': 405,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'success': False, 'message': 'Method not allowed'})
-        }
+@app.route('/api/submit-contact', methods=['POST', 'OPTIONS'])
+def submit_contact():
+    if request.method == 'OPTIONS':
+        res = jsonify({})
+        res.headers['Access-Control-Allow-Origin'] = '*'
+        res.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
+        res.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        return res, 200
 
-    data = parse_json_request(request)
-    if not data:
-        return {
-            'statusCode': 400,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'success': False, 'message': 'Invalid JSON payload'})
-        }
+    data = request.get_json(silent=True) or {}
 
     if not EMAIL_USER:
-        return {
-            'statusCode': 500,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'success': False, 'message': 'Email credentials are not configured'})
-        }
+        return jsonify({'success': False, 'message': 'Email credentials are not configured'}), 500
 
     try:
         template = create_email_template('contact', data)
         send_email(EMAIL_USER, template['subject'], template['html'])
-
-        return {
-            'statusCode': 200,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'success': True, 'message': 'Contact form submitted successfully!'})
-        }
+        return jsonify({'success': True, 'message': 'Contact form submitted successfully!'})
     except Exception as exc:
-        return {
-            'statusCode': 500,
-            'headers': {'Content-Type': 'application/json'},
-            'body': json.dumps({'success': False, 'message': f'Failed to submit contact form: {str(exc)}'})
-        }
+        return jsonify({'success': False, 'message': f'Failed to send: {str(exc)}'}), 500
