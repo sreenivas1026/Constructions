@@ -3,6 +3,7 @@ from email_utils import create_email_template, send_email, EMAIL_USER
 
 app = Flask(__name__)
 
+@app.route('/', methods=['POST', 'OPTIONS'])
 @app.route('/api/submit-contact', methods=['POST', 'OPTIONS'])
 def submit_contact():
     if request.method == 'OPTIONS':

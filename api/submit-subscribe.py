@@ -4,6 +4,7 @@ from email_utils import send_email, create_email_template
 
 app = Flask(__name__)
 
+@app.route('/', methods=['POST', 'OPTIONS'])
 @app.route('/api/submit-subscribe', methods=['POST', 'OPTIONS'])
 def submit_subscribe():
     if request.method == 'OPTIONS':
@@ -20,11 +21,9 @@ def submit_subscribe():
         return jsonify({'success': False, 'message': 'Email is required'}), 400
 
     try:
-        # Confirmation email to subscriber
         template = create_email_template('subscribe', {'email': subscriber_email})
         send_email(subscriber_email, template['subject'], template['html'])
 
-        # Notify admin
         EMAIL_USER = os.getenv('EMAIL_USER')
         if EMAIL_USER:
             from datetime import datetime

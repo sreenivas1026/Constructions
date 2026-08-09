@@ -20,8 +20,20 @@
   ],
   "routes": [
     {
-      "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "src": "/api/submit-contact",
+      "dest": "/api/submit-contact.py"
+    },
+    {
+      "src": "/api/submit-get-quote",
+      "dest": "/api/submit-get-quote.py"
+    },
+    {
+      "src": "/api/submit-site-visit",
+      "dest": "/api/submit-site-visit.py"
+    },
+    {
+      "src": "/api/submit-subscribe",
+      "dest": "/api/submit-subscribe.py"
     },
     {
       "src": "/static/(.*)",
