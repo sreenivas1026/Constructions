@@ -1,35 +1,52 @@
+import json
 import os
-from flask import Flask, request, jsonify
-from email_utils import send_email, create_email_template
+from email_utils import create_email_template, send_email, parse_json_request
 
-app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'OPTIONS'])
-@app.route('/api/submit-subscribe', methods=['POST', 'OPTIONS'])
-def submit_subscribe():
-    if request.method == 'OPTIONS':
-@@ -20,24 +21,22 @@
-        return jsonify({'success': False, 'message': 'Email is required'}), 400
-
+def handler(request):
+    """Handle subscription requests via Vercel serverless."""
     try:
-        # Confirmation email to subscriber
-        template = create_email_template('subscribe', {'email': subscriber_email})
-        send_email(subscriber_email, template['subject'], template['html'])
+        data = parse_json_request(request)
+        subscriber_email = data.get('email', '').strip()
+        subscriber_name = data.get('name', '').strip()
 
-        # Notify admin
-        EMAIL_USER = os.getenv('EMAIL_USER')
-        if EMAIL_USER:
-            from datetime import datetime
-            admin_html = f"""
-            <!DOCTYPE html><html><body style="font-family:Arial,sans-serif;background:#f4f4f2;padding:20px;">
-            <div style="max-width:600px;margin:0 auto;background:#fff;padding:20px;border-radius:8px;">
-                <h2 style="color:#1a1a1a;">New Subscriber</h2>
-                <p><strong>Email:</strong> {subscriber_email}</p>
-                <p><strong>Date:</strong> {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}</p>
-            </div></body></html>
-            """
-            send_email(EMAIL_USER, 'New Subscriber - SLTG Builders', admin_html)
+        if not subscriber_email:
+            return {
+                'statusCode': 400,
+                'headers': {'Content-Type': 'application/json'},
+                'body': json.dumps({'success': False, 'message': 'Email is required'})
+            }
 
-        return jsonify({'success': True, 'message': 'Successfully subscribed! Check your email.'})
-    except Exception as e:
-        return jsonify({'success': False, 'message': f'Failed to subscribe: {str(e)}'}), 500
+        EMAIL_USER = os.getenv('EMAIL_USER', '').strip()
+        if not EMAIL_USER:
+            return {
+                'statusCode': 500,
+                'headers': {'Content-Type': 'application/json'},
+                'body': json.dumps({'success': False, 'message': 'Email credentials are not configured'})
+            }
+
+        owner_template = create_email_template('subscribe', {'email': subscriber_email, 'name': subscriber_name}, 'owner')
+        send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
+
+        try:
+            consumer_template = create_email_template('subscribe', {'email': subscriber_email, 'name': subscriber_name}, 'consumer')
+            send_email(subscriber_email, consumer_template['subject'], consumer_template['html'])
+        except Exception as consumer_exc:
+            print(f"Consumer email send failed for subscribe request: {consumer_exc}")
+
+        return {
+            'statusCode': 200,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': True, 'message': 'Successfully subscribed! Check your email.'})
+        }
+    except Exception as exc:
+        print(f"Subscribe handler error: {exc}")
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'message': f'Failed to subscribe: {str(exc)}'})
+        }
+
+
+app = handler
+application = handler
