@@ -1,26 +1,47 @@
-from flask import Flask, request, jsonify
-from email_utils import create_email_template, send_email, EMAIL_USER
+import json
+from email_utils import create_email_template, send_email, parse_json_request, EMAIL_USER
 
-app = Flask(__name__)
 
-@app.route('/', methods=['POST', 'OPTIONS'])
-@app.route('/api/submit-contact', methods=['POST', 'OPTIONS'])
-def submit_contact():
-    if request.method == 'OPTIONS':
-        res = jsonify({})
-        res.headers['Access-Control-Allow-Origin'] = '*'
-        res.headers['Access-Control-Allow-Methods'] = 'POST, OPTIONS'
-        res.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-        return res, 200
+def handler(request):
+    if request.method != 'POST':
+        return {
+            'statusCode': 405,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'message': 'Method not allowed'})
+        }
 
-    data = request.get_json(silent=True) or {}
+    data = parse_json_request(request)
+    if not data:
+        return {
+            'statusCode': 400,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'message': 'Invalid JSON payload'})
+        }
 
     if not EMAIL_USER:
-        return jsonify({'success': False, 'message': 'Email credentials are not configured'}), 500
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'message': 'Email credentials are not configured'})
+        }
 
     try:
-        template = create_email_template('contact', data)
-        send_email(EMAIL_USER, template['subject'], template['html'])
-        return jsonify({'success': True, 'message': 'Contact form submitted successfully!'})
+            owner_template = create_email_template('contact', data, 'owner')
+            send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
+
+            consumer_email = data.get('email', '').strip()
+            if consumer_email:
+                consumer_template = create_email_template('contact', data, 'consumer')
+                send_email(consumer_email, consumer_template['subject'], consumer_template['html'])
+
+        return {
+            'statusCode': 200,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': True, 'message': 'Contact form submitted successfully!'})
+        }
     except Exception as exc:
-        return jsonify({'success': False, 'message': f'Failed to send: {str(exc)}'}), 500
+        return {
+            'statusCode': 500,
+            'headers': {'Content-Type': 'application/json'},
+            'body': json.dumps({'success': False, 'message': f'Failed to submit contact form: {str(exc)}'})
+        }
