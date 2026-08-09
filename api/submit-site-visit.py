@@ -43,6 +43,7 @@ def handler(request):
             'body': json.dumps({'success': True, 'message': 'Site visit request submitted successfully!'})
         }
     except Exception as exc:
+        print(f"Site visit form failed: {exc}")
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json'},

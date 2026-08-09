@@ -43,6 +43,7 @@ def handler(request):
             'body': json.dumps({'success': True, 'message': 'Quote request submitted successfully!'})
         }
     except Exception as exc:
+        print(f"Quote form failed: {exc}")
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json'},

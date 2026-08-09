@@ -41,7 +41,7 @@ def handler(request):
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json'},
-            'body': '{"success": false, "message": "Failed to subscribe"}'
+            'body': f'{{"success": false, "message": "Failed to subscribe: {str(e)}"}}'
         }
 
 

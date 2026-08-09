@@ -43,6 +43,7 @@ def handler(request):
             'body': json.dumps({'success': True, 'message': 'Contact form submitted successfully!'})
         }
     except Exception as exc:
+        print(f"Contact form failed: {exc}")
         return {
             'statusCode': 500,
             'headers': {'Content-Type': 'application/json'},
