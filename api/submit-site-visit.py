@@ -30,18 +30,12 @@ def handler(request):
         send_email(EMAIL_USER, owner_template['subject'], owner_template['html'])
 
         consumer_email = data.get('email', '').strip()
-        consumer_sent = False
         if consumer_email:
-            consumer_template = create_email_template('visit', data, 'consumer')
-            send_email(consumer_email, consumer_template['subject'], consumer_template['html'])
-            consumer_sent = True
-
-        if not consumer_sent:
-            return {
-                'statusCode': 400,
-                'headers': {'Content-Type': 'application/json'},
-                'body': json.dumps({'success': False, 'message': 'Customer email is missing from the form submission'})
-            }
+            try:
+                consumer_template = create_email_template('visit', data, 'consumer')
+                send_email(consumer_email, consumer_template['subject'], consumer_template['html'])
+            except Exception as consumer_exc:
+                print(f"Consumer email send failed for site visit request: {consumer_exc}")
 
         return {
             'statusCode': 200,
