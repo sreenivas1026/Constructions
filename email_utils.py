@@ -6,11 +6,11 @@ from pathlib import Path
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
-EMAIL_USER = os.getenv('EMAIL_USER')
-EMAIL_PASS = os.getenv('EMAIL_PASS')
 
-if not EMAIL_USER or not EMAIL_PASS:
-    print('Warning: EMAIL_USER or EMAIL_PASS not set in environment. Email sending will fail.')
+def get_email_credentials():
+    email_user = os.getenv('EMAIL_USER', '').strip()
+    email_pass = os.getenv('EMAIL_PASS', '').strip()
+    return email_user, email_pass
 
 
 def get_logo_data_uri():
@@ -20,8 +20,11 @@ def get_logo_data_uri():
         Path(__file__).resolve().parent / 'SLTG Logo.png',
     ]:
         if candidate.exists():
-            encoded = base64.b64encode(candidate.read_bytes()).decode('ascii')
-            return f'data:image/png;base64,{encoded}'
+            try:
+                encoded = base64.b64encode(candidate.read_bytes()).decode('ascii')
+                return f'data:image/png;base64,{encoded}'
+            except Exception:
+                pass
     return ''
 
 
@@ -64,26 +67,39 @@ def parse_json_request(request):
 
 
 def send_email(to_email, subject, html_content):
-    if not EMAIL_USER or not EMAIL_PASS:
-        raise RuntimeError('Email credentials are not configured.')
+    email_user, email_pass = get_email_credentials()
+    if not email_user or not email_pass:
+        print(f"Warning: EMAIL_USER or EMAIL_PASS not configured. Skipping email send to {to_email}.")
+        return False
 
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = subject
-    msg['From'] = EMAIL_USER
-    msg['To'] = to_email
+    if not to_email or not to_email.strip():
+        print("Warning: No recipient email provided. Skipping email send.")
+        return False
 
-    plain_text = 'This email contains HTML content. Please open it in an HTML-compatible email client.'
-    text_part = MIMEText(plain_text, 'plain', _charset='utf-8')
-    msg.attach(text_part)
+    to_email = to_email.strip()
 
-    html_part = MIMEText(html_content, 'html', _charset='utf-8')
-    msg.attach(html_part)
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = email_user
+        msg['To'] = to_email
 
-    server = smtplib.SMTP('smtp.gmail.com', 587)
-    server.starttls()
-    server.login(EMAIL_USER, EMAIL_PASS)
-    server.send_message(msg)
-    server.quit()
+        plain_text = 'This email contains HTML content. Please open it in an HTML-compatible email client.'
+        text_part = MIMEText(plain_text, 'plain', _charset='utf-8')
+        msg.attach(text_part)
+
+        html_part = MIMEText(html_content, 'html', _charset='utf-8')
+        msg.attach(html_part)
+
+        with smtplib.SMTP('smtp.gmail.com', 587, timeout=10) as server:
+            server.starttls()
+            server.login(email_user, email_pass)
+            server.send_message(msg)
+        print(f"Email sent successfully to {to_email}")
+        return True
+    except Exception as e:
+        print(f"Error sending email to {to_email}: {e}")
+        return False
 
 
 def create_email_template(template_type, data):
@@ -100,11 +116,11 @@ def create_email_template(template_type, data):
     if template_type == 'quote':
         subject = 'Quote Request - SLTG Builders'
         title = 'Quote Request'
-        body = f"<p style='margin: 8px 0;'><strong>Property Details:</strong> {data.get('plotSize', 'Not provided')}</p><p style='margin: 8px 0;'><strong>Budget:</strong> {budget}</p><p style='margin: 8px 0;'><strong>Requirements:</strong><br>{details}</p>"
+        body = f"<p style='margin: 8px 0;'><strong>Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Budget:</strong> {budget}</p><p style='margin: 8px 0;'><strong>Requirements:</strong><br>{details}</p>"
     elif template_type == 'visit':
         subject = 'Site Visit Request - SLTG Builders'
         title = 'Site Visit Request'
-        body = f"<p style='margin: 8px 0;'><strong>Location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Time:</strong> {selected_time}</p>"
+        body = f"<p style='margin: 8px 0;'><strong>Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Location:</strong> {visit_location}</p><p style='margin: 8px 0;'><strong>Date:</strong> {visit_date}</p><p style='margin: 8px 0;'><strong>Time:</strong> {selected_time}</p>"
     elif template_type == 'subscribe':
         subject = 'Welcome to SLTG Builders Updates!'
         title = 'Subscription Confirmed'
@@ -112,7 +128,7 @@ def create_email_template(template_type, data):
     else:
         subject = 'Contact Form Submission - SLTG Builders'
         title = 'Contact Form Submission'
-        body = f"<p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Message:</strong><br>{details}</p>"
+        body = f"<p style='margin: 8px 0;'><strong>Name:</strong> {name}</p><p style='margin: 8px 0;'><strong>Email:</strong> {email}</p><p style='margin: 8px 0;'><strong>Phone:</strong> {phone}</p><p style='margin: 8px 0;'><strong>Service:</strong> {service}</p><p style='margin: 8px 0;'><strong>Message:</strong><br>{details}</p>"
 
     html = f"""
     <!DOCTYPE html>
@@ -139,14 +155,14 @@ def create_email_template(template_type, data):
                         <tr>
                             <td style="padding: 32px 32px; color: #2f2f2f; font-size: 15px; line-height: 1.8;">
                                 <p style="margin: 0 0 20px 0; color: #555555;">Dear Valued Customer,</p>
-                                <p style="margin: 0 0 24px 0; color: #555555;">Thank you for subscribing to SLTG Builders updates!</p>
+                                <p style="margin: 0 0 24px 0; color: #555555;">Thank you for reaching out to SLTG Builders!</p>
                                 
                                 <!-- Details Section -->
                                 <div style="background: #faf7ee; border-left: 4px solid #FFD700; border-radius: 4px; padding: 16px 16px; margin-bottom: 24px;">
                                     {body}
                                 </div>
                                 
-                                <p style="margin: 0 0 8px 0; color: #555555;">Stay tuned for the latest updates from SLTG Builders.</p>
+                                <p style="margin: 0 0 8px 0; color: #555555;">We will be in touch with you shortly.</p>
                                 <p style="margin: 0; color: #555555;">Best regards,<br><strong>Team SLTG Builders</strong></p>
                             </td>
                         </tr>

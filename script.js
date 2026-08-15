@@ -565,7 +565,7 @@ document.head.appendChild(style);
 				
 				try {
 					// Send data to backend API
-					const response = await fetch('/api/submit-get-quote/', {
+					const response = await fetch('/api/submit-get-quote', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
@@ -698,7 +698,7 @@ document.head.appendChild(style);
 				
 				try {
 					// Send data to backend API
-					const response = await fetch('/api/submit-contact/', {
+					const response = await fetch('/api/submit-contact', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
@@ -769,7 +769,7 @@ document.head.appendChild(style);
 				
 				try {
 					// Send data to backend API
-					const response = await fetch('/api/submit-site-visit/', {
+					const response = await fetch('/api/submit-site-visit', {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',

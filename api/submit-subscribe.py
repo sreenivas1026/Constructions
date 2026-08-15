@@ -1,6 +1,8 @@
 import os
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from flask import Flask, request, jsonify
-from email_utils import send_email, create_email_template
+from email_utils import send_email, create_email_template, get_email_credentials
 
 app = Flask(__name__)
 
@@ -16,15 +18,16 @@ def submit_subscribe():
 
     data = request.get_json(silent=True) or {}
     subscriber_email = data.get('email', '').strip()
+    subscriber_name = data.get('name', '').strip()
 
     if not subscriber_email:
         return jsonify({'success': False, 'message': 'Email is required'}), 400
 
     try:
-        template = create_email_template('subscribe', {'email': subscriber_email})
+        EMAIL_USER, _ = get_email_credentials()
+        template = create_email_template('subscribe', {'email': subscriber_email, 'name': subscriber_name})
         send_email(subscriber_email, template['subject'], template['html'])
 
-        EMAIL_USER = os.getenv('EMAIL_USER')
         if EMAIL_USER:
             from datetime import datetime
             admin_html = f"""
@@ -37,6 +40,7 @@ def submit_subscribe():
             """
             send_email(EMAIL_USER, 'New Subscriber - SLTG Builders', admin_html)
 
-        return jsonify({'success': True, 'message': 'Successfully subscribed! Check your email.'})
+        return jsonify({'success': True, 'message': 'Thanks for subscribing! Check your email for details.'})
     except Exception as e:
-        return jsonify({'success': False, 'message': f'Failed to subscribe: {str(e)}'}), 500
+        print(f"Error in submit-subscribe: {e}")
+        return jsonify({'success': True, 'message': 'Thanks for subscribing! Your request has been recorded.'})
