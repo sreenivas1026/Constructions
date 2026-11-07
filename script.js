@@ -98,37 +98,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const studioViews = {
     elevation: {
-      src: '/images/Elevation.png',
+      src: 'images/Elevation.png',
       title: 'Contemporary Italian Elevation — 133 Sq Yards East Facing',
       desc: 'High-grade natural stone cladding, warm profile groove lighting, and 100% Vastu-compliant structural symmetry.'
     },
     living: {
-      src: '/images/Hall.png',
+      src: 'images/Hall.png',
       title: 'Grand Living Hall & Ambient Atrium',
       desc: '800x1600mm glazed vitrified tiles, designer cove LED false ceiling, and optimized natural cross-ventilation.'
     },
     kitchen: {
-      src: '/images/Kitchen_aa.png',
+      src: 'images/Kitchen_aa.png',
       title: "Chef's Ergonomic Modular Kitchen",
       desc: 'Quartz stone countertop, soft-close Blum/Hettich hardware, anti-stain acrylic shutters, and concealed chimney ducting.'
     },
     bedroom: {
-      src: '/images/BR.png',
+      src: 'images/BR.png',
       title: 'Master Bedroom Suite & Acoustic Sanctuary',
       desc: 'Custom upholstered headboard panel, integrated sliding wardrobe, and warm ambient temperature architectural lighting.'
     },
     paint: {
-      src: '/images/wall_paint.png',
+      src: 'images/wall_paint.png',
       title: 'Asian Paints Royale Silk Standards',
       desc: '3-coat anti-fungal acrylic putty base, Teflon surface protection, and silk luster finish for lifetime washability.'
     },
     hallplan: {
-      src: '/images/Hall_top.png',
+      src: 'images/Hall_top.png',
       title: '3D Spatial Blueprint — Living & Dining Circulation',
       desc: 'Spacious seating zoning, unobstructed passageways, and open-plan transition to the dining and kitchen areas.'
     },
     bedroomplan: {
-      src: '/images/BR_top.png',
+      src: 'images/BR_top.png',
       title: '3D Spatial Blueprint — Master Suite & Walk-in Dressing',
       desc: '100% Vastu-aligned master bed orientation with private dressing alcove and attached premium bath.'
     }

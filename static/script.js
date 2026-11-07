@@ -1,7 +1,7 @@
 /**
  * SLTG BUILDERS — TOP-TIER ARCHITECTURAL CLIENT ENGINE
- * Studio 3D Spatial Viewer, Fintech-Grade Cost Estimator,
- * Dynamic 15-Day VIP Scheduler & Asynchronous Lead Vault.
+ * Draggable Before/After Slider, Studio 3D Spatial Viewer,
+ * Fintech Cost & Loan EMI Estimator, and VIP Concierge Booking.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -38,6 +38,57 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // -------------------------------------------------------------
+  // Interactive Draggable Before & After Slider
+  // -------------------------------------------------------------
+  const baContainer = document.getElementById('baContainer');
+  const baAfter = document.getElementById('baAfter');
+  const baHandle = document.getElementById('baHandle');
+
+  if (baContainer && baAfter && baHandle) {
+    let isDragging = false;
+
+    function setSliderPosition(x) {
+      const rect = baContainer.getBoundingClientRect();
+      let offsetX = x - rect.left;
+      if (offsetX < 0) offsetX = 0;
+      if (offsetX > rect.width) offsetX = rect.width;
+
+      const percentage = (offsetX / rect.width) * 100;
+      baAfter.style.width = `${percentage}%`;
+      baHandle.style.left = `${percentage}%`;
+    }
+
+    baContainer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      setSliderPosition(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      setSliderPosition(e.clientX);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch Support
+    baContainer.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      setSliderPosition(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      setSliderPosition(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+    });
+  }
+
+  // -------------------------------------------------------------
   // Luxury Studio 3D Spatial Viewer (Interactive Carousel)
   // -------------------------------------------------------------
   const stageImg = document.getElementById('studioStageImg');
@@ -47,37 +98,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const studioViews = {
     elevation: {
-      src: '/images/Elevation.png',
+      src: 'images/Elevation.png',
       title: 'Contemporary Italian Elevation — 133 Sq Yards East Facing',
       desc: 'High-grade natural stone cladding, warm profile groove lighting, and 100% Vastu-compliant structural symmetry.'
     },
     living: {
-      src: '/images/Hall.png',
+      src: 'images/Hall.png',
       title: 'Grand Living Hall & Ambient Atrium',
       desc: '800x1600mm glazed vitrified tiles, designer cove LED false ceiling, and optimized natural cross-ventilation.'
     },
     kitchen: {
-      src: '/images/Kitchen_aa.png',
+      src: 'images/Kitchen_aa.png',
       title: "Chef's Ergonomic Modular Kitchen",
       desc: 'Quartz stone countertop, soft-close Blum/Hettich hardware, anti-stain acrylic shutters, and concealed chimney ducting.'
     },
     bedroom: {
-      src: '/images/BR.png',
+      src: 'images/BR.png',
       title: 'Master Bedroom Suite & Acoustic Sanctuary',
       desc: 'Custom upholstered headboard panel, integrated sliding wardrobe, and warm ambient temperature architectural lighting.'
     },
     paint: {
-      src: '/images/wall_paint.png',
+      src: 'images/wall_paint.png',
       title: 'Asian Paints Royale Silk Standards',
       desc: '3-coat anti-fungal acrylic putty base, Teflon surface protection, and silk luster finish for lifetime washability.'
     },
     hallplan: {
-      src: '/images/Hall_top.png',
+      src: 'images/Hall_top.png',
       title: '3D Spatial Blueprint — Living & Dining Circulation',
       desc: 'Spacious seating zoning, unobstructed passageways, and open-plan transition to the dining and kitchen areas.'
     },
     bedroomplan: {
-      src: '/images/BR_top.png',
+      src: 'images/BR_top.png',
       title: '3D Spatial Blueprint — Master Suite & Walk-in Dressing',
       desc: '100% Vastu-aligned master bed orientation with private dressing alcove and attached premium bath.'
     }
@@ -106,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // -------------------------------------------------------------
-  // Fintech-Grade Real-Time Construction Cost Estimator
+  // Fintech-Grade Real-Time Construction Cost & EMI Estimator
   // -------------------------------------------------------------
   const plotYardsInput = document.getElementById('calcPlotYards');
   const plotYardsVal = document.getElementById('calcPlotVal');
@@ -119,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const calcServicesCost = document.getElementById('calcServicesCost');
   const calcFinishingCost = document.getElementById('calcFinishingCost');
   const calcDurationBadge = document.getElementById('calcDurationBadge');
+  const calcEmiVal = document.getElementById('calcEmiVal');
   const lockEstimateBtn = document.getElementById('lockEstimateBtn');
 
   let currentTierRate = 2250; // Prestige Build default
@@ -131,11 +183,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const yards = parseInt(plotYardsInput.value, 10) || 133;
     if (plotYardsVal) plotYardsVal.textContent = `${yards} Sq. Yards (${yards * 9} sq.ft)`;
 
+    // Built-up calculation based on plot coverage (68% ground coverage + floors)
     const groundBuiltUp = Math.round(yards * 9 * 0.68);
     const totalBuiltUpSqFt = groundBuiltUp * currentFloors;
 
     const baseConstructionCost = totalBuiltUpSqFt * currentTierRate;
 
+    // Addons
     let addonsTotal = 0;
     addonChecks.forEach(ch => {
       if (ch.checked) {
@@ -145,19 +199,32 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const totalEstimate = baseConstructionCost + addonsTotal;
 
+    // Cost Breakdown percentages (Civil 52%, Services 20%, Finishing 28%)
     const civil = Math.round(totalEstimate * 0.52);
     const services = Math.round(totalEstimate * 0.20);
     const finishing = totalEstimate - civil - services;
 
+    // Format in INR Lakhs / Crores
     if (calcTotalPrice) calcTotalPrice.textContent = formatINR(totalEstimate);
     if (calcCivilCost) calcCivilCost.textContent = formatINR(civil);
     if (calcServicesCost) calcServicesCost.textContent = formatINR(services);
     if (calcFinishingCost) calcFinishingCost.textContent = formatINR(finishing);
 
+    // Duration calculation
     let months = 5 + (currentFloors * 1.5);
     if (yards > 250) months += 1;
     if (calcDurationBadge) {
       calcDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Handover: ${Math.round(months)} Months`;
+    }
+
+    // Monthly EMI Calculation at 8.5% interest, 80% loan amount, 20 years tenure
+    const loanPrincipal = totalEstimate * 0.80;
+    const monthlyRate = 0.085 / 12;
+    const monthsTenure = 20 * 12;
+    const emi = (loanPrincipal * monthlyRate * Math.pow(1 + monthlyRate, monthsTenure)) / (Math.pow(1 + monthlyRate, monthsTenure) - 1);
+
+    if (calcEmiVal) {
+      calcEmiVal.textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')} / mo`;
     }
   }
 
