@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   
-  <title>SLTG Builders — Architectural Monograph & Turnkey Contracting</title>
-  <meta name="description" content="SLTG Builders — Premier Turnkey Contracting, Owned Luxury Duplexes, and Verified Real Estate Advisory in Hyderabad. 11+ years of architectural excellence and 40+ contracts delivered.">
-  <meta name="theme-color" content="#fcfbfa">
+  <title>SLTG Builders — Dominant Architectural Monograph &amp; 3D Spatial Studio</title>
+  <meta name="description" content="SLTG Builders — Dominant Turnkey Contracting, Owned Luxury Duplexes, and Verified Real Estate Advisory in Hyderabad. 11+ years of architectural excellence, 40+ delivered contracts, and immersive 3D spatial engineering.">
+  <meta name="theme-color" content="#090b10">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SLTG Builders — Structures of Permanence">
-  <meta property="og:description" content="We shape your dreams into real living spaces with trust, quality engineering, and on-time delivery.">
+  <meta property="og:title" content="SLTG Builders — Structures of Permanence | 3D Spatial Architecture">
+  <meta property="og:description" content="We shape your dreams into real living spaces with trust, quality engineering, and 100% on-time delivery.">
   <meta property="og:image" content="images/Elevation.png">
 
   <!-- Favicon -->
@@ -28,8 +28,27 @@
   
   <!-- Master Architectural Stylesheet -->
   <link rel="stylesheet" href="style.css">
+
+  <!-- Three.js 3D Engine & Animation Dependencies (Local with CDN Fallback) -->
+  <script src="libs/three.min.js"></script>
+  <script src="libs/OrbitControls.js"></script>
+  <script src="libs/gsap.min.js"></script>
+  <script>
+    // Fallback to CDN if local files are blocked or absent
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
+    }
+    if (typeof gsap === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"><\/script>');
+    }
+  </script>
 </head>
-<body>
+<body class="dominant-theme">
+
+  <!-- Architectural Crosshair Cursor -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
 
   <!-- =====================================================================
        EDITORIAL NAVIGATION HEADER
@@ -50,7 +69,7 @@
         <a href="#about" class="nav-link-editorial">About</a>
         <a href="#capabilities" class="nav-link-editorial">Capabilities</a>
         <a href="#flow" class="nav-link-editorial">Our Flow</a>
-        <a href="#works" class="nav-link-editorial">Works</a>
+        <a href="#works" class="nav-link-editorial">3D Studio &amp; Works</a>
         <a href="#planner" class="nav-link-editorial">Scope Planner</a>
         <a href="#contact" class="nav-link-editorial">Contact</a>
       </nav>
@@ -71,7 +90,7 @@
   </header>
 
   <!-- =====================================================================
-       HERO SECTION — ARCHITECTURAL MONOGRAPH
+       HERO SECTION — DOMINANT 3D ARCHITECTURAL MONOGRAPH
        ===================================================================== -->
   <section class="hero-editorial" id="home">
     <div class="container">
@@ -86,7 +105,7 @@
           </div>
           <h1 class="hero-main-title">
             Structures of <span class="serif-italic">Permanence.</span><br>
-            Crafting Spaces with <span class="text-bronze">Stillness &amp; Form.</span>
+            Spatial Forms <span class="text-bronze">Engineered in 3D.</span>
           </h1>
         </div>
         <div class="hero-meta-aside">
@@ -97,20 +116,67 @@
         </div>
       </div>
 
-      <!-- Hero Artwork Stage -->
-      <div class="hero-stage-frame">
-        <img src="images/Elevation.png" alt="SLTG East-Facing Luxury Duplex Elevation">
-        <div class="hero-stage-overlay">
-          <div class="hero-stage-meta">
-            <h3>East-Facing Luxury Duplex</h3>
-            <p>133 Sq. Yards &middot; 2,400 Sq.Ft Built-Up &middot; G+1 Architectural Masterpiece</p>
+      <!-- Live Three.js 3D Architectural Viewport -->
+      <div class="three-viewport-wrapper">
+        <div id="threeViewport"></div>
+
+        <!-- 3D Top Telemetry HUD -->
+        <div class="three-hud-top">
+          <div class="hud-chip">
+            <span class="live-dot"></span>
+            <span>Live 3D Spatial Model &middot; East-Facing Duplex</span>
           </div>
-          <div class="hero-stage-actions">
-            <button class="btn btn-ink btn-sm" data-open-visit>
-              <i class="fas fa-calendar-alt"></i> Private Site Walk
+          <div class="hud-telemetry">
+            <span class="hud-data-badge" id="threeAzimuth">AZ: 42&deg;</span>
+            <span class="hud-data-badge" id="threeFps">60 FPS</span>
+            <span class="hud-data-badge">133 SQ. YDS &middot; G+1</span>
+          </div>
+        </div>
+
+        <!-- 3D Spatial Hotspots Overlay -->
+        <div id="threeHotspotsOverlay"></div>
+
+        <!-- 3D Floating Feature Detail Card -->
+        <div id="threeHudDetail"></div>
+
+        <!-- 3D Bottom Floating Control Bar -->
+        <div class="three-hud-controls">
+          <!-- Lighting Presets -->
+          <div class="hud-btn-group">
+            <button type="button" class="three-hud-btn active" data-lighting="day" onclick="set3DLighting('day')" title="Daylight Lighting">
+              <i class="fas fa-sun"></i> <span>Day</span>
             </button>
-            <button class="btn btn-ghost btn-sm" style="color: #ffffff; border-color: rgba(255, 255, 255, 0.4); background: rgba(0, 0, 0, 0.35);" data-play-video data-src="static/videos/Video_Generation_Complete.mp4" data-title="East-Facing Duplex — 3D Spatial Walkthrough">
-              <i class="fas fa-play"></i> Watch Walkthrough
+            <button type="button" class="three-hud-btn" data-lighting="golden" onclick="set3DLighting('golden')" title="Golden Hour Lighting">
+              <i class="fas fa-cloud-sun"></i> <span>Dusk</span>
+            </button>
+            <button type="button" class="three-hud-btn" data-lighting="night" onclick="set3DLighting('night')" title="Night Illumination">
+              <i class="fas fa-moon"></i> <span>Night</span>
+            </button>
+          </div>
+
+          <!-- Camera Perspectives -->
+          <div class="hud-btn-group">
+            <button type="button" class="three-hud-btn active" data-preset="iso" onclick="set3DViewPreset('iso')" title="3D Isometric Perspective">
+              <i class="fas fa-cube"></i> <span>3D Orbit</span>
+            </button>
+            <button type="button" class="three-hud-btn" data-preset="front" onclick="set3DViewPreset('front')" title="Front Architectural Elevation">
+              <i class="fas fa-arrows-alt-h"></i> <span>Elevation</span>
+            </button>
+            <button type="button" class="three-hud-btn" data-preset="top" onclick="set3DViewPreset('top')" title="Top Floor Plan Blueprint">
+              <i class="fas fa-th-large"></i> <span>Floor Plan</span>
+            </button>
+          </div>
+
+          <!-- Structural Toolset -->
+          <div class="hud-btn-group">
+            <button type="button" class="three-hud-btn" id="btnExploded" onclick="toggle3DExploded()" title="Exploded Structural View">
+              <i class="fas fa-layer-group"></i> <span>Exploded View</span>
+            </button>
+            <button type="button" class="three-hud-btn" id="btnWireframe" onclick="toggle3DWireframe()" title="Structural Fe550D Wireframe Mode">
+              <i class="fas fa-vector-square"></i> <span>X-Ray Wireframe</span>
+            </button>
+            <button type="button" class="three-hud-btn" onclick="reset3DCamera()" title="Reset Camera">
+              <i class="fas fa-undo"></i>
             </button>
           </div>
         </div>
@@ -324,98 +390,144 @@
   </section>
 
   <!-- =====================================================================
-       WORKS SHOWCASE & SPATIAL GALLERY
+       SELECTED WORKS & 3D ARCHITECTURAL STUDIO
        ===================================================================== -->
   <section class="section section-bone" id="works">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">04 / Selected Works</div>
+        <div class="section-index-badge">04 / Selected Works &middot; 3D Studio</div>
         <h2 class="section-title-editorial">East-Facing Luxury Duplex Architectural Gallery.</h2>
         <p class="section-subtitle-editorial">
-          Explore our signature 133 Sq. Yards duplex development across all spatial elevations and floor plans.
+          Explore our signature 133 Sq. Yards duplex development across spatial elevations, interior perspectives, and floor plans.
         </p>
       </div>
 
-      <div class="works-editorial-layout">
-        <!-- Info Column -->
-        <div class="works-info-panel">
-          <span class="works-badge">Signature Living &middot; Ready for Move-In</span>
-          <h3 class="works-project-title">The East-Facing Duplex Monograph</h3>
-          <p class="works-project-desc">
-            A refined residence balancing contemporary geometry with natural daylight. Built with Fe550D TMT reinforcement, double-height living spaces, teak main entrance, and premium Italian-styled vitrified surfaces.
-          </p>
+      <!-- Studio Mode Selector -->
+      <div class="studio-tab-bar">
+        <button type="button" class="studio-tab-btn active" data-tab="tabPhotos">
+          <i class="fas fa-camera"></i> <span>Photographic Monograph (7 Perspectives)</span>
+        </button>
+        <button type="button" class="studio-tab-btn" data-tab="tabVideoDoc">
+          <i class="fas fa-video"></i> <span>On-Site Construction Documentary</span>
+        </button>
+      </div>
 
-          <div class="works-specs-grid">
-            <div class="spec-line">
-              <span class="spec-line-label">Plot Area</span>
-              <span class="spec-line-val">133 Sq. Yards</span>
-            </div>
-            <div class="spec-line">
-              <span class="spec-line-label">Built-Up Area</span>
-              <span class="spec-line-val">2,400 Sq.Ft (G+1)</span>
-            </div>
-            <div class="spec-line">
-              <span class="spec-line-label">Orientation</span>
-              <span class="spec-line-val">100% East Facing Vaastu</span>
-            </div>
-            <div class="spec-line">
-              <span class="spec-line-label">Sanction Status</span>
-              <span class="spec-line-val">Clear HMDA Approved</span>
-            </div>
-          </div>
+      <!-- Tab 1: Photographic Studio Carousel -->
+      <div class="studio-tab-content active" id="tabPhotos">
+        <div class="works-editorial-layout">
+          <!-- Info Column -->
+          <div class="works-info-panel">
+            <span class="works-badge">Signature Living &middot; Ready for Move-In</span>
+            <h3 class="works-project-title">The East-Facing Duplex Monograph</h3>
+            <p class="works-project-desc">
+              A refined residence balancing contemporary geometry with natural daylight. Built with Fe550D TMT reinforcement, double-height living spaces, teak main entrance, and premium Italian-styled vitrified surfaces.
+            </p>
 
-          <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-            <button class="btn btn-ink" data-open-visit>
-              <i class="fas fa-calendar-check"></i> Schedule Site Visit
-            </button>
-            <button class="btn btn-ghost" data-play-video data-src="static/videos/Video_Generation_Complete.mp4" data-title="East-Facing Duplex — 3D Spatial Walkthrough">
-              <i class="fas fa-play"></i> Watch Walkthrough
-            </button>
-          </div>
-        </div>
-
-        <!-- Interactive 7-View Spatial Viewer -->
-        <div>
-          <div class="studio-stage-frame">
-            <img id="studioStageImg" class="studio-stage-img" src="images/Elevation.png" alt="East-Facing Luxury Duplex Elevation">
-            <div class="studio-stage-caption">
-              <div>
-                <h4 id="studioInfoTitle" class="studio-info-title">Contemporary Italian Elevation — 133 Sq Yards East Facing</h4>
-                <p id="studioInfoDesc" class="studio-info-desc">High-grade natural stone cladding, warm profile groove lighting, and 100% Vastu-compliant structural symmetry.</p>
+            <div class="works-specs-grid">
+              <div class="spec-line">
+                <span class="spec-line-label">Plot Area</span>
+                <span class="spec-line-val">133 Sq. Yards</span>
+              </div>
+              <div class="spec-line">
+                <span class="spec-line-label">Built-Up Area</span>
+                <span class="spec-line-val">2,400 Sq.Ft (G+1)</span>
+              </div>
+              <div class="spec-line">
+                <span class="spec-line-label">Orientation</span>
+                <span class="spec-line-val">100% East Facing Vaastu</span>
+              </div>
+              <div class="spec-line">
+                <span class="spec-line-label">Sanction Status</span>
+                <span class="spec-line-val">Clear HMDA Approved</span>
               </div>
             </div>
+
+            <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+              <button class="btn btn-ink" data-open-visit>
+                <i class="fas fa-calendar-check"></i> Schedule Site Visit
+              </button>
+              <button class="btn btn-ghost" data-play-video data-src="static/videos/Video_Generation_Complete.mp4" data-title="East-Facing Duplex — 3D Spatial Walkthrough">
+                <i class="fas fa-play"></i> Watch Walkthrough
+              </button>
+            </div>
           </div>
 
-          <!-- Thumbnails Row -->
-          <div class="studio-thumbs-row">
-            <button type="button" class="studio-thumb-btn active" data-view="elevation">
-              <img src="images/Elevation.png" alt="Elevation">
-              <span class="studio-thumb-label">Elevation</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="living">
-              <img src="images/Hall.png" alt="Living Hall">
-              <span class="studio-thumb-label">Living Hall</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="kitchen">
-              <img src="images/Kitchen_aa.png" alt="Kitchen">
-              <span class="studio-thumb-label">Kitchen</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="bedroom">
-              <img src="images/BR.png" alt="Master Suite">
-              <span class="studio-thumb-label">Master Suite</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="paint">
-              <img src="images/wall_paint.png" alt="Finishes">
-              <span class="studio-thumb-label">Finishes</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="hallplan">
-              <img src="images/Hall_top.png" alt="Plan: Living">
-              <span class="studio-thumb-label">Plan: Living</span>
-            </button>
-            <button type="button" class="studio-thumb-btn" data-view="bedroomplan">
-              <img src="images/BR_top.png" alt="Plan: Suite">
-              <span class="studio-thumb-label">Plan: Suite</span>
-            </button>
+          <!-- Interactive 7-View Spatial Viewer -->
+          <div>
+            <div class="studio-stage-frame">
+              <img id="studioStageImg" class="studio-stage-img" src="images/Elevation.png" alt="East-Facing Luxury Duplex Elevation">
+              <div class="studio-stage-caption">
+                <div>
+                  <h4 id="studioInfoTitle" class="studio-info-title">Contemporary Italian Elevation — 133 Sq Yards East Facing</h4>
+                  <p id="studioInfoDesc" class="studio-info-desc">High-grade natural stone cladding, warm profile groove lighting, and 100% Vastu-compliant structural symmetry.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Thumbnails Row -->
+            <div class="studio-thumbs-row">
+              <button type="button" class="studio-thumb-btn active" data-view="elevation">
+                <img src="images/Elevation.png" alt="Elevation">
+                <span class="studio-thumb-label">Elevation</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="living">
+                <img src="images/Hall.png" alt="Living Hall">
+                <span class="studio-thumb-label">Living Hall</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="kitchen">
+                <img src="images/Kitchen_aa.png" alt="Kitchen">
+                <span class="studio-thumb-label">Kitchen</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="bedroom">
+                <img src="images/BR.png" alt="Master Suite">
+                <span class="studio-thumb-label">Master Suite</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="paint">
+                <img src="images/wall_paint.png" alt="Finishes">
+                <span class="studio-thumb-label">Finishes</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="hallplan">
+                <img src="images/Hall_top.png" alt="Plan: Living">
+                <span class="studio-thumb-label">Plan: Living</span>
+              </button>
+              <button type="button" class="studio-thumb-btn" data-view="bedroomplan">
+                <img src="images/BR_top.png" alt="Plan: Suite">
+                <span class="studio-thumb-label">Plan: Suite</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: On-Site Construction Video Walkthrough -->
+      <div class="studio-tab-content" id="tabVideoDoc">
+        <div class="video-documentary-grid">
+          <div class="video-doc-card">
+            <div class="video-doc-wrapper">
+              <video controls playsinline preload="metadata">
+                <source src="static/videos/Video_Generation_Complete.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="video-doc-meta">
+              <h3 class="video-doc-title">East-Facing Duplex — 3D Spatial Walkthrough</h3>
+              <p class="video-doc-desc">
+                Comprehensive virtual tour of our 133 Sq. Yards luxury duplex, detailing the light wells, high ceilings, and double-height living areas.
+              </p>
+            </div>
+          </div>
+
+          <div class="video-doc-card">
+            <div class="video-doc-wrapper">
+              <video controls playsinline preload="metadata">
+                <source src="static/videos/Concrete_Slab_Construction_Video_Ready.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="video-doc-meta">
+              <h3 class="video-doc-title">On-Site Structural Concrete &amp; Framing</h3>
+              <p class="video-doc-desc">
+                Live documentary of RCC beam and column casting with rigorous vibrator consolidation and curing standards on our client contracting sites.
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -597,59 +709,12 @@
   </section>
 
   <!-- =====================================================================
-       VIDEO DOCUMENTATION GRID
-       ===================================================================== -->
-  <section class="section section-bone" id="videos">
-    <div class="container">
-      <div class="section-header-editorial">
-        <div class="section-index-badge">06 / Documentation</div>
-        <h2 class="section-title-editorial">Engineering On-Site Documentaries.</h2>
-        <p class="section-subtitle-editorial">
-          Watch our actual on-site structural works, concrete pours, and finished spatial walkthroughs.
-        </p>
-      </div>
-
-      <div class="video-documentary-grid">
-        <!-- Video 01 -->
-        <div class="video-doc-card">
-          <div class="video-doc-wrapper">
-            <video controls playsinline preload="metadata">
-              <source src="static/videos/Video_Generation_Complete.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="video-doc-meta">
-            <h3 class="video-doc-title">East-Facing Duplex — 3D Spatial Walkthrough</h3>
-            <p class="video-doc-desc">
-              Comprehensive virtual tour of our 133 Sq. Yards luxury duplex, detailing the light wells, high ceilings, and double-height living areas.
-            </p>
-          </div>
-        </div>
-
-        <!-- Video 02 -->
-        <div class="video-doc-card">
-          <div class="video-doc-wrapper">
-            <video controls playsinline preload="metadata">
-              <source src="static/videos/Concrete_Slab_Construction_Video_Ready.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="video-doc-meta">
-            <h3 class="video-doc-title">On-Site Structural Concrete &amp; Framing</h3>
-            <p class="video-doc-desc">
-              Documentary of live RCC beam and column casting with rigorous vibrator consolidation and curing standards on our client contracting sites.
-            </p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =====================================================================
        15-DAY VISIT SCHEDULER & INQUIRY SECTION
        ===================================================================== -->
   <section class="section section-pure" id="contact">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">07 / Private Consultation</div>
+        <div class="section-index-badge">06 / Private Consultation</div>
         <h2 class="section-title-editorial">Schedule a Private Architectural Walk.</h2>
         <p class="section-subtitle-editorial">
           Select a convenient date from the next 15 days or reach out directly for plot advisory and turnkey contracting consultations.
@@ -776,7 +841,7 @@
   <section class="section section-bone" id="faq">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">08 / Clarity &amp; Protocol</div>
+        <div class="section-index-badge">07 / Clarity &amp; Protocol</div>
         <h2 class="section-title-editorial">Frequently Asked Questions.</h2>
         <p class="section-subtitle-editorial">
           Transparent answers to common queries regarding contracting, timelines, and site visits.
@@ -898,7 +963,7 @@
             <li><a href="#about">About SLTG</a></li>
             <li><a href="#capabilities">The Three Pillars</a></li>
             <li><a href="#flow">Contracting Flow</a></li>
-            <li><a href="#works">Selected Works</a></li>
+            <li><a href="#works">3D Studio &amp; Works</a></li>
             <li><a href="#planner">Scope Planner</a></li>
             <li><a href="#contact">Private Site Walk</a></li>
           </ul>
@@ -1074,6 +1139,9 @@
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
+
+  <!-- 3D Architectural Engine -->
+  <script src="three_engine.js"></script>
 
   <!-- Master Architectural Client Engine -->
   <script src="script.js"></script>

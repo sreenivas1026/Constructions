@@ -507,4 +507,60 @@ document.addEventListener('DOMContentLoaded', function () {
 
   const yearSpan = document.getElementById('footerYear');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+  // -------------------------------------------------------------
+  // Studio Mode Switcher (Monograph / Video Documentary)
+  // -------------------------------------------------------------
+  document.querySelectorAll('.studio-tab-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.studio-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.studio-tab-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      const targetId = this.dataset.tab;
+      const target = document.getElementById(targetId);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // -------------------------------------------------------------
+  // Architectural Crosshair Cursor Tracking
+  // -------------------------------------------------------------
+  const cursorDot = document.getElementById('cursorDot');
+  const cursorRing = document.getElementById('cursorRing');
+  if (cursorDot && cursorRing) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursorDot.style.left = ${mouseX}px;
+      cursorDot.style.top = ${mouseY}px;
+    }, { passive: true });
+
+    function renderCursor() {
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
+      cursorRing.style.left = ${ringX}px;
+      cursorRing.style.top = ${ringY}px;
+      requestAnimationFrame(renderCursor);
+    }
+    renderCursor();
+
+    const hoverSelectors = 'a, button, .hotspot-marker, .tier-btn, .floor-btn, .three-hud-btn, .studio-tab-btn, .studio-thumb-btn';
+    document.querySelectorAll(hoverSelectors).forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursorRing.style.width = '50px';
+        cursorRing.style.height = '50px';
+        cursorRing.style.borderColor = '#c5a059';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursorRing.style.width = '36px';
+        cursorRing.style.height = '36px';
+        cursorRing.style.borderColor = 'rgba(197, 160, 89, 0.6)';
+      });
+    });
+  }
 });
