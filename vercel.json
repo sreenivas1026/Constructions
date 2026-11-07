@@ -10,6 +10,14 @@
       "use": "@vercel/static"
     },
     {
+      "src": "style.css",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "script.js",
+      "use": "@vercel/static"
+    },
+    {
       "src": "static/**",
       "use": "@vercel/static"
     },
@@ -34,6 +42,14 @@
     {
       "src": "/api/submit-subscribe/?",
       "dest": "/api/submit-subscribe.py"
+    },
+    {
+      "src": "/style.css",
+      "dest": "/style.css"
+    },
+    {
+      "src": "/script.js",
+      "dest": "/script.js"
     },
     {
       "src": "/static/(.*)",

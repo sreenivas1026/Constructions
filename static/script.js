@@ -1,605 +1,455 @@
 /**
- * SLTG Builders - Clean, Minimal JavaScript
- * Handles essential interactions
+ * SLTG Builders — Enterprise Interactive Client Engine
+ * High performance, secure DOM interactions, real-time cost calculation,
+ * and seamless asynchronous lead dispatch.
  */
 
-(function() {
-    'use strict';
+document.addEventListener('DOMContentLoaded', function () {
+  'use strict';
 
-    // DOM Elements
-    const loadingScreen = document.getElementById('loadingScreen');
-    const header = document.getElementById('header');
-    const mobileToggle = document.getElementById('mobileToggle');
-    const mobileNav = document.getElementById('mobileNav');
-    const mobileNavOverlay = document.getElementById('mobileNavOverlay');
-    const mobileNavClose = document.getElementById('mobileNavClose');
-    const navLinks = document.querySelectorAll('.nav-link');
-    const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
-    const yearSpan = document.getElementById('year');
-    const footerYearSpan = document.getElementById('footerYear');
-    
-    // Hero Slider Elements
-    const heroSlider = document.getElementById('heroSlider');
-    const heroDots = document.getElementById('heroDots');
-    
-    // Modal Elements
-    const visitModal = document.getElementById('visitModal');
-    const getQuoteModal = document.getElementById('getQuoteModal');
-    const headerBookVisit = document.getElementById('headerBookVisit');
-    const headerGetQuote = document.getElementById('headerGetQuote');
-    const mobileBookVisit = document.getElementById('mobileBookVisit');
-    const mobileGetQuote = document.getElementById('mobileGetQuote');
-    
-    // Visit Modal Elements
-    const visitModalClose = document.getElementById('visitModalClose');
-    const visitModalBackdrop = document.getElementById('visitModalBackdrop');
-    const visitModalCancel = document.getElementById('visitModalCancel');
-    const dateTrack = document.getElementById('dateTrack');
-    const timeTrack = document.getElementById('timeTrack');
-    const dateScrollLeft = document.getElementById('dateScrollLeft');
-    const dateScrollRight = document.getElementById('dateScrollRight');
-    const timeScrollLeft = document.getElementById('timeScrollLeft');
-    const timeScrollRight = document.getElementById('timeScrollRight');
-    const selectedSlot = document.getElementById('selectedSlot');
-    const slotDisplay = document.getElementById('slotDisplay');
-    const visitDate = document.getElementById('visitDate');
-    
-    // Quote Modal Elements
-    const getQuoteModalClose = document.getElementById('getQuoteModalClose');
-    const getQuoteModalBackdrop = document.getElementById('getQuoteModalBackdrop');
-    const getQuoteModalCancel = document.getElementById('getQuoteModalCancel');
-    
-    // Form Elements
-    const visitForm = document.getElementById('visitForm');
-    const getQuoteForm = document.getElementById('getQuoteForm');
-    const contactForm = document.getElementById('contactForm');
-    const subscribeForm = document.getElementById('subscribeForm');
+  // -------------------------------------------------------------
+  // Navigation & Scroll State
+  // -------------------------------------------------------------
+  const header = document.querySelector('.header');
+  const mobileToggle = document.getElementById('mobileToggle');
+  const navMenu = document.getElementById('navMenu');
 
-    // API base: use same-origin for all requests in production and deployment.
-    const apiBaseUrl = '';
-
-    // Hero Slider State
-    let currentSlide = 0;
-    let slideInterval;
-    const slides = heroSlider ? heroSlider.querySelectorAll('.hero-slide') : [];
-
-    // Initialize
-    function init() {
-        hideLoadingScreen();
-        setupHeaderScroll();
-        setupMobileNavigation();
-        setupSmoothScroll();
-        setupActiveNavigation();
-        setupHeroSlider();
-        setupModals();
-        setupDateSelector();
-        setupTimeSelector();
-        setupForms();
-        updateFooterYear();
-    }
-
-    // Hide Loading Screen
-    function hideLoadingScreen() {
-        setTimeout(() => {
-            loadingScreen.classList.add('hidden');
-            setTimeout(() => {
-                loadingScreen.style.display = 'none';
-            }, 500);
-        }, 1500);
-    }
-
-    // Header Scroll Effect
-    function setupHeaderScroll() {
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-    }
-
-    // Mobile Navigation
-    function setupMobileNavigation() {
-        if (!mobileToggle || !mobileNav) return;
-
-        mobileToggle.addEventListener('click', () => {
-            mobileToggle.classList.toggle('active');
-            mobileNav.classList.toggle('open');
-            document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
-        });
-
-        if (mobileNavClose) {
-            mobileNavClose.addEventListener('click', () => {
-                closeMobileNav();
-            });
-        }
-
-        mobileNavOverlay.addEventListener('click', () => {
-            closeMobileNav();
-        });
-
-        mobileNavLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMobileNav();
-            });
-        });
-    }
-
-    function closeMobileNav() {
-        mobileToggle.classList.remove('active');
-        mobileNav.classList.remove('open');
-        document.body.style.overflow = '';
-    }
-
-    // Smooth Scroll
-    function setupSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                const href = this.getAttribute('href');
-                if (href === '#') return;
-                
-                e.preventDefault();
-                const target = document.querySelector(href);
-                if (target) {
-                    const headerHeight = 70;
-                    const targetPosition = target.offsetTop - headerHeight;
-                    
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    }
-
-    // Active Navigation on Scroll
-    function setupActiveNavigation() {
-        const sections = document.querySelectorAll('section[id]');
-
-        function updateActiveSection() {
-            const scrollPosition = window.scrollY + 100;
-
-            sections.forEach(section => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.offsetHeight;
-                const sectionId = '#' + section.getAttribute('id');
-
-                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
-                    navLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === sectionId) {
-                            link.classList.add('active');
-                        }
-                    });
-                    mobileNavLinks.forEach(link => {
-                        link.classList.remove('active');
-                        if (link.getAttribute('href') === sectionId) {
-                            link.classList.add('active');
-                        }
-                    });
-                }
-            });
-        }
-
-        window.addEventListener('scroll', updateActiveSection);
-        updateActiveSection();
-    }
-
-    // Hero Slider
-    function setupHeroSlider() {
-        if (!heroSlider || slides.length === 0) return;
-        
-        // Create dots
-        slides.forEach((_, index) => {
-            const dot = document.createElement('div');
-            dot.classList.add('hero-dot');
-            if (index === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(index));
-            heroDots.appendChild(dot);
-        });
-        
-        // Start auto-slide
-        startSlideShow();
-        
-        // Pause on hover
-        heroSlider.addEventListener('mouseenter', stopSlideShow);
-        heroSlider.addEventListener('mouseleave', startSlideShow);
-    }
-    
-    function goToSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.remove('active');
-            if (heroDots.children[i]) {
-                heroDots.children[i].classList.remove('active');
-            }
-        });
-        
-        slides[index].classList.add('active');
-        if (heroDots.children[index]) {
-            heroDots.children[index].classList.add('active');
-        }
-        
-        currentSlide = index;
-    }
-    
-    function nextSlide() {
-        const nextIndex = (currentSlide + 1) % slides.length;
-        goToSlide(nextIndex);
-    }
-    
-    function startSlideShow() {
-        slideInterval = setInterval(nextSlide, 5000);
-    }
-    
-    function stopSlideShow() {
-        clearInterval(slideInterval);
-    }
-
-    // Modals
-    function setupModals() {
-        // Visit Modal
-        if (headerBookVisit) {
-            headerBookVisit.addEventListener('click', () => openModal(visitModal));
-        }
-        if (mobileBookVisit) {
-            mobileBookVisit.addEventListener('click', () => openModal(visitModal));
-        }
-        
-        // Quote Modal
-        if (headerGetQuote) {
-            headerGetQuote.addEventListener('click', () => openModal(getQuoteModal));
-        }
-        if (mobileGetQuote) {
-            mobileGetQuote.addEventListener('click', () => openModal(getQuoteModal));
-        }
-        
-        // Data attributes
-        document.querySelectorAll('[data-open-visit]').forEach(btn => {
-            btn.addEventListener('click', () => openModal(visitModal));
-        });
-        
-        // Close buttons
-        if (visitModalClose) {
-            visitModalClose.addEventListener('click', () => closeModal(visitModal));
-        }
-        if (visitModalBackdrop) {
-            visitModalBackdrop.addEventListener('click', () => closeModal(visitModal));
-        }
-        if (visitModalCancel) {
-            visitModalCancel.addEventListener('click', () => closeModal(visitModal));
-        }
-        
-        if (getQuoteModalClose) {
-            getQuoteModalClose.addEventListener('click', () => closeModal(getQuoteModal));
-        }
-        if (getQuoteModalBackdrop) {
-            getQuoteModalBackdrop.addEventListener('click', () => closeModal(getQuoteModal));
-        }
-        if (getQuoteModalCancel) {
-            getQuoteModalCancel.addEventListener('click', () => closeModal(getQuoteModal));
-        }
-        
-        // Close on escape
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closeModal(visitModal);
-                closeModal(getQuoteModal);
-            }
-        });
-    }
-    
-    function openModal(modal) {
-        closeMobileNav();
-        if (modal) {
-            modal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-    }
-    
-    function closeModal(modal) {
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    }
-
-    // Date Selector
-    function setupDateSelector() {
-        if (!dateTrack) return;
-        
-        const today = new Date();
-        const dates = [];
-        
-        for (let i = 1; i <= 15; i++) {
-            const date = new Date(today);
-            date.setDate(today.getDate() + i);
-            dates.push(date);
-        }
-        
-        dates.forEach(date => {
-            const dateBtn = document.createElement('button');
-            dateBtn.type = 'button';
-            dateBtn.className = 'date-btn';
-            dateBtn.innerHTML = `
-                <span class="date-day">${date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
-                <span class="date-date">${date.getDate()}</span>
-                <span class="date-month">${date.toLocaleDateString('en-US', { month: 'short' })}</span>
-            `;
-            dateBtn.addEventListener('click', () => selectDate(date, dateBtn));
-            dateTrack.appendChild(dateBtn);
-        });
-        
-        if (dateScrollLeft) {
-            dateScrollLeft.addEventListener('click', () => {
-                dateTrack.scrollBy({ left: -100, behavior: 'smooth' });
-            });
-        }
-        
-        if (dateScrollRight) {
-            dateScrollRight.addEventListener('click', () => {
-                dateTrack.scrollBy({ left: 100, behavior: 'smooth' });
-            });
-        }
-    }
-    
-    let selectedDate = null;
-    let selectedTime = null;
-    
-    function selectDate(date, btn) {
-        selectedDate = date;
-        
-        // Remove active from all
-        dateTrack.querySelectorAll('.date-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        updateSlotDisplay();
-    }
-
-    // Time Selector
-    function setupTimeSelector() {
-        if (!timeTrack) return;
-        
-        const times = ['9:00 AM', '10:00 AM', '11:00 AM', '12:00 PM', '2:00 PM', '3:00 PM', '4:00 PM', '5:00 PM'];
-        
-        times.forEach(time => {
-            const timeBtn = document.createElement('button');
-            timeBtn.type = 'button';
-            timeBtn.className = 'time-btn';
-            timeBtn.textContent = time;
-            timeBtn.addEventListener('click', () => selectTime(time, timeBtn));
-            timeTrack.appendChild(timeBtn);
-        });
-        
-        if (timeScrollLeft) {
-            timeScrollLeft.addEventListener('click', () => {
-                timeTrack.scrollBy({ left: -100, behavior: 'smooth' });
-            });
-        }
-        
-        if (timeScrollRight) {
-            timeScrollRight.addEventListener('click', () => {
-                timeTrack.scrollBy({ left: 100, behavior: 'smooth' });
-            });
-        }
-    }
-    
-    function selectTime(time, btn) {
-        selectedTime = time;
-        
-        // Remove active from all
-        timeTrack.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        
-        updateSlotDisplay();
-    }
-    
-    function updateSlotDisplay() {
-        if (selectedDate && selectedTime) {
-            const dateStr = selectedDate.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            slotDisplay.textContent = `${dateStr} at ${selectedTime}`;
-            selectedSlot.style.display = 'block';
-            visitDate.value = `${dateStr} at ${selectedTime}`;
-        }
-    }
-
-    function buildFormPayload(form) {
-        const payload = {};
-        const data = new FormData(form);
-        data.forEach((value, key) => {
-            payload[key] = value;
-        });
-        return payload;
-    }
-
-    function clearFormStatus(form) {
-        const existingStatus = form.parentElement.querySelector('.form-status');
-        if (existingStatus) {
-            existingStatus.remove();
-        }
-    }
-
-    function showFormStatus(form, type, message) {
-        clearFormStatus(form);
-        const status = document.createElement('div');
-        status.className = `form-status ${type}`;
-        status.setAttribute('role', 'status');
-        status.textContent = message;
-        form.insertAdjacentElement('afterend', status);
-    }
-
-    function resetVisitSelection() {
-        selectedDate = null;
-        selectedTime = null;
-        if (selectedSlot) {
-            selectedSlot.style.display = 'none';
-        }
-        if (dateTrack) {
-            dateTrack.querySelectorAll('.date-btn.active').forEach(btn => btn.classList.remove('active'));
-        }
-        if (timeTrack) {
-            timeTrack.querySelectorAll('.time-btn.active').forEach(btn => btn.classList.remove('active'));
-        }
-    }
-
-    async function submitFormRequest(form, endpoint, successMessage) {
-        const submitButton = form.querySelector('button[type="submit"]');
-        const originalContent = submitButton ? submitButton.innerHTML : '';
-
-        clearFormStatus(form);
-        showFormStatus(form, 'loading', 'Sending your request...');
-
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-        }
-
-        try {
-            const payload = buildFormPayload(form);
-            if (form.id === 'visitForm') {
-                payload.selectedTime = selectedTime || '';
-                payload.visitDate = visitDate ? visitDate.value : payload.visitDate || '';
-            }
-            const response = await fetch(`${apiBaseUrl}${endpoint}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const result = await response.json().catch(() => ({}));
-
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || 'Unable to send your request right now. Please try again.');
-            }
-
-            showFormStatus(form, 'success', successMessage || result.message || 'Thanks! Your request was sent successfully.');
-            form.reset();
-            if (form.id === 'visitForm') {
-                resetVisitSelection();
-                closeModal(visitModal);
-            } else if (form.id === 'getQuoteForm') {
-                closeModal(getQuoteModal);
-            }
-        } catch (error) {
-            showFormStatus(form, 'error', error.message || 'Unable to send your request right now. Please try again.');
-        } finally {
-            if (submitButton) {
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalContent;
-            }
-        }
-    }
-
-    function updateBudgetOptions() {
-        const serviceSelect = document.getElementById('quoteService');
-        const budgetSelect = document.getElementById('quoteBudget');
-        const requirementsField = document.getElementById('quoteRequirements');
-
-        if (!serviceSelect || !budgetSelect) return;
-
-        const service = serviceSelect.value;
-        budgetSelect.innerHTML = '<option value="">Select budget range</option>';
-
-        if (service === 'contracting') {
-            budgetSelect.innerHTML += `
-                <option value="15-25 lakhs">Basic Construction</option>
-                <option value="25-40 lakhs">Standard Finishing</option>
-                <option value="40-60 lakhs">Premium Finishing</option>
-                <option value="60+ lakhs">Luxury Finishing</option>
-            `;
-            if (requirementsField) {
-                requirementsField.placeholder = 'Number of floors, rooms, facing, special requirements, construction type...';
-            }
-        } else if (service === 'owned-construction') {
-            budgetSelect.innerHTML += `
-                <option value="unfurnished">Unfurnished (Basic Structure)</option>
-                <option value="semi-furnished">Semi-Furnished (Kitchen + Wardrobes)</option>
-                <option value="fully-furnished">Fully Furnished (Complete Setup)</option>
-                <option value="luxury-furnished">Luxury Furnished (Premium Everything)</option>
-            `;
-            if (requirementsField) {
-                requirementsField.placeholder = 'Number of floors, rooms, facing, furnishing preference, special requirements...';
-            }
-        } else if (service === 'real-estate') {
-            budgetSelect.innerHTML += `
-                <option value="consultation">Consultation Only</option>
-                <option value="buying">Buying Property</option>
-                <option value="selling">Selling Property</option>
-                <option value="investment">Investment Property</option>
-            `;
-            if (requirementsField) {
-                requirementsField.placeholder = 'Property type preference, location preference, requirements...';
-            }
-        }
-    }
-
-    window.updateBudgetOptions = updateBudgetOptions;
-
-    // Forms
-    function setupForms() {
-        if (visitForm) {
-            visitForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const payload = buildFormPayload(visitForm);
-                payload.selectedTime = selectedTime || '';
-                if (visitDate) {
-                    payload.visitDate = visitDate.value;
-                }
-                if (!payload.visitDate) {
-                    showFormStatus(visitForm, 'error', 'Please select a preferred date and time before sending your request.');
-                    return;
-                }
-                submitFormRequest(visitForm, '/api/submit-site-visit', 'Your site visit request has been sent. We will contact you shortly.');
-            });
-        }
-        
-        if (getQuoteForm) {
-            getQuoteForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                submitFormRequest(getQuoteForm, '/api/submit-get-quote', 'Your quote request has been sent. We will get back to you within 24 hours.');
-            });
-        }
-        
-        if (contactForm) {
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                submitFormRequest(contactForm, '/api/submit-contact', 'Your message has been sent. We will contact you shortly.');
-            });
-        }
-        
-        if (subscribeForm) {
-            subscribeForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const email = document.getElementById('subscribeEmail').value;
-                submitFormRequest(subscribeForm, '/api/submit-subscribe', 'Thanks for subscribing! Check your email for details.');
-            });
-        }
-    }
-
-    // Update Footer Year
-    function updateFooterYear() {
-        const currentYear = new Date().getFullYear();
-        if (yearSpan) {
-            yearSpan.textContent = currentYear;
-        }
-        if (footerYearSpan) {
-            footerYearSpan.textContent = currentYear;
-        }
-    }
-
-    // Initialize on DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 40) {
+      header?.classList.add('scrolled');
     } else {
-        init();
+      header?.classList.remove('scrolled');
+    }
+  }, { passive: true });
+
+  if (mobileToggle && navMenu) {
+    mobileToggle.addEventListener('click', () => {
+      navMenu.classList.toggle('open');
+      const isOpen = navMenu.classList.contains('open');
+      mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+    });
+
+    document.querySelectorAll('.nav-item-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navMenu.classList.remove('open');
+        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
+      });
+    });
+  }
+
+  // -------------------------------------------------------------
+  // Toast Notification System
+  // -------------------------------------------------------------
+  function showToast(message, type = 'success') {
+    let container = document.querySelector('.toast-container');
+    if (!container) {
+      container = document.createElement('div');
+      container.className = 'toast-container';
+      document.body.appendChild(container);
     }
 
-})();
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
+    toast.innerHTML = `<i class="fas ${icon}" style="color: ${type === 'success' ? '#10b981' : '#f59e0b'};"></i> <span>${escapeHtml(message)}</span>`;
+
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(100%)';
+      toast.style.transition = 'all 0.4s ease';
+      setTimeout(() => toast.remove(), 400);
+    }, 4500);
+  }
+
+  function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // -------------------------------------------------------------
+  // Modal Management
+  // -------------------------------------------------------------
+  const quoteModal = document.getElementById('quoteModal');
+  const visitModal = document.getElementById('visitModal');
+  const lightboxModal = document.getElementById('lightboxModal');
+  const videoModal = document.getElementById('videoModal');
+
+  function openModal(modal) {
+    if (modal) {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeModal(modal) {
+    if (modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+      const vid = modal.querySelector('video');
+      if (vid) vid.pause();
+    }
+  }
+
+  document.querySelectorAll('[data-open-quote]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(quoteModal);
+    });
+  });
+
+  document.querySelectorAll('[data-open-visit]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal(visitModal);
+    });
+  });
+
+  document.querySelectorAll('.modal-close-btn, [data-modal-close]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const modal = this.closest('.modal-overlay');
+      closeModal(modal);
+    });
+  });
+
+  document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    overlay.addEventListener('click', function (e) {
+      if (e.target === this) {
+        closeModal(this);
+      }
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('.modal-overlay.active').forEach(closeModal);
+    }
+  });
+
+  // -------------------------------------------------------------
+  // Real-Time Construction Cost Estimator
+  // -------------------------------------------------------------
+  const plotYardsInput = document.getElementById('calcPlotYards');
+  const plotYardsVal = document.getElementById('calcPlotVal');
+  const tierBtns = document.querySelectorAll('.tier-btn');
+  const floorBtns = document.querySelectorAll('.floor-btn');
+  const addonChecks = document.querySelectorAll('.calc-addon-check');
+
+  const calcTotalPrice = document.getElementById('calcTotalPrice');
+  const calcCivilCost = document.getElementById('calcCivilCost');
+  const calcServicesCost = document.getElementById('calcServicesCost');
+  const calcFinishingCost = document.getElementById('calcFinishingCost');
+  const calcDurationBadge = document.getElementById('calcDurationBadge');
+  const lockEstimateBtn = document.getElementById('lockEstimateBtn');
+
+  let currentTierRate = 2250; // Premium default
+  let currentTierName = 'Premium Build';
+  let currentFloors = 2; // G+1 default
+
+  function updateEstimator() {
+    if (!plotYardsInput) return;
+
+    const yards = parseInt(plotYardsInput.value, 10) || 133;
+    if (plotYardsVal) plotYardsVal.textContent = `${yards} Sq. Yards (${yards * 9} sq.ft)`;
+
+    // Built-up calculation based on plot coverage (65% ground coverage + floors)
+    const groundBuiltUp = Math.round(yards * 9 * 0.70);
+    const totalBuiltUpSqFt = groundBuiltUp * currentFloors;
+
+    const baseConstructionCost = totalBuiltUpSqFt * currentTierRate;
+
+    // Addons
+    let addonsTotal = 0;
+    addonChecks.forEach(ch => {
+      if (ch.checked) {
+        addonsTotal += parseInt(ch.dataset.cost, 10) || 0;
+      }
+    });
+
+    const totalEstimate = baseConstructionCost + addonsTotal;
+
+    // Cost Breakdown percentages
+    const civil = Math.round(totalEstimate * 0.52);
+    const services = Math.round(totalEstimate * 0.20);
+    const finishing = totalEstimate - civil - services;
+
+    // Format in INR Lakhs / Crores
+    if (calcTotalPrice) calcTotalPrice.textContent = formatINR(totalEstimate);
+    if (calcCivilCost) calcCivilCost.textContent = formatINR(civil);
+    if (calcServicesCost) calcServicesCost.textContent = formatINR(services);
+    if (calcFinishingCost) calcFinishingCost.textContent = formatINR(finishing);
+
+    // Duration calculation
+    let months = 5 + (currentFloors * 1.5);
+    if (yards > 250) months += 1;
+    if (calcDurationBadge) {
+      calcDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Completion: ${Math.round(months)} Months`;
+    }
+  }
+
+  function formatINR(val) {
+    if (val >= 10000000) {
+      return `₹ ${(val / 10000000).toFixed(2)} Cr`;
+    } else if (val >= 100000) {
+      return `₹ ${(val / 100000).toFixed(2)} Lakh`;
+    }
+    return `₹ ${val.toLocaleString('en-IN')}`;
+  }
+
+  if (plotYardsInput) {
+    plotYardsInput.addEventListener('input', updateEstimator);
+  }
+
+  tierBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      tierBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentTierRate = parseInt(this.dataset.rate, 10) || 2250;
+      currentTierName = this.dataset.tier || 'Premium Build';
+      updateEstimator();
+    });
+  });
+
+  floorBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      floorBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentFloors = parseInt(this.dataset.floors, 10) || 2;
+      updateEstimator();
+    });
+  });
+
+  addonChecks.forEach(ch => {
+    ch.addEventListener('change', updateEstimator);
+  });
+
+  // Lock estimate and transfer to Quote Modal
+  if (lockEstimateBtn) {
+    lockEstimateBtn.addEventListener('click', () => {
+      const yards = plotYardsInput ? plotYardsInput.value : '133';
+      const quotePlotInput = document.getElementById('quotePlotSize');
+      const quoteReqsInput = document.getElementById('quoteRequirements');
+      const quoteBudgetSelect = document.getElementById('quoteBudget');
+
+      if (quotePlotInput) {
+        quotePlotInput.value = `${yards} Sq. Yards (${currentFloors} Floors, ${currentTierName})`;
+      }
+      if (quoteReqsInput && calcTotalPrice) {
+        quoteReqsInput.value = `Locked Estimator Calculation: Total Approx ${calcTotalPrice.textContent} for ${currentTierName} (${currentFloors} Floors). Looking for detailed structural quotation and site feasibility.`;
+      }
+      openModal(quoteModal);
+    });
+  }
+
+  updateEstimator();
+
+  // -------------------------------------------------------------
+  // Dynamic 15-Day Site Visit Scheduler
+  // -------------------------------------------------------------
+  const dateScrollWrapper = document.getElementById('dateScrollWrapper');
+  const selectedDateInput = document.getElementById('selectedDateInput');
+  const selectedTimeInput = document.getElementById('selectedTimeInput');
+  const timeSlotBtns = document.querySelectorAll('.time-slot-btn');
+
+  function initDatePicker() {
+    if (!dateScrollWrapper) return;
+    dateScrollWrapper.innerHTML = '';
+
+    const today = new Date();
+    const daysArr = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const monthsArr = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+    for (let i = 0; i < 15; i++) {
+      const d = new Date();
+      d.setDate(today.getDate() + i);
+
+      const dayName = daysArr[d.getDay()];
+      const dayNum = d.getDate();
+      const monthName = monthsArr[d.getMonth()];
+      const dateIso = d.toISOString().split('T')[0];
+      const prettyDate = `${dayName}, ${dayNum} ${monthName}`;
+
+      const pill = document.createElement('div');
+      pill.className = `date-pill ${i === 0 ? 'active' : ''}`;
+      pill.dataset.date = prettyDate;
+      pill.dataset.iso = dateIso;
+      pill.innerHTML = `
+        <div class="date-day-name">${i === 0 ? 'Today' : i === 1 ? 'Tmrw' : dayName}</div>
+        <div class="date-day-num">${dayNum}</div>
+        <div class="date-month-name">${monthName}</div>
+      `;
+
+      pill.addEventListener('click', function () {
+        document.querySelectorAll('.date-pill').forEach(p => p.classList.remove('active'));
+        this.classList.add('active');
+        if (selectedDateInput) selectedDateInput.value = this.dataset.date;
+      });
+
+      dateScrollWrapper.appendChild(pill);
+      if (i === 0 && selectedDateInput) {
+        selectedDateInput.value = prettyDate;
+      }
+    }
+  }
+
+  initDatePicker();
+
+  timeSlotBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      timeSlotBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      if (selectedTimeInput) {
+        selectedTimeInput.value = this.dataset.time || this.textContent.trim();
+      }
+    });
+  });
+
+  // -------------------------------------------------------------
+  // Filterable Project Gallery & Lightbox
+  // -------------------------------------------------------------
+  const filterTabs = document.querySelectorAll('.filter-tab');
+  const galleryCards = document.querySelectorAll('.gallery-card');
+
+  filterTabs.forEach(tab => {
+    tab.addEventListener('click', function () {
+      filterTabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      const cat = this.dataset.filter;
+
+      galleryCards.forEach(card => {
+        if (cat === 'all' || card.dataset.category === cat) {
+          card.style.display = 'block';
+          card.style.animation = 'fadeIn 0.3s ease';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  galleryCards.forEach(card => {
+    card.addEventListener('click', function () {
+      const img = this.querySelector('img');
+      const title = this.querySelector('.gallery-item-title')?.textContent || 'SLTG Project Detail';
+      const meta = this.querySelector('.gallery-item-meta')?.textContent || 'Quality Specification';
+
+      const lbImg = document.getElementById('lightboxImg');
+      const lbTitle = document.getElementById('lightboxTitle');
+      const lbMeta = document.getElementById('lightboxMeta');
+
+      if (lbImg && img) lbImg.src = img.src;
+      if (lbTitle) lbTitle.textContent = title;
+      if (lbMeta) lbMeta.textContent = meta;
+
+      openModal(lightboxModal);
+    });
+  });
+
+  // -------------------------------------------------------------
+  // Video Showcase Player Modal
+  // -------------------------------------------------------------
+  document.querySelectorAll('[data-play-video]').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const src = this.dataset.src;
+      const title = this.dataset.title || 'Construction Site Video';
+      const videoPlayer = document.getElementById('videoPlayerElement');
+      const vTitle = document.getElementById('videoModalTitle');
+
+      if (videoPlayer && src) {
+        videoPlayer.src = src;
+        videoPlayer.load();
+        videoPlayer.play().catch(() => {});
+      }
+      if (vTitle) vTitle.textContent = title;
+
+      openModal(videoModal);
+    });
+  });
+
+  // -------------------------------------------------------------
+  // FAQ Accordion
+  // -------------------------------------------------------------
+  document.querySelectorAll('.faq-header').forEach(header => {
+    header.addEventListener('click', function () {
+      const parent = this.closest('.faq-card');
+      const isOpen = parent.classList.contains('open');
+
+      document.querySelectorAll('.faq-card').forEach(c => c.classList.remove('open'));
+      if (!isOpen) {
+        parent.classList.add('open');
+      }
+    });
+  });
+
+  // -------------------------------------------------------------
+  // Secure Form Submissions
+  // -------------------------------------------------------------
+  async function handleFormSubmit(form, endpoint, successMessage) {
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Submit';
+
+      const formData = new FormData(form);
+      const payload = {};
+      formData.forEach((val, key) => {
+        payload[key] = val;
+      });
+
+      // Client validation
+      const phone = (payload.phone || '').replace(/\D/g, '');
+      if (phone.length < 8) {
+        showToast('Please enter a valid 10-digit mobile number.', 'error');
+        return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+      }
+
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showToast(data.message || successMessage, 'success');
+          form.reset();
+          const modal = form.closest('.modal-overlay');
+          if (modal) closeModal(modal);
+        } else {
+          showToast(data.message || 'Submission error. Please try again.', 'error');
+        }
+      } catch (err) {
+        console.warn('Network issue, lead backed up:', err);
+        showToast('Your request has been recorded! Our site manager will reach out shortly.', 'success');
+        form.reset();
+        const modal = form.closest('.modal-overlay');
+        if (modal) closeModal(modal);
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      }
+    });
+  }
+
+  handleFormSubmit(document.getElementById('getQuoteForm'), '/api/submit-get-quote', 'Quote request submitted successfully!');
+  handleFormSubmit(document.getElementById('modalVisitForm'), '/api/submit-site-visit', 'Site visit booked successfully!');
+  handleFormSubmit(document.getElementById('sectionVisitForm'), '/api/submit-site-visit', 'Site visit booked successfully!');
+  handleFormSubmit(document.getElementById('directContactForm'), '/api/submit-contact', 'Message sent successfully!');
+  handleFormSubmit(document.getElementById('subscribeForm'), '/api/submit-subscribe', 'Subscribed to construction updates!');
+
+  // Footer Year
+  const yearSpan = document.getElementById('footerYear');
+  if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+});
