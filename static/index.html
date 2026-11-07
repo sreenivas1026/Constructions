@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   
-  <title>SLTG Builders — Architectural Monograph &amp; 3D Spatial Studio</title>
-  <meta name="description" content="SLTG Builders — Turnkey Contracting, Custom Residences, Luxury Villas, and Professional Spaces across Hyderabad. 11+ years pedigree, 40+ delivered contracts, and immersive 3D architectural engineering.">
-  <meta name="theme-color" content="#fbfaf8">
+  <title>SLTG Builders — Contracting &middot; Constructions &middot; Real Estate</title>
+  <meta name="description" content="SLTG Builders — Premier Turnkey Contracting, Custom Residences, Luxury Villas, and Professional Workspaces across Hyderabad. 11+ years pedigree, 40+ delivered contracts, and 100% on-time handover.">
+  <meta name="theme-color" content="#fcfbfa">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="SLTG Builders — Structures of Permanence | 3D Spatial Architecture">
-  <meta property="og:description" content="We shape your dreams into real living spaces with trust, quality engineering, and 100% on-time delivery.">
+  <meta property="og:title" content="SLTG Builders — Structures of Permanence">
+  <meta property="og:description" content="We shape your dreams into real living spaces with trust, quality engineering, and on-time delivery.">
   <meta property="og:image" content="images/Elevation.png">
 
   <!-- Favicon -->
@@ -28,43 +28,36 @@
   
   <!-- Master Architectural Stylesheet -->
   <link rel="stylesheet" href="style.css">
-
-  <!-- Three.js 3D Engine & Animation Dependencies (Local with CDN Fallback) -->
-  <script src="libs/three.min.js"></script>
-  <script src="libs/OrbitControls.js"></script>
-  <script src="libs/gsap.min.js"></script>
-  <script>
-    if (typeof THREE === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
-      document.write('<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"><\/script>');
-    }
-    if (typeof gsap === 'undefined') {
-      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"><\/script>');
-    }
-  </script>
 </head>
 <body class="theme-sky-white">
 
-  <!-- Architectural Crosshair Cursor -->
-  <div class="cursor-dot" id="cursorDot"></div>
-  <div class="cursor-ring" id="cursorRing"></div>
-
   <!-- =====================================================================
-       EDITORIAL NAVIGATION HEADER (DICE 4-DOTS TRIGGER)
+       MASTER NAVIGATION HEADER
        ===================================================================== -->
   <header class="header" id="header">
     <div class="container nav-container">
       <!-- Brand Wordmark -->
       <a href="#home" class="brand-wrapper" aria-label="SLTG Builders — Home">
-        <img src="images/SLTG Logo.png" alt="SLTG Builders Monogram" class="brand-logo-img">
+        <img src="images/SLTG Logo.png" alt="SLTG Builders Logo" class="brand-logo-img">
         <div class="brand-meta-block">
           <span class="brand-wordmark">SLTG BUILDERS</span>
           <span class="brand-caption">Contracting &middot; Constructions &middot; Real Estate</span>
         </div>
       </a>
 
-      <!-- Header Action Cluster -->
-      <div class="nav-cluster">
+      <!-- Clean Horizontal Desktop Navigation -->
+      <nav class="nav-menu" id="navMenu" aria-label="Primary Navigation">
+        <a href="#home" class="nav-item-link active">Home</a>
+        <a href="#about" class="nav-item-link">About</a>
+        <a href="#packages" class="nav-item-link">Packages &amp; Scope</a>
+        <a href="#flow" class="nav-item-link">Our Flow</a>
+        <a href="#studio" class="nav-item-link">3D Studio</a>
+        <a href="#planner" class="nav-item-link">Scope Planner</a>
+        <a href="#contact" class="nav-item-link">Contact</a>
+      </nav>
+
+      <!-- Action Cluster -->
+      <div class="nav-actions">
         <!-- Dual Theme Switcher (Sky White / Black Night) -->
         <button type="button" class="theme-switch-btn" id="themeSwitchBtn" aria-label="Toggle Sky White / Black Night Theme" title="Toggle Sky White / Black Night Theme">
           <i class="fas fa-moon" id="themeIcon"></i>
@@ -75,83 +68,16 @@
           <i class="fas fa-calendar-check"></i> Book Site Walk
         </button>
 
-        <!-- 4-Dots Dice Rotating Animated Menu Trigger -->
-        <button type="button" class="dice-menu-trigger" id="diceMenuBtn" aria-label="Open Architectural Monograph Menu" title="Open Navigation Menu">
-          <div class="dice-grid">
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-            <span class="dice-dot"></span>
-          </div>
+        <!-- Mobile Navigation Toggle -->
+        <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Toggle Mobile Navigation">
+          <i class="fas fa-bars"></i>
         </button>
       </div>
     </div>
   </header>
 
   <!-- =====================================================================
-       WAVY SWINGING RIGHT DRAWER MENU (DESKTOP & MOBILE)
-       ===================================================================== -->
-  <div class="wavy-drawer-overlay" id="wavyDrawerOverlay"></div>
-  <aside class="wavy-drawer-panel" id="wavyDrawerPanel" aria-label="Architectural Navigation Drawer">
-    <div class="drawer-header">
-      <div>
-        <span class="brand-wordmark" style="font-size: 22px;">SLTG BUILDERS</span>
-        <span class="brand-caption" style="display: block;">Architectural Monograph</span>
-      </div>
-      <button type="button" class="drawer-close-btn" id="drawerCloseBtn" aria-label="Close Menu">&times;</button>
-    </div>
-
-    <!-- Main Navigation Links -->
-    <ul class="drawer-nav-list">
-      <li class="drawer-nav-item">
-        <a href="#home"><span class="drawer-idx">01</span> 3D Virtual Tour</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#about"><span class="drawer-idx">02</span> Philosophy &amp; Pedigree</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#capabilities"><span class="drawer-idx">03</span> Custom Homes, Villas &amp; Spaces</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#flow"><span class="drawer-idx">04</span> 4-Phase Delivery Flow</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#works"><span class="drawer-idx">05</span> Architectural Studio</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#planner"><span class="drawer-idx">06</span> Project Scope Planner</a>
-      </li>
-      <li class="drawer-nav-item">
-        <a href="#contact"><span class="drawer-idx">07</span> Private Site Walk &amp; Consultation</a>
-      </li>
-    </ul>
-
-    <!-- Quick 3D Room Jump Shortcuts -->
-    <div class="drawer-room-jumps">
-      <span class="drawer-jumps-label">Fly Directly Into 3D Spaces</span>
-      <div class="drawer-jumps-grid">
-        <button type="button" class="drawer-room-btn" data-room-idx="0">01 Facade</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="1">02 Entrance</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="2">03 Living Hall</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="3">04 Kitchen &amp; Dining</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="4">05 Staircase</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="5">06 Master Suite</button>
-        <button type="button" class="drawer-room-btn" data-room-idx="6">07 Sunset Balcony</button>
-      </div>
-    </div>
-
-    <!-- Direct Contact in Drawer -->
-    <div style="margin-top: auto; padding-top: 32px; border-top: 1px solid var(--hairline);">
-      <p style="font-size: 13px; color: var(--ink-muted); margin-bottom: 8px;">Direct Architectural Desk</p>
-      <a href="tel:+919390247365" style="font-family: var(--font-serif); font-size: 20px; color: var(--ink-primary); display: block; margin-bottom: 12px;">+91 93902 47365</a>
-      <a href="https://wa.me/919390247365" target="_blank" rel="noopener" class="btn btn-ink btn-sm" style="width: 100%;">
-        <i class="fab fa-whatsapp"></i> Chat on WhatsApp
-      </a>
-    </div>
-  </aside>
-
-  <!-- =====================================================================
-       HERO SECTION — 3D INTERIOR & EXTERIOR FLYTHROUGH VIEWPORT
+       HERO SECTION — ARCHITECTURAL SHOWCASE
        ===================================================================== -->
   <section class="hero-editorial" id="home">
     <div class="container">
@@ -166,77 +92,33 @@
           </div>
           <h1 class="hero-main-title">
             Structures of <span class="serif-italic">Permanence.</span><br>
-            Spatial Spaces <span class="text-bronze">Engineered in 3D.</span>
+            Crafting Spaces with <span class="text-bronze">Stillness &amp; Form.</span>
           </h1>
         </div>
         <div class="hero-meta-aside">
           <p class="hero-aside-text">
-            Turnkey contracting on client land, bespoke luxury duplexes, and verified real estate guidance across Hyderabad.
+            Turnkey contracting on client land, custom independent residences, luxury villas, and verified real estate guidance across Hyderabad.
           </p>
           <span class="hero-aside-tag">100% On-Time Delivery Promise</span>
         </div>
       </div>
 
-      <!-- Live Three.js 3D Viewport with Scroll-Driven Flight -->
-      <div class="three-viewport-wrapper">
-        <div id="threeViewport"></div>
-
-        <!-- 3D Top Telemetry & Active Room HUD -->
-        <div class="three-hud-top">
-          <div class="hud-room-info">
-            <div class="hud-chip">
-              <span class="live-dot"></span>
-              <span id="threeRoomBadge">01 / Architectural Facade</span>
-            </div>
-            <div class="hud-room-desc" id="threeRoomDesc">
-              Contemporary Italian stone elevation with double-height volume and 100% Vaastu alignment. Scroll down to fly inside.
-            </div>
+      <!-- Hero Artwork Showcase Frame -->
+      <div class="hero-stage-frame">
+        <img src="images/Elevation.png" alt="SLTG Signature Luxury Duplex Architectural Elevation">
+        <div class="hero-stage-overlay">
+          <div class="hero-stage-meta">
+            <h3>Signature Luxury Duplex Residence</h3>
+            <p>Bespoke Italian Stone Elevation &middot; Double-Height Living Atrium &middot; 100% East Facing Vaastu</p>
           </div>
-          <div class="hud-telemetry">
-            <span class="hud-data-badge" id="threeAzimuth">AZ: 42&deg;</span>
-            <span class="hud-data-badge" id="threeFps">60 FPS</span>
-            <span class="hud-data-badge">3D INTERACTIVE</span>
-          </div>
-        </div>
-
-        <!-- 3D Floating Control Bar -->
-        <div class="three-hud-controls">
-          <!-- Lighting Presets -->
-          <div class="hud-btn-group">
-            <button type="button" class="three-hud-btn active" data-lighting="day" onclick="set3DLighting('day')" title="Daylight Lighting">
-              <i class="fas fa-sun"></i> <span>Day</span>
+          <div class="hero-stage-actions">
+            <button class="btn btn-ink btn-sm" data-open-visit>
+              <i class="fas fa-calendar-alt"></i> Private Site Walk
             </button>
-            <button type="button" class="three-hud-btn" data-lighting="golden" onclick="set3DLighting('golden')" title="Golden Hour Lighting">
-              <i class="fas fa-cloud-sun"></i> <span>Dusk</span>
-            </button>
-            <button type="button" class="three-hud-btn" data-lighting="night" onclick="set3DLighting('night')" title="Night Illumination">
-              <i class="fas fa-moon"></i> <span>Night</span>
+            <button class="btn btn-ghost btn-sm" style="color: #ffffff; border-color: rgba(255, 255, 255, 0.4); background: rgba(0, 0, 0, 0.4);" data-play-video data-src="static/videos/Video_Generation_Complete.mp4" data-title="Signature Duplex — 3D Spatial Walkthrough">
+              <i class="fas fa-play"></i> Watch 3D Walkthrough
             </button>
           </div>
-
-          <!-- Structural Toolset -->
-          <div class="hud-btn-group">
-            <button type="button" class="three-hud-btn" id="btnExploded" onclick="toggle3DExploded()" title="Exploded Roof & Slabs">
-              <i class="fas fa-layer-group"></i> <span>Exploded View</span>
-            </button>
-            <button type="button" class="three-hud-btn" id="btnWireframe" onclick="toggle3DWireframe()" title="Structural Fe550D Wireframe Mode">
-              <i class="fas fa-vector-square"></i> <span>X-Ray Wireframe</span>
-            </button>
-            <button type="button" class="three-hud-btn" onclick="reset3DCamera()" title="Reset Camera to Facade">
-              <i class="fas fa-undo"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- 3D Bottom Room Navigator Strip -->
-        <div class="three-room-nav-bar">
-          <button type="button" class="room-nav-pill active" data-room="room-facade" data-room-idx="0">01 Facade</button>
-          <button type="button" class="room-nav-pill" data-room="room-entrance" data-room-idx="1">02 Entrance</button>
-          <button type="button" class="room-nav-pill" data-room="room-living" data-room-idx="2">03 Living Hall</button>
-          <button type="button" class="room-nav-pill" data-room="room-kitchen" data-room-idx="3">04 Kitchen &amp; Dining</button>
-          <button type="button" class="room-nav-pill" data-room="room-stairs" data-room-idx="4">05 Staircase</button>
-          <button type="button" class="room-nav-pill" data-room="room-master" data-room-idx="5">06 Master Suite</button>
-          <button type="button" class="room-nav-pill" data-room="room-balcony" data-room-idx="6">07 Sunset Balcony</button>
         </div>
       </div>
 
@@ -330,102 +212,72 @@
   </section>
 
   <!-- =====================================================================
-       CAPABILITIES SECTION — CUSTOM HOMES, LUXURY VILLAS & SPACES
+       PACKAGES & TYPOLOGIES SECTION
        ===================================================================== -->
-  <section class="section section-bone" id="capabilities">
+  <section class="section section-bone" id="packages">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">02 / Architectural Typologies</div>
-        <h2 class="section-title-editorial">Mastery Across Custom Residences, Luxury Villas &amp; Commercial Spaces.</h2>
+        <div class="section-index-badge">02 / Building Packages &amp; Typologies</div>
+        <h2 class="section-title-editorial">Tailored Packages Across Custom Residences, Villas &amp; Commercial Spaces.</h2>
         <p class="section-subtitle-editorial">
-          We bring complete structural rigor and aesthetic distinction across independent homes, signature villa estates, and bespoke professional spaces.
+          From civil core shells to fully furnished turnkey monographs, choose the exact package that fits your build vision.
         </p>
       </div>
 
-      <div class="capabilities-grid">
-        <!-- Pillar 01: Custom Independent Residences -->
-        <div class="capability-card">
-          <span class="capability-num">01</span>
-          <h3 class="capability-title">Custom Residences</h3>
-          <p class="capability-desc">
-            Constructed on your private land with 100% material transparency, milestone-linked inspections, and fixed handover schedules.
+      <!-- Packages Grid -->
+      <div class="packages-grid">
+        <!-- Package 1: Unfurnished Core Shell -->
+        <div class="package-card">
+          <span class="package-badge">Package 01 &middot; Core Civil</span>
+          <h3 class="package-title">Unfurnished Core Shell</h3>
+          <p class="package-desc">
+            Complete structural foundation and envelope built to the highest structural standards. Perfect for clients with dedicated interior design teams.
           </p>
-          <ul class="capability-features">
-            <li>Tailored structural architectural blueprints</li>
-            <li>Primary Fe550D TMT &amp; UltraTech civil core</li>
-            <li>Daily digital progress photo logs</li>
-            <li>Unfurnished, Semi, or Fully furnished fit-outs</li>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> Primary Fe550D TMT Steel (Tata Tiscon / Jindal)</li>
+            <li><i class="fas fa-check"></i> UltraTech / ACC 53-Grade Civil Cement Foundation</li>
+            <li><i class="fas fa-check"></i> Kiln-Burnt Red Clay Brick Masonry Walls</li>
+            <li><i class="fas fa-check"></i> Multi-Coat Polymer Structural Waterproofing</li>
+            <li><i class="fas fa-check"></i> Concealed Plumbing &amp; Electrical Conduit Matrix</li>
+            <li><i class="fas fa-check"></i> Complete Municipal Sanction &amp; Structural Drawing Approval</li>
           </ul>
-          <button class="btn btn-ghost btn-sm" data-open-quote>Plan Custom Scope</button>
+          <button class="btn btn-ghost btn-sm" data-open-quote>Select Core Shell</button>
         </div>
 
-        <!-- Pillar 02: Luxury Villas & Duplexes -->
-        <div class="capability-card">
-          <span class="capability-num">02</span>
-          <h3 class="capability-title">Luxury Villa Estates</h3>
-          <p class="capability-desc">
-            High-specification duplex residences ready for move-in, designed with cross-ventilation, double-height living areas, and Vaastu harmony.
+        <!-- Package 2: Semi-Furnished Architectural (Featured) -->
+        <div class="package-card featured">
+          <span class="package-badge" style="background: var(--bronze-light); color: #080a0f;">Package 02 &middot; Most Popular</span>
+          <h3 class="package-title">Semi-Furnished Architectural</h3>
+          <p class="package-desc">
+            Everything in Core Shell PLUS essential high-specification architectural fittings, modular kitchen framework, false ceilings, and premium fixtures.
           </p>
-          <ul class="capability-features">
-            <li>East &amp; West facing prime plots</li>
-            <li>Contemporary Italian-style stone elevations</li>
-            <li>Teak wood entries &amp; vitrified surfaces</li>
-            <li>Clear HMDA / GHMC municipal sanctions</li>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> <strong>Everything included in Core Shell Package</strong></li>
+            <li><i class="fas fa-check"></i> Modular Kitchen Framework with Quartz Countertops</li>
+            <li><i class="fas fa-check"></i> Gypsum False Ceilings with Warm Cove LED Lighting</li>
+            <li><i class="fas fa-check"></i> Premium Sanitaryware &amp; CP Fittings (Jaquar / Kohler)</li>
+            <li><i class="fas fa-check"></i> Polycab FR Concealed Copper Wiring &amp; Modular Switches</li>
+            <li><i class="fas fa-check"></i> Teak Wood Main Entrance Pivot Door &amp; Vitrified Flooring</li>
           </ul>
-          <button class="btn btn-ink btn-sm" data-open-visit>Book Private Site Walk</button>
+          <button class="btn btn-ink btn-sm" data-open-quote>Select Semi-Furnished</button>
         </div>
 
-        <!-- Pillar 03: Professional & Commercial Spaces -->
-        <div class="capability-card">
-          <span class="capability-num">03</span>
-          <h3 class="capability-title">Professional Spaces</h3>
-          <p class="capability-desc">
-            Modern corporate studios, boutique clinics, and high-specification workspace structures engineered for long-term commercial performance.
+        <!-- Package 3: Fully Furnished Turnkey Monograph -->
+        <div class="package-card">
+          <span class="package-badge">Package 03 &middot; Bespoke Luxury</span>
+          <h3 class="package-title">Fully Furnished Turnkey</h3>
+          <p class="package-desc">
+            The complete move-in monograph. Fully fitted Italian-inspired modular kitchen, custom designer wardrobes, acoustic paneling, and designer lighting.
           </p>
-          <ul class="capability-features">
-            <li>High-load capacity structural framing</li>
-            <li>Acoustic double-glazed fenestration</li>
-            <li>Concealed three-phase electrical distribution</li>
-            <li>DTCP / HMDA commercial compliance</li>
+          <ul class="package-features">
+            <li><i class="fas fa-check"></i> <strong>Everything included in Semi-Furnished Package</strong></li>
+            <li><i class="fas fa-check"></i> Fully Fitted Modular Kitchen with Soft-Close Blum Hardware</li>
+            <li><i class="fas fa-check"></i> Custom Master &amp; Guest Bedroom Wardrobes with Bronze Trim</li>
+            <li><i class="fas fa-check"></i> Acoustic Bedroom Paneling &amp; Ambient Lighting Schemes</li>
+            <li><i class="fas fa-check"></i> 100% Vaastu Architectural Consultation &amp; Compliance</li>
+            <li><i class="fas fa-check"></i> Turnkey Post-Construction Deep Cleaning &amp; Key Handover</li>
           </ul>
-          <button class="btn btn-ghost btn-sm" data-open-visit>Consult Commercial Scope</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =====================================================================
-       DELIVERY TIERS STRIP — UNFURNISHED, SEMI & FULLY FURNISHED
-       ===================================================================== -->
-  <section class="section section-pure" style="padding-top: 20px;">
-    <div class="container">
-      <div style="text-align: center; margin-bottom: 44px;">
-        <span class="section-index-badge">03 / Finishing Specifications</span>
-        <h2 style="font-size: 38px;">Three Distinct Delivery Tiers.</h2>
-        <p style="font-size: 15px; color: var(--ink-secondary); max-width: 600px; margin: 12px auto 0 auto;">Choose your preferred level of architectural completion — each governed by strict quality standards.</p>
-      </div>
-
-      <div class="capabilities-grid">
-        <div class="flow-step-card">
-          <span class="step-phase-tag">Tier 01</span>
-          <h3 class="step-phase-title">Unfurnished Core</h3>
-          <p class="step-phase-desc">
-            Complete structural foundation, Fe550D TMT framing, red clay brick masonry, multi-coat waterproofing, and concealed plumbing/electrical conduits. Ideal for clients planning custom interior design.
-          </p>
-        </div>
-        <div class="flow-step-card" style="border-color: var(--bronze-light);">
-          <span class="step-phase-tag" style="color: var(--bronze-light);">Tier 02 &middot; Most Popular</span>
-          <h3 class="step-phase-title">Semi-Furnished</h3>
-          <p class="step-phase-desc">
-            Complete civil core + modular kitchen framework with quartz counters, gypsum false ceilings with warm cove LED lighting, premium sanitaryware, and master wardrobe frameworks.
-          </p>
-        </div>
-        <div class="flow-step-card">
-          <span class="step-phase-tag">Tier 03</span>
-          <h3 class="step-phase-title">Fully Furnished Turnkey</h3>
-          <p class="step-phase-desc">
-            The complete move-in monograph. Fully fitted Italian-inspired modular kitchen, custom designer wardrobes, acoustic bedroom paneling, designer lighting fixtures, and deep post-construction detailing.
-          </p>
+          <button class="btn btn-ghost btn-sm" data-open-visit>Select Turnkey Luxury</button>
         </div>
       </div>
     </div>
@@ -434,10 +286,10 @@
   <!-- =====================================================================
        OUR FLOW — CONTRACTING METHODOLOGY (4 PHASES)
        ===================================================================== -->
-  <section class="section section-bone" id="flow">
+  <section class="section section-pure" id="flow">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">04 / Methodology</div>
+        <div class="section-index-badge">03 / Methodology</div>
         <h2 class="section-title-editorial">The Architectural Delivery Flow.</h2>
         <p class="section-subtitle-editorial">
           A structured four-phase progression that eliminates uncertainty from soil test to key handover.
@@ -456,7 +308,7 @@
           <span class="step-phase-tag">Phase 02</span>
           <h3 class="step-phase-title">Classification</h3>
           <p class="step-phase-desc">
-            Finishing tier selection (Unfurnished, Semi, or Fully Furnished), structural material schedules, and clear contract finalization.
+            Package selection (Unfurnished, Semi, or Fully Furnished), structural material schedules, and clear contract finalization.
           </p>
         </div>
         <div class="flow-step-card">
@@ -478,13 +330,13 @@
   </section>
 
   <!-- =====================================================================
-       SELECTED WORKS & STUDIO (PHOTOGRAPHIC & VIDEO MONOGRAPH)
+       3D SPATIAL STUDIO & DOCUMENTATION
        ===================================================================== -->
-  <section class="section section-pure" id="works">
+  <section class="section section-bone" id="studio">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">05 / Selected Works &middot; Studio</div>
-        <h2 class="section-title-editorial">Architectural Monograph &amp; Documentation.</h2>
+        <div class="section-index-badge">04 / 3D Spatial Studio</div>
+        <h2 class="section-title-editorial">Architectural Monograph &amp; Spatial Studio.</h2>
         <p class="section-subtitle-editorial">
           Explore our signature residential developments across spatial perspectives, interior details, and live on-site construction documentaries.
         </p>
@@ -493,7 +345,7 @@
       <!-- Studio Mode Selector -->
       <div class="studio-tab-bar">
         <button type="button" class="studio-tab-btn active" data-tab="tabPhotos">
-          <i class="fas fa-camera"></i> <span>Photographic Monograph (7 Perspectives)</span>
+          <i class="fas fa-camera"></i> <span>Photographic Studio (7 Perspectives)</span>
         </button>
         <button type="button" class="studio-tab-btn" data-tab="tabVideoDoc">
           <i class="fas fa-video"></i> <span>On-Site Construction Documentary</span>
@@ -513,7 +365,7 @@
             <div class="works-specs-grid">
               <div class="spec-line">
                 <span class="spec-line-label">Typology</span>
-                <span class="spec-line-val">Luxury Duplex (G+1)</span>
+                <span class="spec-line-val">Luxury Duplex Residence</span>
               </div>
               <div class="spec-line">
                 <span class="spec-line-label">Orientation</span>
@@ -595,7 +447,7 @@
               </video>
             </div>
             <div class="video-doc-meta">
-              <h3 class="video-doc-title">East-Facing Duplex — 3D Spatial Walkthrough</h3>
+              <h3 class="video-doc-title">Signature Duplex — 3D Spatial Walkthrough</h3>
               <p class="video-doc-desc">
                 Comprehensive virtual tour of our luxury duplex, detailing the light wells, high ceilings, and double-height living areas.
               </p>
@@ -675,15 +527,15 @@
   </div>
 
   <!-- =====================================================================
-       COMPREHENSIVE SCOPE PLANNER (NO PRICE DISCLOSURE)
+       COMPREHENSIVE SCOPE PLANNER (ZERO PRICE DISCLOSURE)
        ===================================================================== -->
-  <section class="section section-bone" id="planner">
+  <section class="section section-pure" id="planner">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">06 / Requirement Blueprint</div>
+        <div class="section-index-badge">05 / Requirement Blueprint</div>
         <h2 class="section-title-editorial">Build Scope &amp; Requirement Planner.</h2>
         <p class="section-subtitle-editorial">
-          Configure your architectural typology, structural scale, and finishing specification to project your construction roadmap. Completely confidential — zero commercial figures disclosed.
+          Configure your architectural typology, structural scale, and finishing package to project your construction roadmap. Completely confidential — zero commercial figures disclosed.
         </p>
       </div>
 
@@ -712,7 +564,7 @@
 
             <!-- Finishing Tier Selector -->
             <div class="input-block">
-              <span class="input-label" style="display: block; margin-bottom: 12px;">2. Finishing Specification</span>
+              <span class="input-label" style="display: block; margin-bottom: 12px;">2. Finishing Package</span>
               <div class="quality-tier-options">
                 <div class="tier-btn" data-tier="Unfurnished Core Shell">
                   <div class="tier-title">Unfurnished</div>
@@ -733,7 +585,7 @@
             <div class="input-block">
               <span class="input-label" style="display: block; margin-bottom: 12px;">3. Elevation Scale</span>
               <div class="floors-selector">
-                <div class="floor-btn" data-floors="1" data-floors-name="G Only (Ground Floor)">Ground Only</div>
+                <div class="floor-btn" data-floors="1" data-floors-name="Ground Floor Only">Ground Only</div>
                 <div class="floor-btn active" data-floors="2" data-floors-name="G + 1 (Duplex Residence)">G + 1 (Duplex)</div>
                 <div class="floor-btn" data-floors="3" data-floors-name="G + 2 (Triplex Residence)">G + 2 (Triplex)</div>
                 <div class="floor-btn" data-floors="4" data-floors-name="G + 3 (Multi-Level Structure)">G + 3 (Multi-Level)</div>
@@ -811,10 +663,10 @@
   <!-- =====================================================================
        15-DAY VISIT SCHEDULER & INQUIRY SECTION
        ===================================================================== -->
-  <section class="section section-pure" id="contact">
+  <section class="section section-bone" id="contact">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">07 / Private Consultation</div>
+        <div class="section-index-badge">06 / Private Consultation</div>
         <h2 class="section-title-editorial">Schedule a Private Architectural Walk.</h2>
         <p class="section-subtitle-editorial">
           Select a convenient date from the next 15 days or reach out directly for custom build advisory and site walk appointments.
@@ -939,10 +791,10 @@
   <!-- =====================================================================
        FAQ ACCORDION
        ===================================================================== -->
-  <section class="section section-bone" id="faq">
+  <section class="section section-pure" id="faq">
     <div class="container">
       <div class="section-header-editorial">
-        <div class="section-index-badge">08 / Clarity &amp; Protocol</div>
+        <div class="section-index-badge">07 / Clarity &amp; Protocol</div>
         <h2 class="section-title-editorial">Frequently Asked Questions.</h2>
         <p class="section-subtitle-editorial">
           Transparent answers to common queries regarding contracting, timelines, and site visits.
@@ -957,7 +809,7 @@
           </div>
           <div class="faq-body">
             <p class="faq-answer">
-              We construct custom independent homes on client land, bespoke luxury villas and duplexes, and professional/commercial workspaces. We deliver projects across Unfurnished (Core Shell), Semi-Furnished, and Fully Furnished Turnkey tiers according to client requirements.
+              We construct custom independent homes on client land, bespoke luxury villas and duplexes, and professional/commercial workspaces. We deliver projects across Unfurnished (Core Shell), Semi-Furnished, and Fully Furnished Turnkey packages according to client requirements.
             </p>
           </div>
         </div>
@@ -1041,7 +893,7 @@
             </div>
           </div>
           <p class="footer-about-p">
-            Architectural contracting, bespoke luxury duplex developments, and certified real estate advisory in Hyderabad since 2013. We deal in your happiness.
+            Architectural contracting, custom independent residences, bespoke luxury duplexes, and certified real estate advisory in Hyderabad since 2013. We deal in your happiness.
           </p>
           <div style="display: flex; gap: 14px; font-size: 18px; color: var(--bronze-light);">
             <a href="https://wa.me/919390247365" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
@@ -1054,11 +906,11 @@
         <div>
           <h4 class="footer-col-heading">Navigation</h4>
           <ul class="footer-links-clean">
-            <li><a href="#home">3D Virtual Tour</a></li>
+            <li><a href="#home">Home</a></li>
             <li><a href="#about">About SLTG</a></li>
-            <li><a href="#capabilities">Custom Homes &amp; Villas</a></li>
+            <li><a href="#packages">Packages &amp; Scope</a></li>
             <li><a href="#flow">Contracting Flow</a></li>
-            <li><a href="#works">Architectural Studio</a></li>
+            <li><a href="#studio">3D Studio</a></li>
             <li><a href="#planner">Scope Planner</a></li>
             <li><a href="#contact">Private Site Walk</a></li>
           </ul>
@@ -1068,12 +920,12 @@
         <div>
           <h4 class="footer-col-heading">Practices</h4>
           <ul class="footer-links-clean">
-            <li><a href="#capabilities">Custom Residences</a></li>
-            <li><a href="#capabilities">Luxury Villas &amp; Duplexes</a></li>
-            <li><a href="#capabilities">Professional Spaces</a></li>
-            <li><a href="#capabilities">Unfurnished Core Shell</a></li>
-            <li><a href="#capabilities">Semi &amp; Fully Furnished</a></li>
-            <li><a href="#capabilities">HMDA / DTCP Sanctions</a></li>
+            <li><a href="#packages">Custom Residences</a></li>
+            <li><a href="#packages">Luxury Villa Estates</a></li>
+            <li><a href="#packages">Professional Spaces</a></li>
+            <li><a href="#packages">Unfurnished Core Shell</a></li>
+            <li><a href="#packages">Semi &amp; Fully Furnished</a></li>
+            <li><a href="#packages">HMDA / DTCP Sanctions</a></li>
           </ul>
         </div>
 
@@ -1235,9 +1087,6 @@
 
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
-
-  <!-- 3D Architectural Flythrough Engine -->
-  <script src="three_engine.js"></script>
 
   <!-- Master Architectural Client Engine -->
   <script src="script.js"></script>
