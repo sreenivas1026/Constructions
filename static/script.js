@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
       mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
     });
 
-    document.querySelectorAll('.nav-item-link').forEach(link => {
+    document.querySelectorAll('.nav-item-link, .nav-link-editorial').forEach(link => {
       link.addEventListener('click', () => {
         navMenu.classList.remove('open');
         mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
@@ -252,39 +252,6 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   updatePlanner();
-    });
-  });
-
-  floorBtns.forEach(btn => {
-    btn.addEventListener('click', function () {
-      floorBtns.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      currentFloors = parseInt(this.dataset.floors, 10) || 2;
-      updateEstimator();
-    });
-  });
-
-  addonChecks.forEach(ch => {
-    ch.addEventListener('change', updateEstimator);
-  });
-
-  if (lockEstimateBtn) {
-    lockEstimateBtn.addEventListener('click', () => {
-      const yards = plotYardsInput ? plotYardsInput.value : '133';
-      const quotePlotInput = document.getElementById('quotePlotSize');
-      const quoteReqsInput = document.getElementById('quoteRequirements');
-
-      if (quotePlotInput) {
-        quotePlotInput.value = `${yards} Sq. Yards (${currentFloors} Floors, ${currentTierName})`;
-      }
-      if (quoteReqsInput && calcTotalPrice) {
-        quoteReqsInput.value = `Locked Calculation: Approx ${calcTotalPrice.textContent} for ${currentTierName} (${currentFloors} Floors, ${yards} Sq. Yds). Requesting itemized BOQ and structural layout.`;
-      }
-      openModal(quoteModal);
-    });
-  }
-
-  updateEstimator();
 
   // -------------------------------------------------------------
   // Dynamic 15-Day VIP Site Visit Concierge
@@ -387,14 +354,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   function openModal(modal) {
     if (modal) {
-      modal.classList.add('active');
+      modal.classList.add('active', 'open');
       document.body.style.overflow = 'hidden';
     }
   }
 
   function closeModal(modal) {
     if (modal) {
-      modal.classList.remove('active');
+      modal.classList.remove('active', 'open');
       document.body.style.overflow = '';
       const vid = modal.querySelector('video');
       if (vid) vid.pause();
@@ -432,7 +399,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
-      document.querySelectorAll('.modal-overlay.active').forEach(closeModal);
+      document.querySelectorAll('.modal-overlay.active, .modal-overlay.open').forEach(closeModal);
     }
   });
 
