@@ -156,8 +156,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // -------------------------------------------------------------
-  // Fintech-Grade Real-Time Construction Cost & EMI Estimator
+    // -------------------------------------------------------------
+  // Interactive Project Scope & Requirement Planner (NO PRICES DISCLOSED)
   // -------------------------------------------------------------
   const plotYardsInput = document.getElementById('calcPlotYards');
   const plotYardsVal = document.getElementById('calcPlotVal');
@@ -165,19 +165,17 @@ document.addEventListener('DOMContentLoaded', function () {
   const floorBtns = document.querySelectorAll('.floor-btn');
   const addonChecks = document.querySelectorAll('.calc-addon-check');
 
-  const calcTotalPrice = document.getElementById('calcTotalPrice');
-  const calcCivilCost = document.getElementById('calcCivilCost');
-  const calcServicesCost = document.getElementById('calcServicesCost');
-  const calcFinishingCost = document.getElementById('calcFinishingCost');
-  const calcDurationBadge = document.getElementById('calcDurationBadge');
-  const calcEmiVal = document.getElementById('calcEmiVal');
-  const lockEstimateBtn = document.getElementById('lockEstimateBtn');
+  const plannerBuiltUpSqFt = document.getElementById('plannerBuiltUpSqFt');
+  const plannerCivilGrade = document.getElementById('plannerCivilGrade');
+  const plannerFinishes = document.getElementById('plannerFinishes');
+  const plannerAddonCount = document.getElementById('plannerAddonCount');
+  const plannerDurationBadge = document.getElementById('plannerDurationBadge');
+  const requestProposalBtn = document.getElementById('requestProposalBtn');
 
-  let currentTierRate = 2250; // Prestige Build default
-  let currentTierName = 'Prestige Build (Most Popular)';
+  let currentTierName = 'Prestige Build';
   let currentFloors = 2; // G+1 default
 
-  function updateEstimator() {
+  function updatePlanner() {
     if (!plotYardsInput) return;
 
     const yards = parseInt(plotYardsInput.value, 10) || 133;
@@ -187,67 +185,73 @@ document.addEventListener('DOMContentLoaded', function () {
     const groundBuiltUp = Math.round(yards * 9 * 0.68);
     const totalBuiltUpSqFt = groundBuiltUp * currentFloors;
 
-    const baseConstructionCost = totalBuiltUpSqFt * currentTierRate;
+    if (plannerBuiltUpSqFt) {
+      plannerBuiltUpSqFt.textContent = `${totalBuiltUpSqFt.toLocaleString('en-IN')} Sq.Ft`;
+    }
 
-    // Addons
-    let addonsTotal = 0;
+    // Count selected addons
+    let addonCount = 0;
     addonChecks.forEach(ch => {
-      if (ch.checked) {
-        addonsTotal += parseInt(ch.dataset.cost, 10) || 0;
-      }
+      if (ch.checked) addonCount++;
     });
+    if (plannerAddonCount) {
+      plannerAddonCount.textContent = `${addonCount} Selected`;
+    }
 
-    const totalEstimate = baseConstructionCost + addonsTotal;
-
-    // Cost Breakdown percentages (Civil 52%, Services 20%, Finishing 28%)
-    const civil = Math.round(totalEstimate * 0.52);
-    const services = Math.round(totalEstimate * 0.20);
-    const finishing = totalEstimate - civil - services;
-
-    // Format in INR Lakhs / Crores
-    if (calcTotalPrice) calcTotalPrice.textContent = formatINR(totalEstimate);
-    if (calcCivilCost) calcCivilCost.textContent = formatINR(civil);
-    if (calcServicesCost) calcServicesCost.textContent = formatINR(services);
-    if (calcFinishingCost) calcFinishingCost.textContent = formatINR(finishing);
-
-    // Duration calculation
+    // Dynamic timeline estimation
     let months = 5 + (currentFloors * 1.5);
     if (yards > 250) months += 1;
-    if (calcDurationBadge) {
-      calcDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Handover: ${Math.round(months)} Months`;
+    if (plannerDurationBadge) {
+      plannerDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Handover: ${Math.round(months)} Months`;
     }
-
-    // Monthly EMI Calculation at 8.5% interest, 80% loan amount, 20 years tenure
-    const loanPrincipal = totalEstimate * 0.80;
-    const monthlyRate = 0.085 / 12;
-    const monthsTenure = 20 * 12;
-    const emi = (loanPrincipal * monthlyRate * Math.pow(1 + monthlyRate, monthsTenure)) / (Math.pow(1 + monthlyRate, monthsTenure) - 1);
-
-    if (calcEmiVal) {
-      calcEmiVal.textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')} / mo`;
-    }
-  }
-
-  function formatINR(val) {
-    if (val >= 10000000) {
-      return `₹ ${(val / 10000000).toFixed(2)} Cr`;
-    } else if (val >= 100000) {
-      return `₹ ${(val / 100000).toFixed(2)} Lakh`;
-    }
-    return `₹ ${val.toLocaleString('en-IN')}`;
   }
 
   if (plotYardsInput) {
-    plotYardsInput.addEventListener('input', updateEstimator);
+    plotYardsInput.addEventListener('input', updatePlanner);
   }
 
   tierBtns.forEach(btn => {
     btn.addEventListener('click', function () {
       tierBtns.forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      currentTierRate = parseInt(this.dataset.rate, 10) || 2250;
       currentTierName = this.dataset.tier || 'Prestige Build';
-      updateEstimator();
+      if (plannerFinishes) {
+        plannerFinishes.textContent = currentTierName;
+      }
+      updatePlanner();
+    });
+  });
+
+  floorBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      floorBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentFloors = parseInt(this.dataset.floors, 10) || 2;
+      updatePlanner();
+    });
+  });
+
+  addonChecks.forEach(ch => {
+    ch.addEventListener('change', updatePlanner);
+  });
+
+  if (requestProposalBtn) {
+    requestProposalBtn.addEventListener('click', () => {
+      const yards = plotYardsInput ? plotYardsInput.value : '133';
+      const quotePlotInput = document.getElementById('quotePlotSize');
+      const quoteReqsInput = document.getElementById('quoteRequirements');
+
+      if (quotePlotInput) {
+        quotePlotInput.value = `${yards} Sq. Yards (${currentFloors} Floors, ${currentTierName})`;
+      }
+      if (quoteReqsInput && plannerBuiltUpSqFt) {
+        quoteReqsInput.value = `Project Scope: Approx ${plannerBuiltUpSqFt.textContent} built-up area for ${currentTierName} (${currentFloors} Floors, ${yards} Sq. Yds). Requesting customized architectural proposal and itemized BOQ.`;
+      }
+      openModal(quoteModal);
+    });
+  }
+
+  updatePlanner();
     });
   });
 
