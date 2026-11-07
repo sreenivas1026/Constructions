@@ -1,7 +1,7 @@
 /**
  * SLTG BUILDERS — TOP-TIER ARCHITECTURAL CLIENT ENGINE
- * Studio 3D Spatial Viewer, Fintech-Grade Cost Estimator,
- * Dynamic 15-Day VIP Scheduler & Asynchronous Lead Vault.
+ * Draggable Before/After Slider, Studio 3D Spatial Viewer,
+ * Fintech Cost & Loan EMI Estimator, and VIP Concierge Booking.
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -34,6 +34,57 @@ document.addEventListener('DOMContentLoaded', function () {
         navMenu.classList.remove('open');
         mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
       });
+    });
+  }
+
+  // -------------------------------------------------------------
+  // Interactive Draggable Before & After Slider
+  // -------------------------------------------------------------
+  const baContainer = document.getElementById('baContainer');
+  const baAfter = document.getElementById('baAfter');
+  const baHandle = document.getElementById('baHandle');
+
+  if (baContainer && baAfter && baHandle) {
+    let isDragging = false;
+
+    function setSliderPosition(x) {
+      const rect = baContainer.getBoundingClientRect();
+      let offsetX = x - rect.left;
+      if (offsetX < 0) offsetX = 0;
+      if (offsetX > rect.width) offsetX = rect.width;
+
+      const percentage = (offsetX / rect.width) * 100;
+      baAfter.style.width = `${percentage}%`;
+      baHandle.style.left = `${percentage}%`;
+    }
+
+    baContainer.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      setSliderPosition(e.clientX);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      setSliderPosition(e.clientX);
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    // Touch Support
+    baContainer.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      setSliderPosition(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      setSliderPosition(e.touches[0].clientX);
+    }, { passive: true });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
     });
   }
 
@@ -106,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   // -------------------------------------------------------------
-  // Fintech-Grade Real-Time Construction Cost Estimator
+  // Fintech-Grade Real-Time Construction Cost & EMI Estimator
   // -------------------------------------------------------------
   const plotYardsInput = document.getElementById('calcPlotYards');
   const plotYardsVal = document.getElementById('calcPlotVal');
@@ -119,6 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const calcServicesCost = document.getElementById('calcServicesCost');
   const calcFinishingCost = document.getElementById('calcFinishingCost');
   const calcDurationBadge = document.getElementById('calcDurationBadge');
+  const calcEmiVal = document.getElementById('calcEmiVal');
   const lockEstimateBtn = document.getElementById('lockEstimateBtn');
 
   let currentTierRate = 2250; // Prestige Build default
@@ -164,6 +216,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (calcDurationBadge) {
       calcDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Handover: ${Math.round(months)} Months`;
     }
+
+    // Monthly EMI Calculation at 8.5% interest, 80% loan amount, 20 years tenure
+    const loanPrincipal = totalEstimate * 0.80;
+    const monthlyRate = 0.085 / 12;
+    const monthsTenure = 20 * 12;
+    const emi = (loanPrincipal * monthlyRate * Math.pow(1 + monthlyRate, monthsTenure)) / (Math.pow(1 + monthlyRate, monthsTenure) - 1);
+
+    if (calcEmiVal) {
+      calcEmiVal.textContent = `₹ ${Math.round(emi).toLocaleString('en-IN')} / mo`;
+    }
   }
 
   function formatINR(val) {
@@ -202,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function () {
     ch.addEventListener('change', updateEstimator);
   });
 
-  // Lock estimate and transfer to Quote Modal
   if (lockEstimateBtn) {
     lockEstimateBtn.addEventListener('click', () => {
       const yards = plotYardsInput ? plotYardsInput.value : '133';
@@ -425,7 +486,6 @@ document.addEventListener('DOMContentLoaded', function () {
         payload[key] = val;
       });
 
-      // Strict Client Phone Validation
       const phone = (payload.phone || '').replace(/\D/g, '');
       if (phone.length < 8) {
         showToast('Please enter a valid 10-digit mobile number.', 'error');
@@ -474,7 +534,6 @@ document.addEventListener('DOMContentLoaded', function () {
   handleFormSubmit(document.getElementById('directContactForm'), '/api/submit-contact', 'Message sent successfully!');
   handleFormSubmit(document.getElementById('subscribeForm'), '/api/submit-subscribe', 'Subscribed to construction updates!');
 
-  // Footer Year
   const yearSpan = document.getElementById('footerYear');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 });

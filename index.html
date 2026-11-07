@@ -8,7 +8,7 @@
   <title>SLTG Builders | Luxury Contracting • Custom Duplexes • Real Estate Advisory</title>
   <meta name="description" content="SLTG Builders — Premier architectural contracting, luxury duplex constructions, and verified real estate advisory. 11+ years of experience, 40+ delivered homes, and 100% on-time handover guarantee.">
   <meta name="keywords" content="SLTG Builders, luxury construction, turnkey contracting, independent duplex villa, east facing vastu home, real estate investments, modern elevations">
-  <meta name="theme-color" content="#06090e">
+  <meta name="theme-color" content="#04070b">
 
   <!-- Open Graph / Meta -->
   <meta property="og:type" content="website">
@@ -56,12 +56,13 @@
 
       <nav class="nav-menu" id="navMenu" aria-label="Primary Navigation">
         <a href="#home" class="nav-item-link active">Home</a>
-        <a href="#studio" class="nav-item-link">3D Space Tour</a>
-        <a href="#estimator" class="nav-item-link">Cost Estimator</a>
+        <a href="#studio" class="nav-item-link">3D Spatial Tour</a>
+        <a href="#compare" class="nav-item-link">Craftsmanship</a>
+        <a href="#estimator" class="nav-item-link">Cost & EMI</a>
         <a href="#services" class="nav-item-link">Pillars of Business</a>
         <a href="#delivery" class="nav-item-link">Delivery Flow</a>
         <a href="#videos" class="nav-item-link">Site Videos</a>
-        <a href="#scheduler" class="nav-item-link">VIP Site Visit</a>
+        <a href="#scheduler" class="nav-item-link">VIP Visit</a>
         <a href="#faq" class="nav-item-link">FAQ</a>
         <a href="#contact" class="nav-item-link">Contact</a>
       </nav>
@@ -193,7 +194,7 @@
     </div>
   </section>
 
-  <!-- Studio 3D Interactive Spatial Viewer -->
+  <!-- Interactive Studio 3D Spatial Viewer -->
   <section class="section" id="studio">
     <div class="container">
       <div class="section-header">
@@ -254,14 +255,54 @@
     </div>
   </section>
 
-  <!-- Interactive Construction Cost Estimator Section -->
-  <section class="section" id="estimator" style="background: rgba(10, 14, 23, 0.45);">
+  <!-- Interactive Draggable Before & After Comparison Section -->
+  <section class="section" id="compare" style="background: rgba(8, 12, 20, 0.5);">
     <div class="container">
       <div class="section-header">
-        <span class="eyebrow-badge"><i class="fas fa-coins"></i> Transparent Financial Planning</span>
-        <h2 class="section-title">Fintech Construction Cost Estimator</h2>
+        <span class="eyebrow-badge"><i class="fas fa-balance-scale"></i> Craftsmanship In Action</span>
+        <h2 class="section-title">From Raw Monolithic Concrete to Bespoke Luxury</h2>
         <p class="section-subtitle">
-          Calculate your turnkey residential build cost in real time. Adjust your plot area, select your luxury tier, and receive an instant financial breakdown with completion timeline.
+          Drag the interactive golden slider below to witness how our structural steel framing and high-grade concrete casting transform into an architectural masterpiece.
+        </p>
+      </div>
+
+      <div class="ba-container" id="baContainer">
+        <!-- Before: Raw Structural Concrete Slab -->
+        <div class="ba-image-before">
+          <video autoplay loop muted playsinline poster="/images/Elevation.png">
+            <source src="/static/videos/Concrete_Slab_Construction_Video_Ready.mp4" type="video/mp4">
+            <source src="/static/Project%20-%202%20MP4/Concrete_Slab_Construction_Video_Ready.mp4" type="video/mp4">
+          </video>
+          <span class="ba-tag-label ba-tag-left"><i class="fas fa-hard-hat" style="color: var(--gold-primary); margin-right: 6px;"></i> Phase 2: RCC Monolithic Slab</span>
+        </div>
+
+        <!-- After: Finished Luxury Elevation -->
+        <div class="ba-image-after" id="baAfter">
+          <img src="/images/Elevation.png" alt="Finished Luxury Duplex">
+          <span class="ba-tag-label ba-tag-right"><i class="fas fa-check-circle" style="color: var(--accent-emerald); margin-right: 6px;"></i> Phase 4: Delivered Luxury Duplex</span>
+        </div>
+
+        <!-- Draggable Handle -->
+        <div class="ba-handle" id="baHandle">
+          <i class="fas fa-arrows-alt-h"></i>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 18px; color: var(--text-muted); font-size: 0.9rem;">
+        <i class="fas fa-hand-pointer" style="color: var(--gold-primary); margin-right: 6px;"></i>
+        Click or drag the golden divider horizontally to compare structural execution with final turnkey handover.
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Construction Cost Estimator + Integrated EMI Section -->
+  <section class="section" id="estimator" style="background: rgba(6, 9, 14, 0.45);">
+    <div class="container">
+      <div class="section-header">
+        <span class="eyebrow-badge"><i class="fas fa-coins"></i> Transparent Financial Modeling</span>
+        <h2 class="section-title">Fintech Construction Cost & Loan EMI Planner</h2>
+        <p class="section-subtitle">
+          Calculate your turnkey residential build cost in real time. Adjust your plot area, select your luxury tier, and receive an instant financial breakdown with completion timeline and estimated monthly EMI.
         </p>
       </div>
 
@@ -329,6 +370,19 @@
                   <span>Elevation Stone & Grooves</span>
                 </label>
               </div>
+            </div>
+
+            <!-- EMI Integration Card -->
+            <div class="emi-calc-box">
+              <div>
+                <div style="font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+                  Est. Bank Loan Monthly EMI (80% Loan, 20 Yrs @ 8.5%):
+                </div>
+                <div style="font-size: 0.8rem; color: #cbd5e1; margin-top: 2px;">
+                  Direct institutional tie-up with SBI, HDFC & ICICI
+                </div>
+              </div>
+              <div class="emi-val" id="calcEmiVal">₹ 29,800 / mo</div>
             </div>
           </div>
 
@@ -884,7 +938,8 @@
           <ul class="footer-links-list">
             <li><a href="#home">Home</a></li>
             <li><a href="#studio">3D Spatial Tour</a></li>
-            <li><a href="#estimator">Cost Estimator</a></li>
+            <li><a href="#compare">Craftsmanship Compare</a></li>
+            <li><a href="#estimator">Cost & EMI Planner</a></li>
             <li><a href="#services">Pillars of Business</a></li>
             <li><a href="#scheduler">Book VIP Visit</a></li>
             <li><a href="#faq">Construction FAQ</a></li>
