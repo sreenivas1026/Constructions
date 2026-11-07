@@ -1,45 +1,108 @@
 /**
- * SLTG BUILDERS — TOP-TIER ARCHITECTURAL CLIENT ENGINE
- * Draggable Before/After Slider, Studio 3D Spatial Viewer,
- * Fintech Cost & Loan EMI Estimator, and VIP Concierge Booking.
+ * SLTG BUILDERS — MASTER CLIENT ENGINE
+ * Dice Animated Rotating Menu Trigger & Wavy Right Drawer
+ * Dual Theme System: Sky White (Daylight) & Black Night (Obsidian)
+ * Scroll-Driven 3D Room Flythrough & Scope Planner (Zero Price Disclosure)
  */
 
 document.addEventListener('DOMContentLoaded', function () {
   'use strict';
 
-  // -------------------------------------------------------------
-  // Header Scroll & Mobile Navigation
-  // -------------------------------------------------------------
-  const header = document.querySelector('.header');
-  const mobileToggle = document.getElementById('mobileToggle');
-  const navMenu = document.getElementById('navMenu');
+  // =============================================================
+  // DUAL THEME ENGINE (SKY WHITE vs BLACK NIGHT)
+  // =============================================================
+  const themeSwitchBtn = document.getElementById('themeSwitchBtn');
+  const themeIcon = document.getElementById('themeIcon');
 
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 40) {
-      header?.classList.add('scrolled');
+  function applyTheme(theme) {
+    if (theme === 'black-night') {
+      document.body.classList.remove('theme-sky-white');
+      document.body.classList.add('theme-black-night');
+      if (themeIcon) themeIcon.className = 'fas fa-sun';
+      if (typeof window.set3DLighting === 'function') window.set3DLighting('night');
+      localStorage.setItem('sltg_theme', 'black-night');
     } else {
-      header?.classList.remove('scrolled');
+      document.body.classList.remove('theme-black-night');
+      document.body.classList.add('theme-sky-white');
+      if (themeIcon) themeIcon.className = 'fas fa-moon';
+      if (typeof window.set3DLighting === 'function') window.set3DLighting('day');
+      localStorage.setItem('sltg_theme', 'sky-white');
     }
-  }, { passive: true });
+  }
 
-  if (mobileToggle && navMenu) {
-    mobileToggle.addEventListener('click', () => {
-      navMenu.classList.toggle('open');
-      const isOpen = navMenu.classList.contains('open');
-      mobileToggle.innerHTML = isOpen ? '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
-    });
+  // Load saved theme or default to Sky White
+  const savedTheme = localStorage.getItem('sltg_theme') || 'sky-white';
+  applyTheme(savedTheme);
 
-    document.querySelectorAll('.nav-item-link, .nav-link-editorial').forEach(link => {
-      link.addEventListener('click', () => {
-        navMenu.classList.remove('open');
-        mobileToggle.innerHTML = '<i class="fas fa-bars"></i>';
-      });
+  if (themeSwitchBtn) {
+    themeSwitchBtn.addEventListener('click', () => {
+      const isNight = document.body.classList.contains('theme-black-night');
+      applyTheme(isNight ? 'sky-white' : 'black-night');
     });
   }
 
-  // -------------------------------------------------------------
-  // Interactive Draggable Before & After Slider
-  // -------------------------------------------------------------
+  // =============================================================
+  // 4-DOTS DICE ANIMATED MENU TRIGGER & WAVY DRAWER
+  // =============================================================
+  const diceMenuBtn = document.getElementById('diceMenuBtn');
+  const drawerOverlay = document.getElementById('wavyDrawerOverlay');
+  const drawerPanel = document.getElementById('wavyDrawerPanel');
+  const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+  function openDrawer() {
+    if (drawerOverlay && drawerPanel) {
+      drawerOverlay.classList.add('open');
+      drawerPanel.classList.add('open');
+      if (diceMenuBtn) diceMenuBtn.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeDrawer() {
+    if (drawerOverlay && drawerPanel) {
+      drawerOverlay.classList.remove('open');
+      drawerPanel.classList.remove('open');
+      if (diceMenuBtn) diceMenuBtn.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (diceMenuBtn) diceMenuBtn.addEventListener('click', openDrawer);
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
+
+  document.querySelectorAll('.drawer-nav-item a').forEach(link => {
+    link.addEventListener('click', () => {
+      closeDrawer();
+    });
+  });
+
+  // Room Jump Buttons inside Drawer
+  document.querySelectorAll('.drawer-room-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const roomIdx = parseInt(this.dataset.roomIdx, 10);
+      if (typeof window.flyToRoom === 'function') {
+        window.flyToRoom(roomIdx);
+      }
+      closeDrawer();
+      const heroSec = document.getElementById('home');
+      if (heroSec) heroSec.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Room Jump Pills on 3D Viewport
+  document.querySelectorAll('.room-nav-pill').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const roomIdx = parseInt(this.dataset.roomIdx, 10);
+      if (typeof window.flyToRoom === 'function') {
+        window.flyToRoom(roomIdx);
+      }
+    });
+  });
+
+  // =============================================================
+  // INTERACTIVE DRAGGABLE BEFORE & AFTER SLIDER
+  // =============================================================
   const baContainer = document.getElementById('baContainer');
   const baAfter = document.getElementById('baAfter');
   const baHandle = document.getElementById('baHandle');
@@ -88,9 +151,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  // -------------------------------------------------------------
-  // Luxury Studio 3D Spatial Viewer (Interactive Carousel)
-  // -------------------------------------------------------------
+  // =============================================================
+  // STUDIO 7-PERSPECTIVES PHOTO GALLERY SWITCHER
+  // =============================================================
   const stageImg = document.getElementById('studioStageImg');
   const stageTitle = document.getElementById('studioInfoTitle');
   const stageDesc = document.getElementById('studioInfoDesc');
@@ -99,12 +162,12 @@ document.addEventListener('DOMContentLoaded', function () {
   const studioViews = {
     elevation: {
       src: 'images/Elevation.png',
-      title: 'Contemporary Italian Elevation — 133 Sq Yards East Facing',
+      title: 'Contemporary Italian Elevation — Architectural Frontage',
       desc: 'High-grade natural stone cladding, warm profile groove lighting, and 100% Vastu-compliant structural symmetry.'
     },
     living: {
       src: 'images/Hall.png',
-      title: 'Grand Living Hall & Ambient Atrium',
+      title: 'Grand Living Hall & Double-Height Atrium',
       desc: '800x1600mm glazed vitrified tiles, designer cove LED false ceiling, and optimized natural cross-ventilation.'
     },
     kitchen: {
@@ -151,73 +214,77 @@ document.addEventListener('DOMContentLoaded', function () {
           if (stageDesc) stageDesc.textContent = data.desc;
           stageImg.style.opacity = '1';
           stageImg.style.transform = 'scale(1)';
-        }, 220);
+        }, 200);
       }
     });
   });
 
-    // -------------------------------------------------------------
-  // Interactive Project Scope & Requirement Planner (NO PRICES DISCLOSED)
-  // -------------------------------------------------------------
-  const plotYardsInput = document.getElementById('calcPlotYards');
-  const plotYardsVal = document.getElementById('calcPlotVal');
+  // Studio Mode Switcher (Monograph / Video Documentary)
+  document.querySelectorAll('.studio-tab-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.studio-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.studio-tab-content').forEach(c => c.classList.remove('active'));
+      this.classList.add('active');
+      const targetId = this.dataset.tab;
+      const target = document.getElementById(targetId);
+      if (target) target.classList.add('active');
+    });
+  });
+
+  // =============================================================
+  // COMPREHENSIVE SCOPE PLANNER (NO PRICE DISCLOSURE)
+  // Handles: Custom Homes, Luxury Villas, Professional Spaces
+  // Finishing Tiers: Unfurnished, Semi-Furnished, Fully Furnished Turnkey
+  // =============================================================
+  const typologyBtns = document.querySelectorAll('.typology-btn');
   const tierBtns = document.querySelectorAll('.tier-btn');
   const floorBtns = document.querySelectorAll('.floor-btn');
   const addonChecks = document.querySelectorAll('.calc-addon-check');
 
-  const plannerBuiltUpSqFt = document.getElementById('plannerBuiltUpSqFt');
-  const plannerCivilGrade = document.getElementById('plannerCivilGrade');
+  const plannerTypologyName = document.getElementById('plannerTypologyName');
   const plannerFinishes = document.getElementById('plannerFinishes');
+  const plannerElevationLevel = document.getElementById('plannerElevationLevel');
   const plannerAddonCount = document.getElementById('plannerAddonCount');
   const plannerDurationBadge = document.getElementById('plannerDurationBadge');
   const requestProposalBtn = document.getElementById('requestProposalBtn');
 
-  let currentTierName = 'Prestige Build';
-  let currentFloors = 2; // G+1 default
+  let currentTypology = 'Luxury Villa & Duplex';
+  let currentTierName = 'Semi-Furnished (Modular & Core)';
+  let currentElevation = 'G + 1 (Duplex)';
+  let baseMonths = 9;
 
   function updatePlanner() {
-    if (!plotYardsInput) return;
+    if (plannerTypologyName) plannerTypologyName.textContent = currentTypology;
+    if (plannerFinishes) plannerFinishes.textContent = currentTierName;
+    if (plannerElevationLevel) plannerElevationLevel.textContent = currentElevation;
 
-    const yards = parseInt(plotYardsInput.value, 10) || 133;
-    if (plotYardsVal) plotYardsVal.textContent = `${yards} Sq. Yards (${yards * 9} sq.ft)`;
-
-    // Built-up calculation based on plot coverage (68% ground coverage + floors)
-    const groundBuiltUp = Math.round(yards * 9 * 0.68);
-    const totalBuiltUpSqFt = groundBuiltUp * currentFloors;
-
-    if (plannerBuiltUpSqFt) {
-      plannerBuiltUpSqFt.textContent = `${totalBuiltUpSqFt.toLocaleString('en-IN')} Sq.Ft`;
-    }
-
-    // Count selected addons
     let addonCount = 0;
-    addonChecks.forEach(ch => {
-      if (ch.checked) addonCount++;
-    });
-    if (plannerAddonCount) {
-      plannerAddonCount.textContent = `${addonCount} Selected`;
-    }
+    addonChecks.forEach(ch => { if (ch.checked) addonCount++; });
+    if (plannerAddonCount) plannerAddonCount.textContent = `${addonCount} Selected`;
 
-    // Dynamic timeline estimation
-    let months = 5 + (currentFloors * 1.5);
-    if (yards > 250) months += 1;
+    let totalMonths = baseMonths;
+    if (currentTierName.includes('Fully')) totalMonths += 2;
+    if (currentTierName.includes('Unfurnished')) totalMonths -= 2;
+
     if (plannerDurationBadge) {
-      plannerDurationBadge.innerHTML = `<i class="fas fa-clock"></i> Est. Handover: ${Math.round(months)} Months`;
+      plannerDurationBadge.innerHTML = `<i class="fas fa-clock text-bronze"></i> Est. Handover: ${totalMonths} – ${totalMonths + 2} Months`;
     }
   }
 
-  if (plotYardsInput) {
-    plotYardsInput.addEventListener('input', updatePlanner);
-  }
+  typologyBtns.forEach(btn => {
+    btn.addEventListener('click', function () {
+      typologyBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      currentTypology = this.dataset.typology || 'Luxury Villa';
+      updatePlanner();
+    });
+  });
 
   tierBtns.forEach(btn => {
     btn.addEventListener('click', function () {
       tierBtns.forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      currentTierName = this.dataset.tier || 'Prestige Build';
-      if (plannerFinishes) {
-        plannerFinishes.textContent = currentTierName;
-      }
+      currentTierName = this.dataset.tier || 'Semi-Furnished';
       updatePlanner();
     });
   });
@@ -226,7 +293,9 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', function () {
       floorBtns.forEach(b => b.classList.remove('active'));
       this.classList.add('active');
-      currentFloors = parseInt(this.dataset.floors, 10) || 2;
+      currentElevation = this.dataset.floorsName || this.textContent.trim();
+      const fNum = parseInt(this.dataset.floors, 10) || 2;
+      baseMonths = 6 + (fNum * 1.5);
       updatePlanner();
     });
   });
@@ -237,15 +306,14 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (requestProposalBtn) {
     requestProposalBtn.addEventListener('click', () => {
-      const yards = plotYardsInput ? plotYardsInput.value : '133';
       const quotePlotInput = document.getElementById('quotePlotSize');
       const quoteReqsInput = document.getElementById('quoteRequirements');
 
       if (quotePlotInput) {
-        quotePlotInput.value = `${yards} Sq. Yards (${currentFloors} Floors, ${currentTierName})`;
+        quotePlotInput.value = `${currentTypology} — ${currentElevation} (${currentTierName})`;
       }
-      if (quoteReqsInput && plannerBuiltUpSqFt) {
-        quoteReqsInput.value = `Project Scope: Approx ${plannerBuiltUpSqFt.textContent} built-up area for ${currentTierName} (${currentFloors} Floors, ${yards} Sq. Yds). Requesting customized architectural proposal and itemized BOQ.`;
+      if (quoteReqsInput) {
+        quoteReqsInput.value = `Custom Project Blueprint: Inquiring for ${currentTypology} [${currentElevation}] with ${currentTierName} finish specification. Requesting itemized BOQ, material schedules, and architectural consultation.`;
       }
       openModal(quoteModal);
     });
@@ -253,9 +321,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
   updatePlanner();
 
-  // -------------------------------------------------------------
-  // Dynamic 15-Day VIP Site Visit Concierge
-  // -------------------------------------------------------------
+  // =============================================================
+  // DYNAMIC 15-DAY VIP SITE VISIT CONCIERGE
+  // =============================================================
   const dateScrollWrapper = document.getElementById('dateScrollWrapper');
   const selectedDateInput = document.getElementById('selectedDateInput');
   const selectedTimeInput = document.getElementById('selectedTimeInput');
@@ -314,9 +382,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // -------------------------------------------------------------
-  // Toast Notification System
-  // -------------------------------------------------------------
+  // =============================================================
+  // TOAST NOTIFICATION SYSTEM
+  // =============================================================
   function showToast(message, type = 'success') {
     let container = document.querySelector('.toast-container');
     if (!container) {
@@ -328,7 +396,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle';
-    toast.innerHTML = `<i class="fas ${icon}" style="color: ${type === 'success' ? '#e5b25d' : '#f59e0b'};"></i> <span>${escapeHtml(message)}</span>`;
+    toast.innerHTML = `<i class="fas ${icon}" style="color: ${type === 'success' ? '#c5a059' : '#f59e0b'};"></i> <span>${escapeHtml(message)}</span>`;
 
     container.appendChild(toast);
     setTimeout(() => {
@@ -345,9 +413,9 @@ document.addEventListener('DOMContentLoaded', function () {
     return div.innerHTML;
   }
 
-  // -------------------------------------------------------------
-  // Modal Management
-  // -------------------------------------------------------------
+  // =============================================================
+  // MODAL MANAGEMENT
+  // =============================================================
   const quoteModal = document.getElementById('quoteModal');
   const visitModal = document.getElementById('visitModal');
   const videoModal = document.getElementById('videoModal');
@@ -371,6 +439,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('[data-open-quote]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      closeDrawer();
       openModal(quoteModal);
     });
   });
@@ -378,6 +447,7 @@ document.addEventListener('DOMContentLoaded', function () {
   document.querySelectorAll('[data-open-visit]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+      closeDrawer();
       openModal(visitModal);
     });
   });
@@ -400,16 +470,15 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       document.querySelectorAll('.modal-overlay.active, .modal-overlay.open').forEach(closeModal);
+      closeDrawer();
     }
   });
 
-  // -------------------------------------------------------------
   // Video Showcase Player Modal
-  // -------------------------------------------------------------
   document.querySelectorAll('[data-play-video]').forEach(btn => {
     btn.addEventListener('click', function () {
       const src = this.dataset.src;
-      const title = this.dataset.title || 'Construction Site Video';
+      const title = this.dataset.title || 'Architectural Video';
       const videoPlayer = document.getElementById('videoPlayerElement');
       const vTitle = document.getElementById('videoModalTitle');
 
@@ -424,9 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // -------------------------------------------------------------
   // FAQ Accordion
-  // -------------------------------------------------------------
   document.querySelectorAll('.faq-header').forEach(header => {
     header.addEventListener('click', function () {
       const parent = this.closest('.faq-card');
@@ -439,9 +506,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-  // -------------------------------------------------------------
-  // Form Submissions Engine (Rate-Limited, Sanitized, Backed up)
-  // -------------------------------------------------------------
+  // =============================================================
+  // FORM SUBMISSION HANDLERS
+  // =============================================================
   async function handleFormSubmit(form, endpoint, successMessage) {
     if (!form) return;
 
@@ -453,9 +520,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
       const formData = new FormData(form);
       const payload = {};
-      formData.forEach((val, key) => {
-        payload[key] = val;
-      });
+      formData.forEach((val, key) => { payload[key] = val; });
 
       const phone = (payload.phone || '').replace(/\D/g, '');
       if (phone.length < 8) {
@@ -499,32 +564,16 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  handleFormSubmit(document.getElementById('getQuoteForm'), '/api/submit-get-quote', 'Quote request submitted successfully!');
-  handleFormSubmit(document.getElementById('modalVisitForm'), '/api/submit-site-visit', 'Site visit booked successfully!');
-  handleFormSubmit(document.getElementById('sectionVisitForm'), '/api/submit-site-visit', 'Site visit booked successfully!');
+  handleFormSubmit(document.getElementById('getQuoteForm'), '/api/submit-get-quote', 'Scope blueprint request received successfully!');
+  handleFormSubmit(document.getElementById('modalVisitForm'), '/api/submit-site-visit', 'Private site walk booked successfully!');
+  handleFormSubmit(document.getElementById('sectionVisitForm'), '/api/submit-site-visit', 'Private site walk booked successfully!');
   handleFormSubmit(document.getElementById('directContactForm'), '/api/submit-contact', 'Message sent successfully!');
-  handleFormSubmit(document.getElementById('subscribeForm'), '/api/submit-subscribe', 'Subscribed to construction updates!');
+  handleFormSubmit(document.getElementById('subscribeForm'), '/api/submit-subscribe', 'Subscribed to construction monograph updates!');
 
   const yearSpan = document.getElementById('footerYear');
   if (yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-  // -------------------------------------------------------------
-  // Studio Mode Switcher (Monograph / Video Documentary)
-  // -------------------------------------------------------------
-  document.querySelectorAll('.studio-tab-btn').forEach(btn => {
-    btn.addEventListener('click', function () {
-      document.querySelectorAll('.studio-tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.studio-tab-content').forEach(c => c.classList.remove('active'));
-      this.classList.add('active');
-      const targetId = this.dataset.tab;
-      const target = document.getElementById(targetId);
-      if (target) target.classList.add('active');
-    });
-  });
-
-  // -------------------------------------------------------------
   // Architectural Crosshair Cursor Tracking
-  // -------------------------------------------------------------
   const cursorDot = document.getElementById('cursorDot');
   const cursorRing = document.getElementById('cursorRing');
   if (cursorDot && cursorRing) {
@@ -536,30 +585,30 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('mousemove', (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      cursorDot.style.left = ${mouseX}px;
-      cursorDot.style.top = ${mouseY}px;
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
     }, { passive: true });
 
     function renderCursor() {
       ringX += (mouseX - ringX) * 0.18;
       ringY += (mouseY - ringY) * 0.18;
-      cursorRing.style.left = ${ringX}px;
-      cursorRing.style.top = ${ringY}px;
+      cursorRing.style.left = `${ringX}px`;
+      cursorRing.style.top = `${ringY}px`;
       requestAnimationFrame(renderCursor);
     }
     renderCursor();
 
-    const hoverSelectors = 'a, button, .hotspot-marker, .tier-btn, .floor-btn, .three-hud-btn, .studio-tab-btn, .studio-thumb-btn';
+    const hoverSelectors = 'a, button, .dice-menu-trigger, .theme-switch-btn, .room-nav-pill, .tier-btn, .floor-btn, .typology-btn, .three-hud-btn, .studio-thumb-btn';
     document.querySelectorAll(hoverSelectors).forEach(el => {
       el.addEventListener('mouseenter', () => {
-        cursorRing.style.width = '50px';
-        cursorRing.style.height = '50px';
+        cursorRing.style.width = '48px';
+        cursorRing.style.height = '48px';
         cursorRing.style.borderColor = '#c5a059';
       });
       el.addEventListener('mouseleave', () => {
         cursorRing.style.width = '36px';
         cursorRing.style.height = '36px';
-        cursorRing.style.borderColor = 'rgba(197, 160, 89, 0.6)';
+        cursorRing.style.borderColor = 'rgba(197, 160, 89, 0.4)';
       });
     });
   }
