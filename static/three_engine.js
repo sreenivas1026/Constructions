@@ -147,7 +147,7 @@
     const isInitNight = document.body.classList.contains('theme-black-night');
     const initBgHex = isInitNight ? 0x080a0f : 0xf2f5f8;
     scene.background = new THREE.Color(initBgHex);
-    scene.fog = new THREE.FogExp2(initBgHex, 0.018);
+    scene.fog = new THREE.Fog(initBgHex, 35, 75);
 
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 600;
