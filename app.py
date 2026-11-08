@@ -137,6 +137,9 @@ def save_lead_to_db(ref_id, lead_type, name, phone, email, details, ip):
 # -------------------------------------------------------------
 @app.after_request
 def add_security_headers(response):
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     response.headers['X-Frame-Options'] = 'SAMEORIGIN'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-XSS-Protection'] = '1; mode=block'
