@@ -612,4 +612,50 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     });
   }
+
+  // =============================================================
+  // 4K FULL-WIDTH CINEMATIC VIDEO & MONOGRAPH SWITCHERS
+  // =============================================================
+  window.switchCinematicVideo = function (src, btn, title) {
+    const vid = document.getElementById('mainCinematicVideo');
+    const titleEl = document.getElementById('cinematicVideoTitle');
+    if (vid) {
+      vid.src = src;
+      vid.load();
+      vid.play().catch(() => {});
+    }
+    if (titleEl && title) {
+      titleEl.textContent = title;
+    }
+    const b1 = document.getElementById('subVideo1');
+    const b2 = document.getElementById('subVideo2');
+    if (b1) b1.classList.remove('active');
+    if (b2) b2.classList.remove('active');
+    if (btn) btn.classList.add('active');
+  };
+
+  window.showCinematicTab = function (tab) {
+    const vidTab = document.getElementById('cinematicVideoTab');
+    const photoTab = document.getElementById('cinematicPhotoTab');
+    const btnVid = document.getElementById('btnTabVideo');
+    const btnPhoto = document.getElementById('btnTabPhotos');
+
+    if (tab === 'video') {
+      if (vidTab) vidTab.style.display = 'block';
+      if (photoTab) photoTab.style.display = 'none';
+      if (btnVid) btnVid.classList.add('active');
+      if (btnPhoto) btnPhoto.classList.remove('active');
+    } else {
+      if (vidTab) vidTab.style.display = 'none';
+      if (photoTab) photoTab.style.display = 'block';
+      if (btnVid) btnVid.classList.remove('active');
+      if (btnPhoto) btnPhoto.classList.add('active');
+    }
+  };
+
+  window.scrollTo3DHome = function () {
+    const homeEl = document.getElementById('home');
+    if (homeEl) homeEl.scrollIntoView({ behavior: 'smooth' });
+  };
+
 });

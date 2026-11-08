@@ -22,8 +22,10 @@
 
     // --- Scene, Camera, Renderer ---
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x080a0f);
-    scene.fog = new THREE.FogExp2(0x080a0f, 0.02);
+    const isInitNight = document.body.classList.contains('theme-black-night');
+    const initBgHex = isInitNight ? 0x080a0f : 0xf2f5f8;
+    scene.background = new THREE.Color(initBgHex);
+    scene.fog = new THREE.FogExp2(initBgHex, 0.018);
 
     const width = container.clientWidth || 800;
     const height = container.clientHeight || 600;
@@ -503,6 +505,25 @@
       }
     };
 
+    // Mouse Wheel Deep Room Exploration inside Viewport
+    let wheelDebounce = null;
+    container.addEventListener('wheel', (e) => {
+      if (e.ctrlKey || e.altKey) return;
+      e.preventDefault();
+      if (wheelDebounce) return;
+      wheelDebounce = setTimeout(() => { wheelDebounce = null; }, 400);
+
+      if (e.deltaY > 0) {
+        // Scroll down -> fly deeper into next room
+        const nextIdx = Math.min(waypoints.length - 1, currentWaypointIdx + 1);
+        if (nextIdx !== currentWaypointIdx) window.flyToRoom(nextIdx);
+      } else if (e.deltaY < 0) {
+        // Scroll up -> fly back towards entrance / facade
+        const prevIdx = Math.max(0, currentWaypointIdx - 1);
+        if (prevIdx !== currentWaypointIdx) window.flyToRoom(prevIdx);
+      }
+    }, { passive: false });
+
     // Scroll-Driven Camera Tour
     window.addEventListener('scroll', () => {
       // Calculate normalized scroll position over document
@@ -539,23 +560,26 @@
       if (typeof gsap === 'undefined') return;
 
       if (mode === 'day') {
-        gsap.to(scene.background, { r: 0.05, g: 0.06, b: 0.08, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 1.5, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 1.0, g: 0.93, b: 0.86, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.7, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 1.0, duration: 0.8 }));
+        gsap.to(scene.background, { r: 0.95, g: 0.96, b: 0.97, duration: 0.8 });
+        if (scene.fog) gsap.to(scene.fog.color, { r: 0.95, g: 0.96, b: 0.97, duration: 0.8 });
+        gsap.to(sunLight, { intensity: 1.6, duration: 0.8 });
+        gsap.to(sunLight.color, { r: 1.0, g: 0.96, b: 0.9, duration: 0.8 });
+        gsap.to(ambientLight, { intensity: 0.85, duration: 0.8 });
+        Object.values(lights).forEach(l => gsap.to(l, { intensity: 0.9, duration: 0.8 }));
       } else if (mode === 'golden') {
-        gsap.to(scene.background, { r: 0.08, g: 0.06, b: 0.06, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 1.8, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 1.0, g: 0.65, b: 0.3, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.5, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 1.8, duration: 0.8 }));
+        gsap.to(scene.background, { r: 0.14, g: 0.10, b: 0.11, duration: 0.8 });
+        if (scene.fog) gsap.to(scene.fog.color, { r: 0.14, g: 0.10, b: 0.11, duration: 0.8 });
+        gsap.to(sunLight, { intensity: 1.9, duration: 0.8 });
+        gsap.to(sunLight.color, { r: 1.0, g: 0.64, b: 0.28, duration: 0.8 });
+        gsap.to(ambientLight, { intensity: 0.55, duration: 0.8 });
+        Object.values(lights).forEach(l => gsap.to(l, { intensity: 2.0, duration: 0.8 }));
       } else if (mode === 'night') {
-        gsap.to(scene.background, { r: 0.02, g: 0.025, b: 0.035, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 0.15, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 0.3, g: 0.4, b: 0.6, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.3, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 2.8, duration: 0.8 }));
+        gsap.to(scene.background, { r: 0.03, g: 0.04, b: 0.06, duration: 0.8 });
+        if (scene.fog) gsap.to(scene.fog.color, { r: 0.03, g: 0.04, b: 0.06, duration: 0.8 });
+        gsap.to(sunLight, { intensity: 0.18, duration: 0.8 });
+        gsap.to(sunLight.color, { r: 0.35, g: 0.45, b: 0.75, duration: 0.8 });
+        gsap.to(ambientLight, { intensity: 0.35, duration: 0.8 });
+        Object.values(lights).forEach(l => gsap.to(l, { intensity: 3.0, duration: 0.8 }));
       }
     };
 
