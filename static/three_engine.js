@@ -8,12 +8,135 @@
 (function () {
   'use strict';
 
+
+  // =========================================================================
+  // SECOND 3D MODEL: G+1 133 SQ YARDS RCC STRUCTURAL CORE ENGINE
+  // =========================================================================
+  function initStructuralCoreEngine() {
+    const container = document.getElementById('threeStructureCanvas');
+    if (!container) return;
+
+    const scene = new THREE.Scene();
+    const isNight = document.body.classList.contains('theme-black-night');
+    const bg = isNight ? 0x090b10 : 0xf2f4f8;
+    scene.background = new THREE.Color(bg);
+
+    const width = container.clientWidth || 800;
+    const height = container.clientHeight || 520;
+    const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
+    camera.position.set(12, 9, 13);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    container.innerHTML = '';
+    container.appendChild(renderer.domElement);
+
+    let controls = null;
+    if (typeof THREE.OrbitControls !== 'undefined') {
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.target.set(0, 3.2, 0);
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+    }
+
+    const amb = new THREE.AmbientLight(0xffffff, 0.85);
+    scene.add(amb);
+    const dir = new THREE.DirectionalLight(0xffeedd, 1.4);
+    dir.position.set(14, 18, 12);
+    scene.add(dir);
+
+    const structGroup = new THREE.Group();
+    scene.add(structGroup);
+
+    const concreteMat = new THREE.MeshStandardMaterial({ color: 0x9da3ae, roughness: 0.85 });
+    const steelMat = new THREE.MeshStandardMaterial({ color: 0xc5a059, metalness: 0.85, roughness: 0.3 });
+    const gridHelper = new THREE.GridHelper(26, 26, 0xc5a059, 0x334155);
+    scene.add(gridHelper);
+
+    // 12 Footing Pads & Columns for 133 SQ Yards G+1 Grid
+    const colCoords = [
+      [-4.0, -3.0], [-1.3, -3.0], [1.3, -3.0], [4.0, -3.0],
+      [-4.0, 0.0], [-1.3, 0.0], [1.3, 0.0], [4.0, 0.0],
+      [-4.0, 3.0], [-1.3, 3.0], [1.3, 3.0], [4.0, 3.0]
+    ];
+
+    colCoords.forEach(([x, z]) => {
+      // Footing Pad
+      const pad = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.35, 1.2), concreteMat);
+      pad.position.set(x, 0.18, z);
+      structGroup.add(pad);
+
+      // Ground Floor Column
+      const colG = new THREE.Mesh(new THREE.BoxGeometry(0.35, 3.0, 0.35), concreteMat);
+      colG.position.set(x, 1.85, z);
+      structGroup.add(colG);
+
+      // First Floor Column
+      const colF = new THREE.Mesh(new THREE.BoxGeometry(0.35, 3.0, 0.35), concreteMat);
+      colF.position.set(x, 5.0, z);
+      structGroup.add(colF);
+
+      // Fe550D Internal Rebar Core
+      const rebar = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 6.4, 8), steelMat);
+      rebar.position.set(x, 3.4, z);
+      structGroup.add(rebar);
+    });
+
+    // Plinth Beam Level
+    const plinthG = new THREE.Mesh(new THREE.BoxGeometry(8.6, 0.3, 6.6), concreteMat);
+    plinthG.position.set(0, 0.45, 0);
+    structGroup.add(plinthG);
+
+    // First Floor Cantilevered Slab (133 SQ Yards)
+    const slab1 = new THREE.Mesh(new THREE.BoxGeometry(9.2, 0.25, 7.2), concreteMat);
+    slab1.position.set(0, 3.45, 0);
+    structGroup.add(slab1);
+
+    // Terrace Roof Slab
+    const slabRoof = new THREE.Mesh(new THREE.BoxGeometry(9.2, 0.25, 7.2), concreteMat);
+    slabRoof.position.set(0, 6.6, 0);
+    structGroup.add(slabRoof);
+
+    // Cantilevered Balcony Slab
+    const balcSlab = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.2, 1.8), concreteMat);
+    balcSlab.position.set(-2.0, 3.45, 4.2);
+    structGroup.add(balcSlab);
+
+    let isWire = false;
+    window.toggleStructureWireframe = function () {
+      isWire = !isWire;
+      concreteMat.wireframe = isWire;
+      const btn = document.getElementById('btnToggleStructWire');
+      if (btn) btn.classList.toggle('active', isWire);
+    };
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (controls) controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    window.addEventListener('resize', () => {
+      if (!container) return;
+      const w = container.clientWidth;
+      const h = container.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    });
+  }
+
   function initWhenReady() {
     if (typeof THREE === 'undefined') {
       setTimeout(initWhenReady, 50);
       return;
     }
     initArchitecturalExperience();
+    initStructuralCoreEngine();
   }
 
   function initArchitecturalExperience() {
@@ -175,15 +298,19 @@
     porticoWall.castShadow = true;
     houseGroup.add(porticoWall);
 
-    // Teak Wood Pivot Door (Grand Entrance)
+    // Teak Wood Pivot Door (Grand Entrance with Dynamic Swing Pivot)
+    const doorPivot = new THREE.Group();
+    doorPivot.position.set(1.45, 1.65, 3.2);
+    houseGroup.add(doorPivot);
+
     const entranceDoor = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.5, 0.1), mats.woodTeak);
-    entranceDoor.position.set(2.2, 1.65, 3.2);
+    entranceDoor.position.set(0.75, 0, 0);
     entranceDoor.castShadow = true;
-    houseGroup.add(entranceDoor);
+    doorPivot.add(entranceDoor);
 
     const doorHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.3, 16), mats.bronzeGold);
-    doorHandle.position.set(2.8, 1.65, 3.28);
-    houseGroup.add(doorHandle);
+    doorHandle.position.set(1.35, 0, 0.08);
+    doorPivot.add(doorHandle);
 
     // =========================================================================
     // ROOM 2: GRAND LIVING HALL (Double-Height Glazed Atrium)
@@ -400,50 +527,90 @@
     houseGroup.add(roofSlab);
 
     // =========================================================================
+    // ROOM 7: COVERED PARKING PORCH & PLINTH SWIMMING POOL
+    // =========================================================================
+    // Covered Parking Pergola Canopy
+    const parkingRoof = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.2, 5.2), mats.stoneDark);
+    parkingRoof.position.set(4.4, 2.8, 1.0);
+    parkingRoof.castShadow = true;
+    houseGroup.add(parkingRoof);
+
+    // Parking Steel Columns
+    for (let z of [-1.0, 3.0]) {
+      const col = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2.8, 0.2), mats.blackSteel);
+      col.position.set(6.3, 1.4, z);
+      col.castShadow = true;
+      houseGroup.add(col);
+    }
+
+    // Modern Vehicle Silhouette in Covered Bay
+    const carBase = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.65, 4.0), mats.blackSteel);
+    carBase.position.set(4.5, 0.65, 1.0);
+    carBase.castShadow = true;
+    houseGroup.add(carBase);
+
+    const carCabin = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.55, 2.2), mats.glass);
+    carCabin.position.set(4.5, 1.15, 0.8);
+    houseGroup.add(carCabin);
+
+    // Luxury Swimming Pool with Aqua Light
+    const poolSurround = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.08, 3.2), mats.stoneLight);
+    poolSurround.position.set(-3.4, 0.36, 2.6);
+    houseGroup.add(poolSurround);
+
+    const poolWaterMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.12, 2.6), mats.water);
+    poolWaterMesh.position.set(-3.4, 0.40, 2.6);
+    houseGroup.add(poolWaterMesh);
+
+    const poolAquaLight = new THREE.PointLight(0x00d4ff, 2.5, 6.0);
+    poolAquaLight.position.set(-3.4, 0.6, 2.6);
+    scene.add(poolAquaLight);
+
+    // =========================================================================
     // SCROLL-DRIVEN CAMERA PATH & ROOM WAYPOINTS
     // =========================================================================
     const waypoints = [
       {
         id: 'room-facade',
         name: '01 / Architectural Facade',
-        desc: 'Contemporary Italian stone elevation with double-height volume and 100% Vaastu alignment.',
+        desc: 'G+1 133 SQ Yards Luxury Duplex — Contemporary Italian stone elevation with 100% Vaastu alignment.',
         cam: new THREE.Vector3(10.5, 7.2, 12.5),
         target: new THREE.Vector3(0, 2.2, 0)
       },
       {
         id: 'room-entrance',
-        name: '02 / Grand Entrance & Portico',
-        desc: 'Teak wood pivot entrance door with bronze hardware and natural granite approach steps.',
-        cam: new THREE.Vector3(3.2, 2.1, 5.4),
-        target: new THREE.Vector3(2.2, 1.8, 2.8)
+        name: '02 / Grand Entrance (Doors Open)',
+        desc: 'Teak wood pivot entrance door automatically swings open as you step inside the reception foyer.',
+        cam: new THREE.Vector3(2.8, 1.9, 4.6),
+        target: new THREE.Vector3(2.0, 1.65, 2.2)
       },
       {
         id: 'room-living',
         name: '03 / Double-Height Living Hall',
-        desc: 'Expansive natural daylight, 800x1600mm Italian vitrified tiling, and custom sectional lounge.',
+        desc: 'Expansive natural daylight, Italian marble flooring, custom sectional sofa, and OLED media wall.',
         cam: new THREE.Vector3(-0.6, 1.8, 2.8),
         target: new THREE.Vector3(-2.6, 1.4, 1.2)
       },
       {
         id: 'room-kitchen',
-        name: '04 / Modular Kitchen & Dining',
+        name: '04 / Modular Chef\'s Kitchen & Dining',
         desc: 'Quartz waterfall island counter, soft-close cabinets, and connected family dining atrium.',
         cam: new THREE.Vector3(1.2, 2.0, 0.4),
         target: new THREE.Vector3(2.5, 1.4, -2.2)
       },
       {
+        id: 'room-master',
+        name: '05 / Master Bedroom Suite',
+        desc: 'Generous first floor suite with upholstered king bed, walk-in dressing wardrobe, and balcony slider.',
+        cam: new THREE.Vector3(0.6, 4.6, 2.8),
+        target: new THREE.Vector3(2.5, 4.4, 1.0)
+      },
+      {
         id: 'room-stairs',
-        name: '05 / Cantilevered Staircase',
+        name: '06 / Cantilevered Staircase',
         desc: 'Solid teak floating steps with frameless glass balustrade ascending to the first floor lounge.',
         cam: new THREE.Vector3(-0.8, 2.8, 0.2),
         target: new THREE.Vector3(-2.2, 2.4, -1.8)
-      },
-      {
-        id: 'room-master',
-        name: '06 / Master Bedroom Suite',
-        desc: 'Generous suite with upholstered king bed, walk-in dressing wardrobe, and bronze solar louvers.',
-        cam: new THREE.Vector3(0.6, 4.6, 2.8),
-        target: new THREE.Vector3(2.5, 4.4, 1.0)
       },
       {
         id: 'room-balcony',
@@ -451,6 +618,13 @@
         desc: 'Open-air private glass terrace capturing evening cross breezes and ambient lighting.',
         cam: new THREE.Vector3(-1.4, 4.8, 4.8),
         target: new THREE.Vector3(-2.8, 4.0, 2.4)
+      },
+      {
+        id: 'room-pool',
+        name: '08 / Covered Parking & Swimming Pool',
+        desc: 'Descending to ground level covered parking porch and private illuminated aqua swimming pool.',
+        cam: new THREE.Vector3(-3.8, 3.0, 7.2),
+        target: new THREE.Vector3(-0.5, 0.8, 2.0)
       }
     ];
 
@@ -481,6 +655,16 @@
       currentWaypointIdx = idx;
       const wp = waypoints[idx];
       setRoomHUD(wp);
+
+      // Dynamic Door Swing Animation: Open when inside (idx >= 1), close when at facade (idx === 0)
+      if (typeof doorPivot !== 'undefined') {
+        const targetDoorAngle = idx >= 1 ? -Math.PI / 2.2 : 0;
+        if (typeof gsap !== 'undefined') {
+          gsap.to(doorPivot.rotation, { y: targetDoorAngle, duration: 1.2, ease: 'power2.out' });
+        } else {
+          doorPivot.rotation.y = targetDoorAngle;
+        }
+      }
 
       if (typeof gsap !== 'undefined') {
         gsap.to(camera.position, {

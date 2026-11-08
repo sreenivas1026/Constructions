@@ -448,7 +448,12 @@ document.addEventListener('DOMContentLoaded', function () {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       closeDrawer();
-      openModal(visitModal);
+      if (visitModal) {
+        openModal(visitModal);
+      } else {
+        const contactSec = document.getElementById('contact');
+        if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+      }
     });
   });
 
@@ -564,6 +569,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
+  handleFormSubmit(document.getElementById('siteWalkForm'), '/api/submit-site-visit', 'Private site walk booked successfully!');
   handleFormSubmit(document.getElementById('getQuoteForm'), '/api/submit-get-quote', 'Scope blueprint request received successfully!');
   handleFormSubmit(document.getElementById('modalVisitForm'), '/api/submit-site-visit', 'Private site walk booked successfully!');
   handleFormSubmit(document.getElementById('sectionVisitForm'), '/api/submit-site-visit', 'Private site walk booked successfully!');

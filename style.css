@@ -2577,3 +2577,293 @@ h1, h2, h3, h4 {
   font-weight: 700;
   box-shadow: 0 4px 14px var(--bronze-glow);
 }
+
+/* ==========================================================================
+   WELCOME TO SLTG BUILDERS BLOCK HERO
+   ========================================================================== */
+.welcome-block-banner {
+  text-align: center;
+  max-width: 1100px;
+  margin: 0 auto 36px auto;
+  padding: 0 20px;
+}
+
+.welcome-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--bronze-light);
+  margin-bottom: 14px;
+}
+
+.welcome-main-title {
+  font-family: 'Syne', var(--font-display), sans-serif;
+  font-size: 68px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--ink-primary);
+  margin-bottom: 18px;
+}
+
+.welcome-sub-desc {
+  font-size: 17px;
+  font-weight: 400;
+  color: var(--ink-secondary);
+  line-height: 1.7;
+  max-width: 860px;
+  margin: 0 auto 28px auto;
+}
+
+.welcome-stats-pills {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.stat-pill {
+  padding: 8px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  border-radius: var(--radius-full);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--ink-primary);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.stat-pill i {
+  color: var(--bronze-light);
+}
+
+/* ==========================================================================
+   SECOND 3D MODEL: STRUCTURAL RCC CORE ENGINE
+   ========================================================================== */
+.three-structure-wrapper {
+  position: relative;
+  width: 100%;
+  height: 580px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #171d2b 0%, #080a0f 100%);
+  border: 1px solid var(--hairline-medium);
+  box-shadow: var(--shadow-3d);
+}
+
+#threeStructureCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: grab;
+}
+
+#threeStructureCanvas:active {
+  cursor: grabbing;
+}
+
+.structure-hud-top {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.structure-hud-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   3D PERSPECTIVE PHOTO CARDS (AUTHENTIC REPO IMAGES)
+   ========================================================================== */
+.photo-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin-top: 36px;
+}
+
+.photo-3d-card {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  box-shadow: var(--shadow-card);
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.45s ease;
+  cursor: pointer;
+}
+
+.photo-3d-card:hover {
+  transform: perspective(1000px) rotateX(4deg) rotateY(-4deg) translateY(-8px) scale(1.02);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.28);
+  border-color: var(--bronze-light);
+}
+
+.photo-3d-img-box {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+  position: relative;
+}
+
+.photo-3d-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.photo-3d-card:hover .photo-3d-img {
+  transform: scale(1.06);
+}
+
+.photo-3d-body {
+  padding: 22px 24px;
+}
+
+.photo-3d-tag {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--bronze-light);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.photo-3d-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--ink-primary);
+  margin-bottom: 8px;
+}
+
+.photo-3d-desc {
+  font-size: 13.5px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   LIVE REALISTIC PROJECTS SHOWCASE (CURRENT & LAST COMPLETED)
+   ========================================================================== */
+.projects-showcase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-top: 36px;
+}
+
+.project-card-live {
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  border-radius: var(--radius-sm);
+  padding: 36px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.project-card-live:hover {
+  transform: translateY(-6px);
+  border-color: var(--bronze-light);
+}
+
+.project-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.badge-running {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-completed {
+  background: var(--bronze-pale);
+  color: var(--bronze-light);
+  border: 1px solid var(--bronze-border);
+}
+
+.project-title-live {
+  font-family: var(--font-serif);
+  font-size: 32px;
+  color: var(--ink-primary);
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.project-specs-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 24px 0;
+  padding: 20px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.project-spec-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.project-spec-key {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.project-spec-val {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+
+@media (max-width: 1024px) {
+  .welcome-main-title { font-size: 50px; }
+  .photo-3d-grid { grid-template-columns: repeat(2, 1fr); }
+  .projects-showcase-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .welcome-main-title { font-size: 38px; }
+  .photo-3d-grid { grid-template-columns: 1fr; }
+  .three-structure-wrapper { height: 440px; }
+}
