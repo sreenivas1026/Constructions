@@ -732,4 +732,176 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
+
+  // =============================================================
+  // FULL-SCREEN HERO MEDIA MODE SWITCHER (CINEMATIC VIDEO vs 3D)
+  // =============================================================
+  window.setHeroMediaMode = function (mode) {
+    const videoBg = document.getElementById('heroVideoBg');
+    const threeBg = document.getElementById('heroThreeCanvasBg');
+    const btnVideo = document.getElementById('btnModeVideo');
+    const btn3D = document.getElementById('btnMode3D');
+
+    if (mode === '3d') {
+      if (videoBg) videoBg.style.opacity = '0';
+      if (threeBg) {
+        threeBg.classList.add('active');
+        threeBg.style.opacity = '1';
+        threeBg.style.pointerEvents = 'auto';
+      }
+      if (btnVideo) btnVideo.classList.remove('active');
+      if (btn3D) btn3D.classList.add('active');
+      if (typeof window.onThreeWindowResize === 'function') {
+        window.onThreeWindowResize();
+      }
+    } else {
+      if (videoBg) videoBg.style.opacity = '0.85';
+      if (threeBg) {
+        threeBg.classList.remove('active');
+        threeBg.style.opacity = '0';
+        threeBg.style.pointerEvents = 'none';
+      }
+      if (btnVideo) btnVideo.classList.add('active');
+      if (btn3D) btn3D.classList.remove('active');
+    }
+  };
+
+
+  // =============================================================
+  // DICE 4-DOTS TO DIAMOND ROTATION & DRAWER CONTROLLER
+  // =============================================================
+  const diceBtn = document.getElementById('diceMenuBtn');
+  const drawerOverlay = document.getElementById('wavyDrawerOverlay');
+  const drawerPanel = document.getElementById('wavyDrawerPanel');
+  const drawerCloseBtn = document.getElementById('drawerCloseBtn');
+
+  function openMasterDrawer() {
+    if (drawerOverlay && drawerPanel) {
+      drawerOverlay.classList.add('open');
+      drawerPanel.classList.add('open');
+      if (diceBtn) diceBtn.classList.add('active'); // Rotates 4-dots into diamond shape!
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeMasterDrawer() {
+    if (drawerOverlay && drawerPanel) {
+      drawerOverlay.classList.remove('open');
+      drawerPanel.classList.remove('open');
+      if (diceBtn) diceBtn.classList.remove('active'); // Rotates back to square dots
+      document.body.style.overflow = '';
+    }
+  }
+
+  if (diceBtn) {
+    diceBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = drawerPanel && drawerPanel.classList.contains('open');
+      if (isOpen) {
+        closeMasterDrawer();
+      } else {
+        openMasterDrawer();
+      }
+    });
+  }
+
+  if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeMasterDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener('click', closeMasterDrawer);
+
+  document.querySelectorAll('.drawer-nav-item a').forEach(link => {
+    link.addEventListener('click', closeMasterDrawer);
+  });
+
+  // Room Jump Buttons inside Drawer
+  document.querySelectorAll('.drawer-room-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const roomIdx = parseInt(this.dataset.roomIdx, 10);
+      if (typeof window.flyToRoom === 'function') {
+        window.flyToRoom(roomIdx);
+      }
+      closeMasterDrawer();
+      const heroSec = document.getElementById('home');
+      if (heroSec) heroSec.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Room Jump Pills on Home
+  document.querySelectorAll('.room-nav-pill').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.room-nav-pill').forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+      const roomIdx = parseInt(this.dataset.roomIdx, 10);
+      if (typeof window.flyToRoom === 'function') {
+        window.flyToRoom(roomIdx);
+      }
+    });
+  });
+
+  // =============================================================
+  // BLUEPRINT QUOTE ESTIMATOR INTERACTIVITY
+  // =============================================================
+  const optionButtons = document.querySelectorAll('.option-select-btn');
+  optionButtons.forEach(btn => {
+    btn.addEventListener('click', function () {
+      const group = this.parentElement;
+      group.querySelectorAll('.option-select-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+
+  const blueprintForm = document.getElementById('blueprintQuoteForm');
+  if (blueprintForm) {
+    blueprintForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const activePlot = document.querySelector('.option-select-btn[data-plot].active')?.dataset.plot || '133';
+      const activeTypo = document.querySelector('.option-select-btn[data-typology].active')?.dataset.typology || 'ground';
+      const name = this.name.value;
+      const phone = this.phone.value;
+      const location = this.location.value || 'Hyderabad';
+
+      const msg = `Hello SLTG Builders, I want a blueprint quote request:%0A- Name: ${encodeURIComponent(name)}%0A- Phone: ${encodeURIComponent(phone)}%0A- Plot: ${encodeURIComponent(activePlot)} SQ YD%0A- Typology: ${encodeURIComponent(activeTypo)}%0A- Location: ${encodeURIComponent(location)}`;
+      window.open(`https://wa.me/919390247365?text=${msg}`, '_blank');
+      showToast('Quote blueprint request generated! Opening direct architectural WhatsApp...', 'success');
+    });
+  }
+
+  // =============================================================
+  // SCROLL-DRIVEN 3D CAMERA WAYPOINT INTERPOLATION
+  // =============================================================
+  let scrollTimeout = null;
+  window.addEventListener('scroll', () => {
+    if (scrollTimeout) return;
+    scrollTimeout = setTimeout(() => {
+      scrollTimeout = null;
+      if (typeof window.flyToRoom !== 'function') return;
+
+      const scrollPos = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      const homeSec = document.getElementById('home');
+      const statsSec = document.getElementById('elevation-stats');
+      const splitSec = document.getElementById('heritage-timeline');
+      const gallerySec = document.getElementById('quality-gallery');
+      const quoteSec = document.getElementById('get-quote');
+      const pillarsSec = document.getElementById('tri-pillars');
+      const contactSec = document.getElementById('contact');
+
+      if (contactSec && scrollPos >= contactSec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(7); // Pool & Parking
+      } else if (pillarsSec && scrollPos >= pillarsSec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(6); // Terrace
+      } else if (quoteSec && scrollPos >= quoteSec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(4); // Master Suite
+      } else if (gallerySec && scrollPos >= gallerySec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(3); // Kitchen
+      } else if (splitSec && scrollPos >= splitSec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(2); // Living Hall
+      } else if (statsSec && scrollPos >= statsSec.offsetTop - windowHeight / 2) {
+        window.flyToRoom(1); // Entrance
+      } else if (homeSec && scrollPos < statsSec?.offsetTop - windowHeight / 2) {
+        window.flyToRoom(0); // Facade
+      }
+    }, 150);
+  }, { passive: true });
+
 });
