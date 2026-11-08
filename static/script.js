@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // =============================================================
-  // 4-DOTS DICE ANIMATED MENU TRIGGER & WAVY DRAWER
+  // PURE 4-DOTS DICE (ROTATES 45 DEG TO DIAMOND) & WAVY DRAWER
   // =============================================================
   const diceMenuBtn = document.getElementById('diceMenuBtn');
   const drawerOverlay = document.getElementById('wavyDrawerOverlay');
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (drawerOverlay && drawerPanel) {
       drawerOverlay.classList.add('open');
       drawerPanel.classList.add('open');
-      if (diceMenuBtn) diceMenuBtn.classList.add('active');
+      if (diceMenuBtn) diceMenuBtn.classList.add('active'); // Rotates 4-dots into diamond shape!
       document.body.style.overflow = 'hidden';
     }
   }
@@ -62,19 +62,28 @@ document.addEventListener('DOMContentLoaded', function () {
     if (drawerOverlay && drawerPanel) {
       drawerOverlay.classList.remove('open');
       drawerPanel.classList.remove('open');
-      if (diceMenuBtn) diceMenuBtn.classList.remove('active');
+      if (diceMenuBtn) diceMenuBtn.classList.remove('active'); // Rotates back to square dots
       document.body.style.overflow = '';
     }
   }
 
-  if (diceMenuBtn) diceMenuBtn.addEventListener('click', openDrawer);
+  if (diceMenuBtn) {
+    diceMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = drawerPanel && drawerPanel.classList.contains('open');
+      if (isOpen) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+  }
+
   if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeDrawer);
   if (drawerOverlay) drawerOverlay.addEventListener('click', closeDrawer);
 
   document.querySelectorAll('.drawer-nav-item a').forEach(link => {
-    link.addEventListener('click', () => {
-      closeDrawer();
-    });
+    link.addEventListener('click', closeDrawer);
   });
 
   // Room Jump Buttons inside Drawer
@@ -767,50 +776,7 @@ document.addEventListener('DOMContentLoaded', function () {
   };
 
 
-  // =============================================================
-  // DICE 4-DOTS TO DIAMOND ROTATION & DRAWER CONTROLLER
-  // =============================================================
-  const diceBtn = document.getElementById('diceMenuBtn');
-  const drawerOverlay = document.getElementById('wavyDrawerOverlay');
-  const drawerPanel = document.getElementById('wavyDrawerPanel');
-  const drawerCloseBtn = document.getElementById('drawerCloseBtn');
 
-  function openMasterDrawer() {
-    if (drawerOverlay && drawerPanel) {
-      drawerOverlay.classList.add('open');
-      drawerPanel.classList.add('open');
-      if (diceBtn) diceBtn.classList.add('active'); // Rotates 4-dots into diamond shape!
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
-  function closeMasterDrawer() {
-    if (drawerOverlay && drawerPanel) {
-      drawerOverlay.classList.remove('open');
-      drawerPanel.classList.remove('open');
-      if (diceBtn) diceBtn.classList.remove('active'); // Rotates back to square dots
-      document.body.style.overflow = '';
-    }
-  }
-
-  if (diceBtn) {
-    diceBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const isOpen = drawerPanel && drawerPanel.classList.contains('open');
-      if (isOpen) {
-        closeMasterDrawer();
-      } else {
-        openMasterDrawer();
-      }
-    });
-  }
-
-  if (drawerCloseBtn) drawerCloseBtn.addEventListener('click', closeMasterDrawer);
-  if (drawerOverlay) drawerOverlay.addEventListener('click', closeMasterDrawer);
-
-  document.querySelectorAll('.drawer-nav-item a').forEach(link => {
-    link.addEventListener('click', closeMasterDrawer);
-  });
 
   // Room Jump Buttons inside Drawer
   document.querySelectorAll('.drawer-room-btn').forEach(btn => {
