@@ -687,4 +687,49 @@ document.addEventListener('DOMContentLoaded', function () {
     revealElements.forEach(el => el.classList.add('is-visible'));
   }
 
+
+  // =============================================================
+  // GALLERY CATEGORY FILTERING & 3D INTERACTIVE CARD TILT
+  // =============================================================
+  const filterPills = document.querySelectorAll('.gallery-filter-pill');
+  const photoCards = document.querySelectorAll('.photo-3d-card');
+
+  filterPills.forEach(pill => {
+    pill.addEventListener('click', function () {
+      filterPills.forEach(p => p.classList.remove('active'));
+      this.classList.add('active');
+
+      const filterVal = this.dataset.filter;
+      photoCards.forEach(card => {
+        if (filterVal === 'all' || card.dataset.category === filterVal) {
+          card.style.display = 'block';
+          setTimeout(() => { card.style.opacity = '1'; card.style.transform = ''; }, 20);
+        } else {
+          card.style.opacity = '0';
+          card.style.transform = 'scale(0.95)';
+          setTimeout(() => { card.style.display = 'none'; }, 250);
+        }
+      });
+    });
+  });
+
+  // 3D Perspective Card Tilt on Mouse Move
+  const interactiveCards = document.querySelectorAll('.photo-3d-card, .timeline-card');
+  interactiveCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const centerX = rect.width / 2;
+      const centerY = rect.height / 2;
+      const rotateX = ((y - centerY) / centerY) * -4;
+      const rotateY = ((x - centerX) / centerX) * 4;
+      card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-5px)`;
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+
 });

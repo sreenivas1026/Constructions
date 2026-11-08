@@ -161,7 +161,7 @@ h1, h2, h3, h4 {
 
 /* Section Containers */
 .section {
-  padding: 100px 0;
+  padding: 64px 0;
   position: relative;
   z-index: 2;
 }
@@ -3109,4 +3109,299 @@ h1, h2, h3, h4 {
   overflow: hidden;
   box-shadow: 0 24px 60px -15px rgba(0, 0, 0, 0.45);
   user-select: none;
+}
+
+
+/* ==========================================================================
+   PERFECT SIZING, BALANCED PADDINGS & ETHEREAL CLOUDY ATMOSPHERE
+   Senior Lead Architectural Presentation System
+   ========================================================================== */
+
+/* 1. Balanced Containers & Disciplined Spacing */
+.container {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.container-wide {
+  width: 100%;
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 64px 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-editorial {
+  padding: 36px 0 48px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-block-banner {
+  margin-bottom: 24px;
+}
+
+.section-header-editorial {
+  margin-bottom: 32px;
+}
+
+.section-title-editorial {
+  font-family: var(--font-serif);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--ink-primary);
+  margin-bottom: 12px;
+}
+
+.section-subtitle-editorial {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--ink-secondary);
+  max-width: 720px;
+}
+
+/* 2. Atmospheric Drifting Cloudy / Mist Layers */
+.cloudy-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cloud-layer {
+  position: absolute;
+  width: 180%;
+  height: 100%;
+  top: 0;
+  left: -40%;
+  pointer-events: none;
+  opacity: 0.42;
+  will-change: transform;
+}
+
+.cloud-layer-1 {
+  background: radial-gradient(ellipse 65% 45% at 20% 30%, rgba(225, 235, 250, 0.55), transparent 70%),
+              radial-gradient(ellipse 55% 55% at 75% 60%, rgba(245, 235, 218, 0.45), transparent 70%),
+              radial-gradient(ellipse 70% 60% at 50% 90%, rgba(255, 255, 255, 0.6), transparent 70%);
+  filter: blur(48px);
+  animation: cloudDrift 55s ease-in-out infinite alternate;
+}
+
+.cloud-layer-2 {
+  background: radial-gradient(ellipse 55% 45% at 40% 70%, rgba(235, 225, 210, 0.35), transparent 75%),
+              radial-gradient(ellipse 65% 55% at 85% 25%, rgba(215, 230, 245, 0.4), transparent 70%);
+  filter: blur(65px);
+  animation: cloudDriftReverse 75s ease-in-out infinite alternate;
+  opacity: 0.32;
+}
+
+body.theme-black-night .cloud-layer-1 {
+  background: radial-gradient(ellipse 65% 45% at 20% 30%, rgba(32, 45, 70, 0.45), transparent 70%),
+              radial-gradient(ellipse 55% 55% at 75% 60%, rgba(50, 40, 24, 0.3), transparent 70%),
+              radial-gradient(ellipse 70% 60% at 50% 90%, rgba(22, 28, 42, 0.55), transparent 70%);
+  filter: blur(55px);
+}
+
+body.theme-black-night .cloud-layer-2 {
+  background: radial-gradient(ellipse 55% 45% at 40% 70%, rgba(45, 34, 20, 0.28), transparent 75%),
+              radial-gradient(ellipse 65% 55% at 85% 25%, rgba(26, 38, 58, 0.38), transparent 70%);
+  filter: blur(75px);
+}
+
+@keyframes cloudDrift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(8%, -4%, 0); }
+}
+
+@keyframes cloudDriftReverse {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-7%, 3%, 0); }
+}
+
+/* 3. 3D Perspective Card Tilt & Elevation */
+.photo-3d-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  margin-top: 24px;
+}
+
+.photo-3d-card {
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  transition: transform 0.4s var(--ease-architectural), box-shadow 0.4s var(--ease-architectural), border-color 0.4s ease;
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  will-change: transform;
+}
+
+.photo-3d-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--bronze-border);
+}
+
+.photo-3d-img-box {
+  width: 100%;
+  height: 240px;
+  overflow: hidden;
+  background: #11141a;
+  position: relative;
+}
+
+.photo-3d-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.photo-3d-card:hover .photo-3d-img {
+  transform: scale(1.06);
+}
+
+.photo-3d-body {
+  padding: 20px 22px;
+}
+
+.photo-3d-tag {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bronze-primary);
+  margin-bottom: 6px;
+}
+
+.photo-3d-title {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  color: var(--ink-primary);
+  margin-bottom: 6px;
+  line-height: 1.25;
+}
+
+.photo-3d-desc {
+  font-size: 13.5px;
+  color: var(--ink-secondary);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Gallery Filter Pills */
+.gallery-filter-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.gallery-filter-pill {
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--hairline-medium);
+  background: var(--bg-card);
+  color: var(--ink-secondary);
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.gallery-filter-pill:hover,
+.gallery-filter-pill.active {
+  background: var(--ink-primary);
+  color: var(--bg-main);
+  border-color: var(--ink-primary);
+}
+
+/* 4. Timeline Card Proportions */
+.timeline-card {
+  padding: 24px 26px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  box-shadow: var(--shadow-card);
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+.timeline-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--bronze-border);
+}
+
+.timeline-card.featured-sale {
+  border: 1.5px solid var(--bronze-border);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%);
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  font-size: 24px;
+  color: var(--ink-primary);
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.timeline-desc {
+  font-size: 14px;
+  color: var(--ink-secondary);
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.timeline-specs-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 14px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 18px;
+}
+
+/* Mobile Responsiveness for Gallery & Timeline */
+@media (max-width: 960px) {
+  .photo-3d-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .section {
+    padding: 48px 0;
+  }
+  .section-title-editorial {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 640px) {
+  .photo-3d-grid {
+    grid-template-columns: 1fr;
+  }
+  .container {
+    padding: 0 16px;
+  }
+  .section {
+    padding: 40px 0;
+  }
+  .section-title-editorial {
+    font-size: 27px;
+  }
+  .timeline-card {
+    padding: 18px 16px;
+  }
 }

@@ -148,6 +148,11 @@
        HERO: WELCOME TO SLTG BUILDERS & INTERACTIVE 3D HOME CANVAS
        ===================================================================== -->
   <section class="hero-editorial" id="home">
+    <!-- Ethereal Cloudy Monograph Atmosphere -->
+    <div class="cloudy-atmosphere" aria-hidden="true">
+      <div class="cloud-layer cloud-layer-1"></div>
+      <div class="cloud-layer cloud-layer-2"></div>
+    </div>
     <div class="container">
       <!-- Prominent Welcome Block Banner -->
       <div class="welcome-block-banner">
@@ -264,6 +269,10 @@
        SECTION 02: CONSTRUCTIONS TIMELINE & ACTIVE DEVELOPMENTS
        ===================================================================== -->
   <section class="section section-pure" id="timeline">
+    <div class="cloudy-atmosphere" aria-hidden="true">
+      <div class="cloud-layer cloud-layer-1"></div>
+      <div class="cloud-layer cloud-layer-2"></div>
+    </div>
     <div class="container">
       <div class="section-header-editorial">
         <div class="section-index-badge">02 / Verified Projects &middot; Constructions Timeline</div>
@@ -478,6 +487,10 @@
        SECTION 03: LAST COMPLETED HOME AUTHENTIC PHOTO GALLERY
        ===================================================================== -->
   <section class="section section-bone" id="gallery">
+    <div class="cloudy-atmosphere" aria-hidden="true">
+      <div class="cloud-layer cloud-layer-1"></div>
+      <div class="cloud-layer cloud-layer-2"></div>
+    </div>
     <div class="container">
       <div class="section-header-editorial">
         <div class="section-index-badge">03 / Last Completed Residence &middot; Authentic Photo Monograph</div>
@@ -488,9 +501,19 @@
       </div>
 
       <!-- 3D Perspective Photo Cards Grid -->
+            <!-- Gallery Category Filter Pills -->
+      <div class="gallery-filter-bar">
+        <button type="button" class="gallery-filter-pill active" data-filter="all">All Real Photos (6)</button>
+        <button type="button" class="gallery-filter-pill" data-filter="elevation">Exterior Elevation</button>
+        <button type="button" class="gallery-filter-pill" data-filter="living">Living Hall Atrium</button>
+        <button type="button" class="gallery-filter-pill" data-filter="kitchen">Chef's Kitchen</button>
+        <button type="button" class="gallery-filter-pill" data-filter="bedroom">Master Suite</button>
+        <button type="button" class="gallery-filter-pill" data-filter="finishes">Wall Finishes</button>
+      </div>
+
       <div class="photo-3d-grid">
         <!-- 1. Elevation -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/Elevation.png', 'Completed Elevation — 133 SQ Yards East Face Ground Floor Independent Home')">
+        <div class="photo-3d-card" data-category="elevation" onclick="openPhotoModal('images/Elevation.png', 'Completed Elevation — 133 SQ Yards East Face Ground Floor Independent Home')">
           <div class="photo-3d-img-box">
             <img src="images/Elevation.png" alt="133 SQ Yards East Face Completed Elevation" class="photo-3d-img">
           </div>
@@ -502,7 +525,7 @@
         </div>
 
         <!-- 2. Living Hall -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/Hall.png', 'Completed Living Hall Atrium — 133 SQ Yards East Face')">
+        <div class="photo-3d-card" data-category="living" onclick="openPhotoModal('images/Hall.png', 'Completed Living Hall Atrium — 133 SQ Yards East Face')">
           <div class="photo-3d-img-box">
             <img src="images/Hall.png" alt="Completed Living Hall" class="photo-3d-img">
           </div>
@@ -514,7 +537,7 @@
         </div>
 
         <!-- 3. Modular Kitchen -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/Kitchen_aa.png', 'Completed Chef's Modular Kitchen — 133 SQ Yards East Face')">
+        <div class="photo-3d-card" data-category="kitchen" onclick="openPhotoModal('images/Kitchen_aa.png', 'Completed Chef's Modular Kitchen — 133 SQ Yards East Face')">
           <div class="photo-3d-img-box">
             <img src="images/Kitchen_aa.png" alt="Completed Modular Kitchen" class="photo-3d-img">
           </div>
@@ -526,7 +549,7 @@
         </div>
 
         <!-- 4. Master Bedroom -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/BR.png', 'Completed Master Bedroom Suite — 133 SQ Yards East Face')">
+        <div class="photo-3d-card" data-category="bedroom" onclick="openPhotoModal('images/BR.png', 'Completed Master Bedroom Suite — 133 SQ Yards East Face')">
           <div class="photo-3d-img-box">
             <img src="images/BR.png" alt="Completed Master Bedroom" class="photo-3d-img">
           </div>
@@ -538,7 +561,7 @@
         </div>
 
         <!-- 5. Wall Paint Finishes -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/wall_paint.png', 'Completed Wall Paint & Finishes — 133 SQ Yards East Face')">
+        <div class="photo-3d-card" data-category="finishes" onclick="openPhotoModal('images/wall_paint.png', 'Completed Wall Paint & Finishes — 133 SQ Yards East Face')">
           <div class="photo-3d-img-box">
             <img src="images/wall_paint.png" alt="Completed Wall Finishes" class="photo-3d-img">
           </div>
@@ -550,7 +573,7 @@
         </div>
 
         <!-- 6. 3D Living Floorplan -->
-        <div class="photo-3d-card" onclick="openPhotoModal('images/Hall_top.png', '3D Spatial Living Layout Plan — 133 SQ Yards East Face')">
+        <div class="photo-3d-card" data-category="living" onclick="openPhotoModal('images/Hall_top.png', '3D Spatial Living Layout Plan — 133 SQ Yards East Face')">
           <div class="photo-3d-img-box">
             <img src="images/Hall_top.png" alt="3D Spatial Floorplan" class="photo-3d-img">
           </div>
