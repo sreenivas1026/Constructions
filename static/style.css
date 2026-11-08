@@ -134,11 +134,9 @@ button {
 /* Master Layout Container */
 .container {
   width: 100%;
-  max-width: 1260px;
+  max-width: 1360px;
   margin: 0 auto;
-  padding: 0 36px;
-  position: relative;
-  z-index: 2;
+  padding: 0 32px;
 }
 
 /* Editorial Typography */
@@ -2866,4 +2864,192 @@ h1, h2, h3, h4 {
   .welcome-main-title { font-size: 38px; }
   .photo-3d-grid { grid-template-columns: 1fr; }
   .three-structure-wrapper { height: 440px; }
+}
+
+
+/* ==========================================================================
+   CONSTRUCTIONS TIMELINE & PROPERTY SHOWCASE STYLES
+   ========================================================================== */
+.timeline-wrapper {
+  position: relative;
+  max-width: 1200px;
+  margin: 48px auto 0 auto;
+}
+
+.timeline-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 28px;
+  width: 2px;
+  background: var(--hairline-medium);
+}
+
+.timeline-item {
+  position: relative;
+  padding-left: 72px;
+  margin-bottom: 40px;
+}
+
+.timeline-item:last-child {
+  margin-bottom: 0;
+}
+
+.timeline-marker {
+  position: absolute;
+  top: 8px;
+  left: 17px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  border: 3px solid var(--bronze-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  box-shadow: 0 0 12px var(--bronze-glow);
+}
+
+.timeline-marker.active {
+  background: #10b981;
+  border-color: #10b981;
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.4);
+}
+
+.timeline-card {
+  background: var(--bg-card);
+  border: 1px solid var(--hairline-medium);
+  border-radius: var(--radius-sm);
+  padding: 32px 36px;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.timeline-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--bronze-light);
+}
+
+.timeline-card.featured-sale {
+  border: 2px solid var(--bronze-light);
+  background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-subtle) 100%);
+  box-shadow: 0 20px 45px -10px var(--bronze-glow);
+}
+
+.timeline-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.timeline-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.timeline-badge {
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.timeline-badge.badge-active {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.timeline-badge.badge-sale {
+  background: var(--bronze-pale);
+  color: var(--bronze-primary);
+  border: 1px solid var(--bronze-border);
+}
+
+.timeline-badge.badge-done {
+  background: var(--bg-subtle);
+  color: var(--ink-secondary);
+  border: 1px solid var(--hairline);
+}
+
+.timeline-price-tag {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--bronze-primary);
+  letter-spacing: -0.01em;
+}
+
+.timeline-title {
+  font-family: var(--font-serif);
+  font-size: 28px;
+  color: var(--ink-primary);
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.timeline-desc {
+  font-size: 14.5px;
+  color: var(--ink-secondary);
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+.timeline-specs-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  padding: 16px 0;
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+  margin-bottom: 20px;
+}
+
+.spec-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spec-cell-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+}
+
+.spec-cell-val {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-primary);
+}
+
+@media (max-width: 900px) {
+  .timeline-specs-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .timeline-wrapper::before {
+    left: 14px;
+  }
+  .timeline-marker {
+    left: 3px;
+  }
+  .timeline-item {
+    padding-left: 44px;
+  }
+  .timeline-specs-row {
+    grid-template-columns: 1fr;
+  }
 }

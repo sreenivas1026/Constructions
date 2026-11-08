@@ -136,7 +136,6 @@
       return;
     }
     initArchitecturalExperience();
-    initStructuralCoreEngine();
   }
 
   function initArchitecturalExperience() {
@@ -172,8 +171,7 @@
       controls.enableDamping = true;
       controls.dampingFactor = 0.06;
       controls.maxPolarAngle = Math.PI / 2 - 0.02;
-      controls.minDistance = 1.5;
-      controls.maxDistance = 30;
+      controls.enableZoom = false; // NEVER trap mousewheel so page scrolling is 100% free & silky smooth
       controls.autoRotate = false;
     }
 
@@ -689,42 +687,9 @@
       }
     };
 
-    // Mouse Wheel Deep Room Exploration inside Viewport
-    let wheelDebounce = null;
-    container.addEventListener('wheel', (e) => {
-      if (e.ctrlKey || e.altKey) return;
-      e.preventDefault();
-      if (wheelDebounce) return;
-      wheelDebounce = setTimeout(() => { wheelDebounce = null; }, 400);
+    // Native smooth page scroll preserved - no wheel interception
 
-      if (e.deltaY > 0) {
-        // Scroll down -> fly deeper into next room
-        const nextIdx = Math.min(waypoints.length - 1, currentWaypointIdx + 1);
-        if (nextIdx !== currentWaypointIdx) window.flyToRoom(nextIdx);
-      } else if (e.deltaY < 0) {
-        // Scroll up -> fly back towards entrance / facade
-        const prevIdx = Math.max(0, currentWaypointIdx - 1);
-        if (prevIdx !== currentWaypointIdx) window.flyToRoom(prevIdx);
-      }
-    }, { passive: false });
-
-    // Scroll-Driven Camera Tour
-    window.addEventListener('scroll', () => {
-      // Calculate normalized scroll position over document
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      if (docHeight <= 0) return;
-      const scrollFraction = Math.max(0, Math.min(1, window.scrollY / docHeight));
-
-      // Map scroll percentage to waypoints
-      const targetIndex = Math.min(
-        waypoints.length - 1,
-        Math.floor(scrollFraction * waypoints.length)
-      );
-
-      if (targetIndex !== currentWaypointIdx && !isUserControlling) {
-        window.flyToRoom(targetIndex);
-      }
-    }, { passive: true });
+    // Scroll camera hijacking removed for silky smooth 60fps page scrolling
 
     // Track when user is actively dragging OrbitControls
     if (controls) {
