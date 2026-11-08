@@ -664,4 +664,27 @@ document.addEventListener('DOMContentLoaded', function () {
     if (homeEl) homeEl.scrollIntoView({ behavior: 'smooth' });
   };
 
+
+  // =============================================================
+  // EDITORIAL TEXT & SECTION REVEAL INTERSECTION OBSERVER
+  // =============================================================
+  const revealElements = document.querySelectorAll('.reveal-elem, .timeline-card, .section-header-editorial');
+  if ('IntersectionObserver' in window && revealElements.length > 0) {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {
+      rootMargin: '0px 0px -80px 0px',
+      threshold: 0.12
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+  } else {
+    revealElements.forEach(el => el.classList.add('is-visible'));
+  }
+
 });

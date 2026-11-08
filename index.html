@@ -21,7 +21,7 @@
   <!-- Google Fonts: Plus Jakarta Sans (Modern Clean Sans) + Cinzel (Regal Monograms) + Cormorant Garamond (Editorial Serif) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Italiana&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -152,7 +152,7 @@
       <!-- Prominent Welcome Block Banner -->
       <div class="welcome-block-banner">
         <div class="welcome-eyebrow">HYDERABAD RESIDENTIAL ARCHITECTURAL MONOGRAPH &middot; EST. 2000</div>
-        <h1 class="welcome-main-title">WELCOME TO <span class="text-bronze">SLTG BUILDERS</span></h1>
+        <h1 class="welcome-main-title reveal-mask"><span class="reveal-elem delay-1" style="display:inline-block;">WELCOME TO <span class="text-bronze serif-italic">SLTG BUILDERS</span></span></h1>
         <p class="welcome-sub-desc">
           Building proper attire independent homes with structural permanence. Civil contracting pedigree since 2000, specialized residential constructions since 2021, and 10+ successfully delivered homes in the last 3 years.
         </p>
@@ -208,6 +208,12 @@
             </button>
             <button type="button" class="three-hud-btn" id="btnWireframe" onclick="toggle3DWireframe()" title="Structural Fe550D Wireframe Mode">
               <i class="fas fa-vector-square"></i> <span>X-Ray Wireframe</span>
+            </button>
+            <button type="button" class="three-hud-btn" onclick="zoom3D(-6)" title="Zoom In (+)">
+              <i class="fas fa-search-plus"></i>
+            </button>
+            <button type="button" class="three-hud-btn" onclick="zoom3D(6)" title="Zoom Out (-)">
+              <i class="fas fa-search-minus"></i>
             </button>
             <button type="button" class="three-hud-btn" onclick="reset3DCamera()" title="Reset Camera to Facade">
               <i class="fas fa-undo"></i>

@@ -261,6 +261,16 @@
     plinth.receiveShadow = true;
     houseGroup.add(plinth);
 
+    // Lush Architectural Landscape Planters
+    const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2e4a32, roughness: 0.9 });
+    for (let p = -5.0; p <= 4.0; p += 1.8) {
+      const hedge = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.45, 0.4), foliageMat);
+      hedge.position.set(p, 0.55, 4.4);
+      hedge.castShadow = true;
+      houseGroup.add(hedge);
+    }
+
+
     const pool = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.15, 2.4), mats.water);
     pool.position.set(-3.4, 0.38, 2.6);
     houseGroup.add(pool);
@@ -760,6 +770,25 @@
     };
 
     // Reset Camera
+    
+    // Zoom In / Out Buttons without trapping mousewheel
+    window.zoom3D = function(delta) {
+      if (typeof camera !== 'undefined') {
+        const targetFov = Math.max(24, Math.min(60, camera.fov + delta));
+        if (typeof gsap !== 'undefined') {
+          gsap.to(camera, {
+            fov: targetFov,
+            duration: 0.5,
+            ease: 'power2.out',
+            onUpdate: () => camera.updateProjectionMatrix()
+          });
+        } else {
+          camera.fov = targetFov;
+          camera.updateProjectionMatrix();
+        }
+      }
+    };
+
     window.reset3DCamera = function () {
       window.flyToRoom(0);
     };
