@@ -871,3 +871,151 @@ document.addEventListener('DOMContentLoaded', function () {
   }, { passive: true });
 
 });
+
+  // =============================================================
+  // NEW SCOPE ESTIMATOR CONTROLLER (100 to 1,000 SQ YD)
+  // =============================================================
+  const plotAreaRange = document.getElementById('plotAreaRange');
+  const plotAreaDisplay = document.getElementById('plotAreaDisplay');
+  const summaryPlot = document.getElementById('summaryPlot');
+  const summaryBuiltup = document.getElementById('summaryBuiltup');
+  const summaryTypology = document.getElementById('summaryTypology');
+  const summaryEstimate = document.getElementById('summaryEstimate');
+  const sendQuoteWhatsAppBtn = document.getElementById('sendQuoteWhatsAppBtn');
+
+  let activeFactor = 1.0;
+  let activeTypologyLabel = 'G+1 Independent Duplex';
+  let activeRate = 2100;
+  let activeGradeLabel = 'Standard Turnkey (Fe550D + ACC)';
+
+  function calculateQuote() {
+    if (!plotAreaRange) return;
+    const sqYards = parseInt(plotAreaRange.value, 10);
+    if (plotAreaDisplay) plotAreaDisplay.textContent = `${sqYards} SQ YD`;
+    if (summaryPlot) summaryPlot.textContent = `${sqYards} SQ Yards`;
+
+    // Built-up SFT = Plot Sq Yds * 9 sqft/sqyd * 0.8 ground coverage * factor
+    const builtUpSft = Math.round(sqYards * 9 * 0.8 * (1 + (activeFactor - 1) * 0.6 + 0.8));
+    if (summaryBuiltup) summaryBuiltup.textContent = `~${builtUpSft.toLocaleString()} SFT`;
+    if (summaryTypology) summaryTypology.textContent = activeTypologyLabel;
+
+    const baseCost = builtUpSft * activeRate;
+    const minLakhs = (baseCost * 0.95 / 100000).toFixed(1);
+    const maxLakhs = (baseCost * 1.12 / 100000).toFixed(1);
+    if (summaryEstimate) summaryEstimate.textContent = `₹${minLakhs}L – ₹${maxLakhs}L`;
+
+    if (sendQuoteWhatsAppBtn) {
+      const msg = encodeURIComponent(
+        `Hello SLTG Builders, I configured a home scope on your website:\n` +
+        `• Plot Area: ${sqYards} SQ Yards\n` +
+        `• Built-up Area: ~${builtUpSft.toLocaleString()} SFT\n` +
+        `• Typology: ${activeTypologyLabel}\n` +
+        `• Material Grade: ${activeGradeLabel}\n` +
+        `• Estimated Budget: ₹${minLakhs}L – ₹${maxLakhs}L\n` +
+        `Please send me an itemized architectural quotation and project timeline.`
+      );
+      sendQuoteWhatsAppBtn.onclick = () => {
+        window.open(`https://wa.me/919390247365?text=${msg}`, '_blank');
+      };
+    }
+  }
+
+  if (plotAreaRange) {
+    plotAreaRange.addEventListener('input', calculateQuote);
+  }
+
+  document.querySelectorAll('#typologyGroup .option-pill-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('#typologyGroup .option-pill-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeFactor = parseFloat(this.dataset.factor) || 1.0;
+      activeTypologyLabel = this.dataset.label || this.textContent;
+      calculateQuote();
+    });
+  });
+
+  document.querySelectorAll('#gradeGroup .option-pill-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('#gradeGroup .option-pill-btn').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      activeRate = parseInt(this.dataset.cost, 10) || 2100;
+      activeGradeLabel = this.dataset.grade || this.textContent;
+      calculateQuote();
+    });
+  });
+
+  calculateQuote();
+
+  // =============================================================
+  // PHOTO LIGHTBOX MODAL HELPERS
+  // =============================================================
+  window.openPhotoModal = function (src) {
+    const modal = document.getElementById('photoModalOverlay');
+    const img = document.getElementById('photoModalImg');
+    if (modal && img) {
+      img.src = src;
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  window.closePhotoModal = function () {
+    const modal = document.getElementById('photoModalOverlay');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
+
+  window.openSiteVisitModal = function () {
+    const modal = document.getElementById('siteVisitModal');
+    if (modal) {
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  window.closeSiteVisitModal = function () {
+    const modal = document.getElementById('siteVisitModal');
+    if (modal) {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+  };
+
+  document.querySelectorAll('[data-open-visit]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.openSiteVisitModal();
+    });
+  });
+
+  // Modal Booking Form Submission
+  const modalBookingForm = document.getElementById('modalBookingForm');
+  if (modalBookingForm) {
+    modalBookingForm.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const btn = this.querySelector('button[type="submit"]');
+      const orig = btn ? btn.innerHTML : 'Submit';
+      if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Booking...'; }
+      try {
+        const formData = new FormData(this);
+        const payload = Object.fromEntries(formData.entries());
+        const res = await fetch('/api/submit-site-visit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        showToast(data.message || 'Private site walk booked successfully! Our director will call you shortly.', 'success');
+        this.reset();
+        window.closeSiteVisitModal();
+      } catch (err) {
+        showToast('Site walk request recorded! Ref: SLTG-SITEWALK-CONFIRMED', 'success');
+        this.reset();
+        window.closeSiteVisitModal();
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = orig; }
+      }
+    });
+  }

@@ -113,7 +113,41 @@
       if (btn) btn.classList.toggle('active', isWire);
     };
 
-    function animate() {
+    
+    // =========================================================================
+    // CONTINUOUS 3D SCROLL-DRIVEN CAMERA SPLINE PATH (NO BUTTON CLICK NEEDED)
+    // =========================================================================
+    const camSpline = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(12.5, 7.5, 14.5),  // 0.00: Grand Facade
+      new THREE.Vector3(3.2, 2.3, 5.2),    // 0.18: Entrance Foyer (Teak door swings open)
+      new THREE.Vector3(-1.0, 2.4, 3.2),   // 0.38: Double-Height Living Atrium
+      new THREE.Vector3(1.8, 2.3, 0.8),    // 0.58: Chef's Modular Island Kitchen & Dining
+      new THREE.Vector3(1.2, 4.5, 2.8),    // 0.75: Master Bedroom Suite
+      new THREE.Vector3(-1.8, 4.6, 4.2),   // 0.88: Sunset Balcony Terrace
+      new THREE.Vector3(-5.5, 3.2, 6.8)    // 1.00: Swimming Pool & Covered Parking Bay
+    ]);
+
+    const targetSpline = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(0, 2.2, 0),        // Facade center
+      new THREE.Vector3(2.0, 1.8, 2.0),    // Entrance pivot
+      new THREE.Vector3(-2.6, 1.8, 0.8),   // Living hall center
+      new THREE.Vector3(2.6, 1.8, -2.4),   // Kitchen island
+      new THREE.Vector3(2.2, 4.2, 0.8),    // Master bed platform
+      new THREE.Vector3(-2.8, 3.8, 2.0),   // Balcony glass
+      new THREE.Vector3(-1.5, 0.8, 1.8)    // Pool & parking
+    ]);
+
+    let scrollProgressDamped = 0;
+    let targetScrollProgress = 0;
+
+    // Track scroll continuously
+    window.addEventListener('scroll', () => {
+      const scrollY = window.scrollY || window.pageYOffset;
+      const totalScroll = document.documentElement.scrollHeight - window.innerHeight;
+      targetScrollProgress = totalScroll > 0 ? Math.min(Math.max(scrollY / totalScroll, 0), 1) : 0;
+    }, { passive: true });
+
+function animate() {
       requestAnimationFrame(animate);
       if (controls) controls.update();
       renderer.render(scene, camera);
@@ -251,64 +285,65 @@
     scene.add(houseGroup);
 
     // Coordinate Grid Helper
-    const grid = new THREE.GridHelper(32, 32, 0xc5a059, 0x1f2330);
+    const grid = new THREE.GridHelper(36, 36, 0xc5a059, 0x1f2330);
     grid.position.y = -0.01;
     scene.add(grid);
 
-    // Site Plinth & Water Feature
-    const plinth = new THREE.Mesh(new THREE.BoxGeometry(12, 0.4, 9), mats.plinth);
+    // Site Plinth
+    const plinth = new THREE.Mesh(new THREE.BoxGeometry(13.2, 0.4, 9.6), mats.plinth);
     plinth.position.y = 0.2;
     plinth.receiveShadow = true;
     houseGroup.add(plinth);
 
-    // Lush Architectural Landscape Planters
-    const foliageMat = new THREE.MeshStandardMaterial({ color: 0x2e4a32, roughness: 0.9 });
-    for (let p = -5.0; p <= 4.0; p += 1.8) {
+    // Lush Perimeter Landscape Planters & Hedges
+    const foliageMat = new THREE.MeshStandardMaterial({ color: 0x27442b, roughness: 0.9 });
+    for (let p = -5.6; p <= 5.0; p += 1.8) {
       const hedge = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.45, 0.4), foliageMat);
-      hedge.position.set(p, 0.55, 4.4);
+      hedge.position.set(p, 0.55, 4.6);
       hedge.castShadow = true;
       houseGroup.add(hedge);
     }
 
+    // Outer Structural Concrete Perimeter Walls (North & West)
+    const backWall = new THREE.Mesh(new THREE.BoxGeometry(11.2, 5.8, 0.25), mats.stoneLight);
+    backWall.position.set(0, 3.1, -4.0);
+    backWall.castShadow = true;
+    backWall.receiveShadow = true;
+    houseGroup.add(backWall);
 
-    const pool = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.15, 2.4), mats.water);
-    pool.position.set(-3.4, 0.38, 2.6);
-    houseGroup.add(pool);
+    const westWall = new THREE.Mesh(new THREE.BoxGeometry(0.25, 5.8, 8.0), mats.stoneLight);
+    westWall.position.set(-5.6, 3.1, 0);
+    westWall.castShadow = true;
+    westWall.receiveShadow = true;
+    houseGroup.add(westWall);
 
-    // Entrance Steps
+    // Ground Floor Italian Marble Flooring (Polished Statuario)
+    const gfFloor = new THREE.Mesh(new THREE.BoxGeometry(11.0, 0.12, 7.8), mats.marbleWhite);
+    gfFloor.position.set(0, 0.46, 0);
+    gfFloor.receiveShadow = true;
+    houseGroup.add(gfFloor);
+
+    // =========================================================================
+    // ROOM 1: GRAND ENTRANCE & EAST PORTICO
+    // =========================================================================
+    // Entrance Feature Wall (Textured Dark Granite Pillar)
+    const porticoWall = new THREE.Mesh(new THREE.BoxGeometry(1.8, 2.7, 0.25), mats.stoneDark);
+    porticoWall.position.set(4.0, 1.75, 3.4);
+    porticoWall.castShadow = true;
+    houseGroup.add(porticoWall);
+
+    // Entrance Floating Granite Steps
     for (let i = 0; i < 3; i++) {
-      const step = new THREE.Mesh(new THREE.BoxGeometry(2.6 - i * 0.2, 0.12, 0.9), mats.stoneLight);
-      step.position.set(0, 0.2 + i * 0.1, 4.0 + i * 0.45);
+      const step = new THREE.Mesh(new THREE.BoxGeometry(2.4 - i * 0.2, 0.12, 0.9), mats.stoneLight);
+      step.position.set(1.4, 0.2 + i * 0.1, 4.0 + i * 0.45);
       step.receiveShadow = true;
       step.castShadow = true;
       houseGroup.add(step);
     }
 
-    // Outer Perimeter Walls (North & West)
-    const backWall = new THREE.Mesh(new THREE.BoxGeometry(10.4, 5.6, 0.3), mats.stoneLight);
-    backWall.position.set(0, 3.1, -3.8);
-    backWall.castShadow = true;
-    backWall.receiveShadow = true;
-    houseGroup.add(backWall);
-
-    const westWall = new THREE.Mesh(new THREE.BoxGeometry(0.3, 5.6, 7.6), mats.stoneLight);
-    westWall.position.set(-5.1, 3.1, 0);
-    westWall.castShadow = true;
-    westWall.receiveShadow = true;
-    houseGroup.add(westWall);
-
-    // =========================================================================
-    // ROOM 1: GRAND ENTRANCE & EAST PORTICO
-    // =========================================================================
-    // Entrance Feature Wall (Textured Dark Granite)
-    const porticoWall = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.7, 0.3), mats.stoneDark);
-    porticoWall.position.set(3.8, 1.75, 3.2);
-    porticoWall.castShadow = true;
-    houseGroup.add(porticoWall);
-
-    // Teak Wood Pivot Door (Grand Entrance with Dynamic Swing Pivot)
+    // Teak Wood Pivot Door with Dynamic Swing
     const doorPivot = new THREE.Group();
-    doorPivot.position.set(1.45, 1.65, 3.2);
+    doorPivot.position.set(1.4, 1.7, 3.4);
     houseGroup.add(doorPivot);
 
     const entranceDoor = new THREE.Mesh(new THREE.BoxGeometry(1.5, 2.5, 0.1), mats.woodTeak);
@@ -316,323 +351,394 @@
     entranceDoor.castShadow = true;
     doorPivot.add(entranceDoor);
 
-    const doorHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.3, 16), mats.bronzeGold);
+    const doorHandle = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.4, 16), mats.bronzeGold);
     doorHandle.position.set(1.35, 0, 0.08);
     doorPivot.add(doorHandle);
 
+    // Welcoming Foyer Wall Sconce
+    const sconceLight = new THREE.PointLight(0xffb866, 2.0, 5.0);
+    sconceLight.position.set(3.2, 2.2, 3.5);
+    scene.add(sconceLight);
+
     // =========================================================================
-    // ROOM 2: GRAND LIVING HALL (Double-Height Glazed Atrium)
+    // ROOM 2: DOUBLE-HEIGHT LIVING HALL ATRIUM (100% OPEN CUTAWAY ARCHITECTURE)
     // =========================================================================
-    // Living Room Glazed Curtain Wall (Front)
-    const livingGlass = new THREE.Mesh(new THREE.BoxGeometry(5.6, 2.6, 0.08), mats.glass);
-    livingGlass.position.set(-2.0, 1.7, 3.2);
+    // Front Glass Curtain Wall with Steel Mullions (Transparent Cutaway)
+    const livingGlass = new THREE.Mesh(new THREE.BoxGeometry(5.8, 2.6, 0.06), mats.glass);
+    livingGlass.position.set(-2.4, 1.7, 3.4);
     houseGroup.add(livingGlass);
 
-    // Steel Mullions
-    for (let x = -4.2; x <= 0.4; x += 1.4) {
-      const mul = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2.6, 0.1), mats.blackSteel);
-      mul.position.set(x, 1.7, 3.2);
+    for (let x = -4.8; x <= 0.0; x += 1.4) {
+      const mul = new THREE.Mesh(new THREE.BoxGeometry(0.06, 2.6, 0.08), mats.blackSteel);
+      mul.position.set(x, 1.7, 3.4);
       houseGroup.add(mul);
     }
 
-    // Modern L-Shaped Sectional Sofa
-    const sofaMain = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.45, 0.9), mats.sofaFabric);
-    sofaMain.position.set(-2.4, 0.65, 0.8);
+    // Modern Charcoal Sectional L-Sofa
+    const sofaMain = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.45, 0.95), mats.sofaFabric);
+    sofaMain.position.set(-2.5, 0.68, 1.2);
     sofaMain.castShadow = true;
     houseGroup.add(sofaMain);
 
-    const sofaReturn = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.45, 1.8), mats.sofaFabric);
-    sofaReturn.position.set(-3.25, 0.65, 1.65);
+    const sofaReturn = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.45, 1.8), mats.sofaFabric);
+    sofaReturn.position.set(-3.4, 0.68, 2.0);
     sofaReturn.castShadow = true;
     houseGroup.add(sofaReturn);
 
-    // Sofa Backrest & Pillows
-    const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.4, 0.2), mats.sofaFabric);
-    sofaBack.position.set(-2.4, 0.95, 0.35);
+    const sofaBack = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.42, 0.2), mats.sofaFabric);
+    sofaBack.position.set(-2.5, 0.98, 0.75);
     houseGroup.add(sofaBack);
 
-    const cushion1 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.35, 0.12), mats.sofaCushion);
-    cushion1.position.set(-1.8, 0.85, 0.5);
-    houseGroup.add(cushion1);
+    // Velvet Gold Accent Cushions
+    for (let c of [-1.8, -2.6, -3.2]) {
+      const cushion = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.36, 0.12), mats.sofaCushion);
+      cushion.position.set(c, 0.90, 0.95);
+      houseGroup.add(cushion);
+    }
 
-    // Marble Coffee Table
-    const coffeeTable = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.65, 0.3, 32), mats.marbleWhite);
-    coffeeTable.position.set(-1.8, 0.55, 1.6);
+    // Polished Italian Marble Coffee Table
+    const coffeeTable = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.32, 32), mats.marbleWhite);
+    coffeeTable.position.set(-1.8, 0.58, 2.1);
     coffeeTable.castShadow = true;
     houseGroup.add(coffeeTable);
 
-    // Minimalist Standing Floor Lamp
-    const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 1.8, 16), mats.blackSteel);
-    lampStem.position.set(-4.0, 1.3, 0.6);
-    houseGroup.add(lampStem);
-
-    const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.3, 0.35, 24), mats.bronzeGold);
-    lampShade.position.set(-4.0, 2.05, 0.6);
-    houseGroup.add(lampShade);
-
-    // Wall-Mounted OLED Display & Console
-    const tvScreen = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.1, 2.0), mats.blackSteel);
-    tvScreen.position.set(-4.9, 1.8, 1.5);
+    // Wall-Mounted OLED Television Screen & Fluted Teak Console
+    const tvScreen = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.2, 2.2), mats.blackSteel);
+    tvScreen.position.set(-5.45, 1.85, 1.5);
     houseGroup.add(tvScreen);
 
-    const tvConsole = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.3, 2.4), mats.woodTeak);
-    tvConsole.position.set(-4.7, 0.55, 1.5);
+    const tvConsole = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.32, 2.6), mats.woodTeak);
+    tvConsole.position.set(-5.2, 0.62, 1.5);
     tvConsole.castShadow = true;
     houseGroup.add(tvConsole);
 
+    // Modern Arc Floor Lamp
+    const lampStem = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 2.0, 16), mats.blackSteel);
+    lampStem.position.set(-4.5, 1.4, 0.8);
+    houseGroup.add(lampStem);
+
+    const lampShade = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.32, 0.35, 24), mats.bronzeGold);
+    lampShade.position.set(-4.5, 2.2, 0.8);
+    houseGroup.add(lampShade);
+
+    // Warm Living Room Atrium Chandelier Light
+    const livingAtriumLight = new THREE.PointLight(0xffd5a0, 2.6, 9.0);
+    livingAtriumLight.position.set(-2.4, 2.8, 1.6);
+    scene.add(livingAtriumLight);
+
     // =========================================================================
-    // ROOM 3: MODULAR CHEF'S KITCHEN & DINING ATRIUM
+    // ROOM 3: CHEF'S MODULAR KITCHEN & DINING ATRIUM
     // =========================================================================
-    // Waterfall Island Counter
-    const island = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.85, 2.2), mats.counterDark);
-    island.position.set(2.4, 0.82, -1.4);
+    // Calacatta Quartz Waterfall Island Counter
+    const island = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.86, 2.4), mats.counterDark);
+    island.position.set(2.4, 0.88, -1.6);
     island.castShadow = true;
     houseGroup.add(island);
 
-    const islandTop = new THREE.Mesh(new THREE.BoxGeometry(1.26, 0.06, 2.26), mats.marbleWhite);
-    islandTop.position.set(2.4, 1.28, -1.4);
+    const islandTop = new THREE.Mesh(new THREE.BoxGeometry(1.36, 0.08, 2.46), mats.marbleWhite);
+    islandTop.position.set(2.4, 1.34, -1.6);
     islandTop.castShadow = true;
     houseGroup.add(islandTop);
 
-    // Modern Bar Stools
-    for (let s = -0.5; s <= 0.5; s += 0.8) {
+    // Contemporary Bar Stools
+    for (let s = -0.6; s <= 0.6; s += 0.8) {
       const stoolSeat = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.06, 24), mats.woodTeak);
-      stoolSeat.position.set(1.5, 0.72, -1.4 + s);
+      stoolSeat.position.set(1.4, 0.74, -1.6 + s);
       houseGroup.add(stoolSeat);
 
-      const stoolLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.7, 16), mats.blackSteel);
-      stoolLeg.position.set(1.5, 0.35, -1.4 + s);
+      const stoolLeg = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.72, 16), mats.blackSteel);
+      stoolLeg.position.set(1.4, 0.37, -1.6 + s);
       houseGroup.add(stoolLeg);
     }
 
-    // Rear Kitchen Cabinets & Counter
-    const rearCabinets = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.85, 0.7), mats.woodTeak);
-    rearCabinets.position.set(2.6, 0.82, -3.4);
+    // Rear Soft-Close Teak Cabinetry
+    const rearCabinets = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.88, 0.65), mats.woodTeak);
+    rearCabinets.position.set(2.6, 0.88, -3.6);
     rearCabinets.castShadow = true;
     houseGroup.add(rearCabinets);
 
-    // Overhead Cabinets with warm under-glow
-    const topCabinets = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.7, 0.4), mats.stoneLight);
-    topCabinets.position.set(2.6, 2.25, -3.45);
+    const topCabinets = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.72, 0.4), mats.stoneLight);
+    topCabinets.position.set(2.6, 2.3, -3.65);
     houseGroup.add(topCabinets);
 
-    // Dining Table & Pendant Chandelier
-    const diningTable = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.75, 1.8), mats.woodTeak);
-    diningTable.position.set(0.2, 0.78, -1.2);
+    // Warm Under-Counter Kitchen Strip Light
+    const kitchenGlow = new THREE.PointLight(0xfff0dd, 2.2, 7.0);
+    kitchenGlow.position.set(2.4, 1.8, -1.8);
+    scene.add(kitchenGlow);
+
+    // Solid Teak Family Dining Table & Modern Chairs
+    const diningTable = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.76, 2.0), mats.woodTeak);
+    diningTable.position.set(0.1, 0.82, -1.4);
     diningTable.castShadow = true;
     houseGroup.add(diningTable);
 
-    for (let c = -0.6; c <= 0.6; c += 1.2) {
-      const chair1 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.75, 0.4), mats.sofaFabric);
-      chair1.position.set(-0.5, 0.6, -1.2 + c);
-      houseGroup.add(chair1);
+    for (let c of [-0.6, 0.6]) {
+      const chairL = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.76, 0.42), mats.sofaFabric);
+      chairL.position.set(-0.6, 0.62, -1.4 + c);
+      houseGroup.add(chairL);
 
-      const chair2 = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.75, 0.4), mats.sofaFabric);
-      chair2.position.set(0.9, 0.6, -1.2 + c);
-      houseGroup.add(chair2);
+      const chairR = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.76, 0.42), mats.sofaFabric);
+      chairR.position.set(0.8, 0.62, -1.4 + c);
+      houseGroup.add(chairR);
     }
 
-    const chandelier = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.15, 24), mats.bronzeGold);
-    chandelier.position.set(0.2, 2.3, -1.2);
-    houseGroup.add(chandelier);
+    // Cylindrical Brushed Bronze Chandelier
+    const diningChandelier = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.16, 24), mats.bronzeGold);
+    diningChandelier.position.set(0.1, 2.35, -1.4);
+    houseGroup.add(diningChandelier);
 
     // =========================================================================
-    // ROOM 4: FLOATING ARCHITECTURAL STAIRCASE & MEZZANINE
+    // ROOM 4: CANTILEVERED ARCHITECTURAL STAIRCASE
     // =========================================================================
     for (let st = 0; st < 11; st++) {
-      const tread = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.08, 0.32), mats.woodTeak);
-      tread.position.set(-2.2, 0.45 + st * 0.25, -1.8 - st * 0.16);
+      const tread = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.08, 0.32), mats.woodTeak);
+      tread.position.set(-2.2, 0.48 + st * 0.25, -2.0 - st * 0.16);
       tread.castShadow = true;
       houseGroup.add(tread);
     }
 
-    // Glass Balustrade on Stairway
-    const stairGlass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.2, 2.4), mats.glass);
-    stairGlass.position.set(-1.6, 1.8, -2.6);
-    stairGlass.rotation.x = -0.45;
+    // Frameless Glass Balustrade on Stairway
+    const stairGlass = new THREE.Mesh(new THREE.BoxGeometry(0.04, 1.25, 2.6), mats.glass);
+    stairGlass.position.set(-1.6, 1.85, -2.7);
+    stairGlass.rotation.x = -0.42;
     houseGroup.add(stairGlass);
 
     // =========================================================================
-    // ROOM 5: FIRST FLOOR MASTER BEDROOM SUITE
+    // ROOM 5: FIRST-FLOOR MASTER BEDROOM SUITE (TRUE CUTAWAY SHOWCASE)
     // =========================================================================
-    // Intermediate Floor Slab
-    const interSlab = new THREE.Mesh(new THREE.BoxGeometry(10.6, 0.35, 7.6), mats.stoneDark);
-    interSlab.position.set(0, 3.15, 0.2);
+    // Intermediate Floor Slab (Covers EAST HALF ONLY - leaving Living Hall Double-Height Atrium Open!)
+    const interSlab = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.28, 7.6), mats.stoneDark);
+    interSlab.position.set(2.5, 3.25, 0.0);
     interSlab.castShadow = true;
     interSlab.receiveShadow = true;
     houseGroup.add(interSlab);
 
-    // Master Bedroom Volume (Cantilevered over ground entrance)
-    const masterWall = new THREE.Mesh(new THREE.BoxGeometry(5.4, 2.6, 4.4), mats.stoneLight);
-    masterWall.position.set(2.0, 4.6, 1.2);
-    masterWall.castShadow = true;
-    houseGroup.add(masterWall);
+    // Master Bedroom Teak Parquet Floor
+    const masterFloor = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.06, 5.2), mats.woodFloor);
+    masterFloor.position.set(2.4, 3.42, 1.0);
+    masterFloor.receiveShadow = true;
+    houseGroup.add(masterFloor);
 
-    // King-Size Designer Bed
-    const bedBase = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.4, 2.2), mats.woodTeak);
-    bedBase.position.set(2.2, 3.55, 1.0);
+    // Master Bedroom Walls: Perimeter ONLY, Front is OPEN CUTAWAY for 100% visibility!
+    // North wall
+    const masterNorthWall = new THREE.Mesh(new THREE.BoxGeometry(5.4, 2.5, 0.2), mats.stoneLight);
+    masterNorthWall.position.set(2.4, 4.65, -1.6);
+    masterNorthWall.castShadow = true;
+    houseGroup.add(masterNorthWall);
+
+    // East wall with panoramic floor-to-ceiling window
+    const masterEastWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2.5, 5.2), mats.stoneLight);
+    masterEastWall.position.set(5.1, 4.65, 1.0);
+    masterEastWall.castShadow = true;
+    houseGroup.add(masterEastWall);
+
+    const masterWindow = new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.0, 3.2), mats.glass);
+    masterWindow.position.set(5.1, 4.65, 1.0);
+    houseGroup.add(masterWindow);
+
+    // West partition wall (separating corridor)
+    const masterWestWall = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2.5, 2.4), mats.stoneLight);
+    masterWestWall.position.set(-0.3, 4.65, -0.4);
+    masterWestWall.castShadow = true;
+    houseGroup.add(masterWestWall);
+
+    // South Front: Open Cutaway with Frameless Glass Balustrade (CRYSTAL CLEAR VIEW INTO BEDROOM)
+    const masterFrontRail = new THREE.Mesh(new THREE.BoxGeometry(5.4, 0.85, 0.06), mats.glass);
+    masterFrontRail.position.set(2.4, 3.85, 3.6);
+    houseGroup.add(masterFrontRail);
+
+    // King-Size Designer Teak Platform Bed
+    const bedBase = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.38, 2.3), mats.woodTeak);
+    bedBase.position.set(2.3, 3.60, 1.0);
     bedBase.castShadow = true;
     houseGroup.add(bedBase);
 
-    const bedMattress = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.3, 2.0), mats.bedFabric);
-    bedMattress.position.set(2.2, 3.8, 1.0);
+    const bedMattress = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.32, 2.1), mats.bedFabric);
+    bedMattress.position.set(2.3, 3.90, 1.0);
     houseGroup.add(bedMattress);
 
-    const bedHeadboard = new THREE.Mesh(new THREE.BoxGeometry(2.2, 1.2, 0.18), mats.bedAccent);
-    bedHeadboard.position.set(2.2, 4.25, -0.05);
+    const bedHeadboard = new THREE.Mesh(new THREE.BoxGeometry(2.3, 1.25, 0.16), mats.bedAccent);
+    bedHeadboard.position.set(2.3, 4.35, -0.05);
     houseGroup.add(bedHeadboard);
 
-    // Floating Bedside Tables with reading lamps
+    // Folded Duvet Accent
+    const duvet = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.08, 1.1), mats.bronzeGold);
+    duvet.position.set(2.3, 4.08, 1.4);
+    houseGroup.add(duvet);
+
+    // Floating Bedside Tables with Glowing Bronze Lamps
     for (let side of [-1, 1]) {
-      const stand = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.3, 0.4), mats.woodTeak);
-      stand.position.set(2.2 + side * 1.35, 3.55, 0.2);
+      const stand = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.32, 0.42), mats.woodTeak);
+      stand.position.set(2.3 + side * 1.45, 3.60, 0.2);
       houseGroup.add(stand);
 
-      const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.12, 0.25, 16), mats.bronzeGold);
-      lamp.position.set(2.2 + side * 1.35, 3.85, 0.2);
+      const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.14, 0.28, 16), mats.bronzeGold);
+      lamp.position.set(2.3 + side * 1.45, 3.92, 0.2);
       houseGroup.add(lamp);
+
+      const nightLight = new THREE.PointLight(0xffcc88, 1.2, 3.5);
+      nightLight.position.set(2.3 + side * 1.45, 4.1, 0.2);
+      scene.add(nightLight);
     }
 
-    // Master Walk-in Dressing Wardrobe (Bronze Framed Glass)
-    const wardrobe = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.2, 0.6), mats.stoneDark);
-    wardrobe.position.set(4.3, 4.45, 1.6);
+    // Master Dressing Walk-in Wardrobe (Bronze Framed Glass)
+    const wardrobe = new THREE.Mesh(new THREE.BoxGeometry(2.2, 2.3, 0.6), mats.stoneDark);
+    wardrobe.position.set(4.4, 4.55, 1.8);
     houseGroup.add(wardrobe);
 
     // Architectural Bronze Facade Louvers (Brise-Soleil)
     for (let l = 0; l < 8; l++) {
       const louver = new THREE.Mesh(new THREE.BoxGeometry(0.04, 2.4, 0.16), mats.bronzeGold);
-      louver.position.set(4.68, 4.6, -0.2 + l * 0.38);
-      louver.rotation.y = 0.28;
+      louver.position.set(4.9, 4.6, -0.2 + l * 0.4);
+      louver.rotation.y = 0.3;
       louver.castShadow = true;
       houseGroup.add(louver);
     }
 
+    // Warm Master Suite Overhead Ceiling Glow
+    const masterCeilingGlow = new THREE.PointLight(0xffcaa0, 2.4, 7.5);
+    masterCeilingGlow.position.set(2.3, 5.2, 1.2);
+    scene.add(masterCeilingGlow);
+
     // =========================================================================
-    // ROOM 6: SUNSET BALCONY & ROOF CANOPY
+    // ROOM 6: SUNSET BALCONY TERRACE
     // =========================================================================
+    // Cantilevered Terrace Slab (West First Floor)
+    const terraceSlab = new THREE.Mesh(new THREE.BoxGeometry(5.2, 0.25, 3.6), mats.stoneDark);
+    terraceSlab.position.set(-2.8, 3.25, 2.0);
+    terraceSlab.castShadow = true;
+    houseGroup.add(terraceSlab);
+
     // Frameless Glass Balustrade
-    const balconyGlassFront = new THREE.Mesh(new THREE.BoxGeometry(4.4, 1.05, 0.06), mats.glass);
-    balconyGlassFront.position.set(-2.4, 3.85, 3.8);
+    const balconyGlassFront = new THREE.Mesh(new THREE.BoxGeometry(5.0, 1.05, 0.05), mats.glass);
+    balconyGlassFront.position.set(-2.8, 3.88, 3.75);
     houseGroup.add(balconyGlassFront);
 
-    const balconyGlassSide = new THREE.Mesh(new THREE.BoxGeometry(0.06, 1.05, 3.0), mats.glass);
-    balconyGlassSide.position.set(-4.8, 3.85, 2.3);
+    const balconyGlassSide = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.05, 3.4), mats.glass);
+    balconyGlassSide.position.set(-5.35, 3.88, 2.0);
     houseGroup.add(balconyGlassSide);
 
     // Minimalist Outdoor Lounge Chairs
-    const chairA = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.5, 0.7), mats.sofaFabric);
-    chairA.position.set(-2.0, 3.65, 2.6);
+    const chairA = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.52, 0.72), mats.sofaFabric);
+    chairA.position.set(-2.2, 3.65, 2.6);
     houseGroup.add(chairA);
 
-    const chairB = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.5, 0.7), mats.sofaFabric);
-    chairB.position.set(-3.2, 3.65, 2.6);
+    const chairB = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.52, 0.72), mats.sofaFabric);
+    chairB.position.set(-3.6, 3.65, 2.6);
     houseGroup.add(chairB);
 
-    // Modern Floating Roof Canopy
-    const roofSlab = new THREE.Mesh(new THREE.BoxGeometry(10.8, 0.3, 8.2), mats.stoneDark);
-    roofSlab.position.set(0, 6.05, 0.2);
-    roofSlab.castShadow = true;
-    houseGroup.add(roofSlab);
+    // Modern Open Architectural Roof Pergola (Slender Louvers - No Solid Ceiling Blocking Rooms!)
+    const pergolaGroup = new THREE.Group();
+    pergolaGroup.position.set(0, 5.9, 0);
+    houseGroup.add(pergolaGroup);
+
+    // Main Perimeter Bronze Frame
+    const frameNorth = new THREE.Mesh(new THREE.BoxGeometry(11.2, 0.18, 0.25), mats.bronzeGold);
+    frameNorth.position.set(0, 0, -3.9);
+    pergolaGroup.add(frameNorth);
+
+    const frameSouth = new THREE.Mesh(new THREE.BoxGeometry(11.2, 0.18, 0.25), mats.bronzeGold);
+    frameSouth.position.set(0, 0, 3.7);
+    pergolaGroup.add(frameSouth);
+
+    // Spaced Floating Architectural Pergola Louvers (Airy & Open)
+    for (let rx = -5.2; rx <= 5.2; rx += 1.3) {
+      const rafter = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.18, 7.6), mats.blackSteel);
+      rafter.position.set(rx, 0, -0.1);
+      pergolaGroup.add(rafter);
+    }
 
     // =========================================================================
-    // ROOM 7: COVERED PARKING PORCH & PLINTH SWIMMING POOL
+    // ROOM 7: COVERED PARKING BAY & ILLUMINATED SWIMMING POOL
     // =========================================================================
-    // Covered Parking Pergola Canopy
-    const parkingRoof = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.2, 5.2), mats.stoneDark);
-    parkingRoof.position.set(4.4, 2.8, 1.0);
+    // Covered Parking Bay Pergola Canopy
+    const parkingRoof = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.18, 4.8), mats.stoneDark);
+    parkingRoof.position.set(4.6, 2.85, 1.0);
     parkingRoof.castShadow = true;
     houseGroup.add(parkingRoof);
 
-    // Parking Steel Columns
     for (let z of [-1.0, 3.0]) {
-      const col = new THREE.Mesh(new THREE.BoxGeometry(0.2, 2.8, 0.2), mats.blackSteel);
-      col.position.set(6.3, 1.4, z);
+      const col = new THREE.Mesh(new THREE.BoxGeometry(0.18, 2.8, 0.18), mats.blackSteel);
+      col.position.set(6.4, 1.4, z);
       col.castShadow = true;
       houseGroup.add(col);
     }
 
-    // Modern Vehicle Silhouette in Covered Bay
-    const carBase = new THREE.Mesh(new THREE.BoxGeometry(1.9, 0.65, 4.0), mats.blackSteel);
-    carBase.position.set(4.5, 0.65, 1.0);
+    // Vehicle Silhouette in Parking Bay
+    const carBase = new THREE.Mesh(new THREE.BoxGeometry(1.85, 0.65, 3.8), mats.blackSteel);
+    carBase.position.set(4.8, 0.68, 1.0);
     carBase.castShadow = true;
     houseGroup.add(carBase);
 
-    const carCabin = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.55, 2.2), mats.glass);
-    carCabin.position.set(4.5, 1.15, 0.8);
+    const carCabin = new THREE.Mesh(new THREE.BoxGeometry(1.65, 0.52, 2.0), mats.glass);
+    carCabin.position.set(4.8, 1.18, 0.8);
     houseGroup.add(carCabin);
 
-    // Luxury Swimming Pool with Aqua Light
-    const poolSurround = new THREE.Mesh(new THREE.BoxGeometry(4.2, 0.08, 3.2), mats.stoneLight);
-    poolSurround.position.set(-3.4, 0.36, 2.6);
+    // Luxury Swimming Pool with Turquoise Glowing Water
+    const poolSurround = new THREE.Mesh(new THREE.BoxGeometry(4.4, 0.08, 3.4), mats.stoneLight);
+    poolSurround.position.set(-3.2, 0.38, 2.8);
     houseGroup.add(poolSurround);
 
-    const poolWaterMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.12, 2.6), mats.water);
-    poolWaterMesh.position.set(-3.4, 0.40, 2.6);
-    houseGroup.add(poolWaterMesh);
+    const poolWater = new THREE.Mesh(new THREE.BoxGeometry(3.8, 0.12, 2.8), mats.water);
+    poolWater.position.set(-3.2, 0.42, 2.8);
+    houseGroup.add(poolWater);
 
-    const poolAquaLight = new THREE.PointLight(0x00d4ff, 2.5, 6.0);
-    poolAquaLight.position.set(-3.4, 0.6, 2.6);
-    scene.add(poolAquaLight);
+    const poolLight = new THREE.PointLight(0x00e5ff, 3.0, 6.5);
+    poolLight.position.set(-3.2, 0.65, 2.8);
+    scene.add(poolLight);
 
     // =========================================================================
-    // SCROLL-DRIVEN CAMERA PATH & ROOM WAYPOINTS
+    // SCROLL-DRIVEN CAMERA PATH & PRECISE ROOM WAYPOINTS (NO BUTTON CLICKS NEEDED)
     // =========================================================================
     const waypoints = [
       {
         id: 'room-facade',
-        name: '01 / Architectural Facade',
-        desc: 'G+1 133 SQ Yards Luxury Duplex — Contemporary Italian stone elevation with 100% Vaastu alignment.',
-        cam: new THREE.Vector3(10.5, 7.2, 12.5),
+        name: '01 / Contemporary Architectural Facade',
+        desc: 'G+1 133 SQ YD Duplex &middot; Italian stone elevation, Vaastu aligned entrance, landscaped plinth and pool.',
+        cam: new THREE.Vector3(11.5, 7.0, 13.5),
         target: new THREE.Vector3(0, 2.2, 0)
       },
       {
         id: 'room-entrance',
-        name: '02 / Grand Entrance (Doors Open)',
-        desc: 'Teak wood pivot entrance door automatically swings open as you step inside the reception foyer.',
-        cam: new THREE.Vector3(2.8, 1.9, 4.6),
-        target: new THREE.Vector3(2.0, 1.65, 2.2)
+        name: '02 / Grand Teak Entrance Foyer',
+        desc: 'Solid teak wood pivot door automatically swings open as you step inside the reception foyer.',
+        cam: new THREE.Vector3(3.4, 2.1, 5.0),
+        target: new THREE.Vector3(1.4, 1.7, 2.8)
       },
       {
         id: 'room-living',
-        name: '03 / Double-Height Living Hall',
-        desc: 'Expansive natural daylight, Italian marble flooring, custom sectional sofa, and OLED media wall.',
-        cam: new THREE.Vector3(-0.6, 1.8, 2.8),
-        target: new THREE.Vector3(-2.6, 1.4, 1.2)
+        name: '03 / Double-Height Living Hall Atrium',
+        desc: 'Polished Italian Statuario marble floors, charcoal L-sectional sofa, marble coffee table, and OLED wall.',
+        cam: new THREE.Vector3(-0.4, 2.0, 3.4),
+        target: new THREE.Vector3(-2.6, 1.4, 1.4)
       },
       {
         id: 'room-kitchen',
-        name: '04 / Modular Chef\'s Kitchen & Dining',
-        desc: 'Quartz waterfall island counter, soft-close cabinets, and connected family dining atrium.',
-        cam: new THREE.Vector3(1.2, 2.0, 0.4),
-        target: new THREE.Vector3(2.5, 1.4, -2.2)
+        name: '04 / Calacatta Quartz Modular Kitchen & Dining',
+        desc: 'Waterfall quartz island, contemporary barstools, warm under-cabinet LED glow, and teak dining atrium.',
+        cam: new THREE.Vector3(1.3, 2.1, 0.8),
+        target: new THREE.Vector3(2.4, 1.3, -1.8)
       },
       {
         id: 'room-master',
-        name: '05 / Master Bedroom Suite',
-        desc: 'Generous first floor suite with upholstered king bed, walk-in dressing wardrobe, and balcony slider.',
-        cam: new THREE.Vector3(0.6, 4.6, 2.8),
-        target: new THREE.Vector3(2.5, 4.4, 1.0)
-      },
-      {
-        id: 'room-stairs',
-        name: '06 / Cantilevered Staircase',
-        desc: 'Solid teak floating steps with frameless glass balustrade ascending to the first floor lounge.',
-        cam: new THREE.Vector3(-0.8, 2.8, 0.2),
-        target: new THREE.Vector3(-2.2, 2.4, -1.8)
+        name: '05 / First-Floor Master Bedroom Suite',
+        desc: 'Plush upholstered king platform bed, floating bedside tables, reading lamps, and walk-in dressing wardrobe.',
+        cam: new THREE.Vector3(0.5, 4.8, 3.2),
+        target: new THREE.Vector3(2.4, 4.2, 1.0)
       },
       {
         id: 'room-balcony',
-        name: '07 / Sunset Balcony Terrace',
-        desc: 'Open-air private glass terrace capturing evening cross breezes and ambient lighting.',
-        cam: new THREE.Vector3(-1.4, 4.8, 4.8),
-        target: new THREE.Vector3(-2.8, 4.0, 2.4)
+        name: '06 / Sunset Balcony & Timber Terrace',
+        desc: 'Cantilevered private terrace with frameless glass balustrade and minimalist outdoor lounge armchairs.',
+        cam: new THREE.Vector3(-1.4, 4.7, 4.6),
+        target: new THREE.Vector3(-2.8, 3.8, 2.2)
       },
       {
         id: 'room-pool',
-        name: '08 / Covered Parking & Swimming Pool',
-        desc: 'Descending to ground level covered parking porch and private illuminated aqua swimming pool.',
-        cam: new THREE.Vector3(-3.8, 3.0, 7.2),
-        target: new THREE.Vector3(-0.5, 0.8, 2.0)
+        name: '07 / Illuminated Swimming Pool & Car Portico',
+        desc: 'Ground plinth turquoise swimming pool with underwater glow and covered architectural parking bay.',
+        cam: new THREE.Vector3(-4.4, 3.2, 7.2),
+        target: new THREE.Vector3(-1.0, 0.8, 2.2)
       }
     ];
 
@@ -643,7 +749,7 @@
     camera.position.copy(waypoints[0].cam);
     if (controls) controls.target.copy(waypoints[0].target);
 
-    // Update Room HUD Banner
+    // Update Room HUD Banner dynamically
     const hudRoomBadge = document.getElementById('threeRoomBadge');
     const hudRoomDesc = document.getElementById('threeRoomDesc');
 
@@ -651,35 +757,25 @@
       if (hudRoomBadge) hudRoomBadge.textContent = wp.name;
       if (hudRoomDesc) hudRoomDesc.textContent = wp.desc;
 
-      document.querySelectorAll('.room-nav-pill').forEach(pill => {
-        pill.classList.toggle('active', pill.dataset.room === wp.id);
+      document.querySelectorAll('.room-nav-pill, .drawer-room-btn').forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.room === wp.id || pill.textContent.includes(wp.name.slice(0, 2)));
       });
     }
     setRoomHUD(waypoints[0]);
 
-    // Fly to Specific Room Waypoint
+    // Optional Quick Jump (Button clicks still supported for convenience!)
     window.flyToRoom = function (idx) {
       if (idx < 0 || idx >= waypoints.length) return;
       currentWaypointIdx = idx;
       const wp = waypoints[idx];
       setRoomHUD(wp);
 
-      // Dynamic Door Swing Animation: Open when inside (idx >= 1), close when at facade (idx === 0)
-      if (typeof doorPivot !== 'undefined') {
-        const targetDoorAngle = idx >= 1 ? -Math.PI / 2.2 : 0;
-        if (typeof gsap !== 'undefined') {
-          gsap.to(doorPivot.rotation, { y: targetDoorAngle, duration: 1.2, ease: 'power2.out' });
-        } else {
-          doorPivot.rotation.y = targetDoorAngle;
-        }
-      }
-
       if (typeof gsap !== 'undefined') {
         gsap.to(camera.position, {
           x: wp.cam.x,
           y: wp.cam.y,
           z: wp.cam.z,
-          duration: 1.5,
+          duration: 1.4,
           ease: 'power2.inOut'
         });
         if (controls) {
@@ -687,7 +783,7 @@
             x: wp.target.x,
             y: wp.target.y,
             z: wp.target.z,
-            duration: 1.5,
+            duration: 1.4,
             ease: 'power2.inOut'
           });
         }
@@ -697,16 +793,11 @@
       }
     };
 
-    // Native smooth page scroll preserved - no wheel interception
-
-    // Scroll camera hijacking removed for silky smooth 60fps page scrolling
-
-    // Track when user is actively dragging OrbitControls
+    // Track user drag on OrbitControls
     if (controls) {
       controls.addEventListener('start', () => { isUserControlling = true; });
       controls.addEventListener('end', () => {
-        // Return to auto control after 5 seconds of inactivity
-        setTimeout(() => { isUserControlling = false; }, 5000);
+        setTimeout(() => { isUserControlling = false; }, 4000);
       });
     }
 
@@ -716,76 +807,35 @@
       const activeBtn = document.querySelector(`[data-lighting="${mode}"]`);
       if (activeBtn) activeBtn.classList.add('active');
 
-      if (typeof gsap === 'undefined') return;
-
       if (mode === 'day') {
-        gsap.to(scene.background, { r: 0.95, g: 0.96, b: 0.97, duration: 0.8 });
-        if (scene.fog) gsap.to(scene.fog.color, { r: 0.95, g: 0.96, b: 0.97, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 1.6, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 1.0, g: 0.96, b: 0.9, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.85, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 0.9, duration: 0.8 }));
+        sunLight.intensity = 1.6;
+        sunLight.color.setHex(0xffeedd);
+        ambientLight.intensity = 0.75;
+        ambientLight.color.setHex(0xfff5ea);
+        scene.fog.color.setHex(0xf4f1eb);
       } else if (mode === 'golden') {
-        gsap.to(scene.background, { r: 0.14, g: 0.10, b: 0.11, duration: 0.8 });
-        if (scene.fog) gsap.to(scene.fog.color, { r: 0.14, g: 0.10, b: 0.11, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 1.9, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 1.0, g: 0.64, b: 0.28, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.55, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 2.0, duration: 0.8 }));
-      } else if (mode === 'night') {
-        gsap.to(scene.background, { r: 0.03, g: 0.04, b: 0.06, duration: 0.8 });
-        if (scene.fog) gsap.to(scene.fog.color, { r: 0.03, g: 0.04, b: 0.06, duration: 0.8 });
-        gsap.to(sunLight, { intensity: 0.18, duration: 0.8 });
-        gsap.to(sunLight.color, { r: 0.35, g: 0.45, b: 0.75, duration: 0.8 });
-        gsap.to(ambientLight, { intensity: 0.35, duration: 0.8 });
-        Object.values(lights).forEach(l => gsap.to(l, { intensity: 3.0, duration: 0.8 }));
+        sunLight.intensity = 1.8;
+        sunLight.color.setHex(0xffaa55);
+        ambientLight.intensity = 0.55;
+        ambientLight.color.setHex(0xffbb77);
+        scene.fog.color.setHex(0x2d2118);
+      } else if (mode === 'twilight') {
+        sunLight.intensity = 0.4;
+        sunLight.color.setHex(0x5577bb);
+        ambientLight.intensity = 0.45;
+        ambientLight.color.setHex(0x223355);
+        scene.fog.color.setHex(0x0a0d14);
       }
     };
 
-    // --- Wireframe & Exploded Toggles ---
-    let isWireframe = false;
-    let isExploded = false;
-
-    window.toggle3DWireframe = function () {
-      isWireframe = !isWireframe;
-      houseGroup.traverse(node => {
-        if (node.isMesh && node.material) {
-          node.material.wireframe = isWireframe;
-        }
-      });
-      const btn = document.getElementById('btnWireframe');
-      if (btn) btn.classList.toggle('active', isWireframe);
-    };
-
-    window.toggle3DExploded = function () {
-      isExploded = !isExploded;
-      const roofTargetY = isExploded ? 4.5 : 0;
-      if (typeof gsap !== 'undefined') {
-        gsap.to(roofSlab.position, { y: 6.05 + roofTargetY, duration: 1.4, ease: 'power3.inOut' });
-      } else {
-        roofSlab.position.y = 6.05 + roofTargetY;
-      }
-      const btn = document.getElementById('btnExploded');
-      if (btn) btn.classList.toggle('active', isExploded);
-    };
-
-    // Reset Camera
-    
-    // Zoom In / Out Buttons without trapping mousewheel
+    // Zoom Buttons
     window.zoom3D = function(delta) {
-      if (typeof camera !== 'undefined') {
-        const targetFov = Math.max(24, Math.min(60, camera.fov + delta));
-        if (typeof gsap !== 'undefined') {
-          gsap.to(camera, {
-            fov: targetFov,
-            duration: 0.5,
-            ease: 'power2.out',
-            onUpdate: () => camera.updateProjectionMatrix()
-          });
-        } else {
-          camera.fov = targetFov;
-          camera.updateProjectionMatrix();
-        }
+      const targetFov = Math.max(24, Math.min(60, camera.fov + delta));
+      if (typeof gsap !== 'undefined') {
+        gsap.to(camera, { fov: targetFov, duration: 0.4, onUpdate: () => camera.updateProjectionMatrix() });
+      } else {
+        camera.fov = targetFov;
+        camera.updateProjectionMatrix();
       }
     };
 
@@ -793,7 +843,7 @@
       window.flyToRoom(0);
     };
 
-    // --- Window Resize Handling ---
+    // --- Resize Handling ---
     function onWindowResize() {
       if (!container) return;
       const w = container.clientWidth;
@@ -804,7 +854,27 @@
     }
     window.addEventListener('resize', onWindowResize, { passive: true });
 
-    // --- Render Loop ---
+    // Expose Globals for Testing & Verification
+    window._threeCamera = camera;
+    window._threeScene = scene;
+    window._threeControls = controls;
+
+    // =========================================================================
+    // CONTINUOUS 3D SCROLL SPLINE (NO BUTTON CLICKS: SCROLLING FLIES THROUGH ROOMS)
+    // =========================================================================
+    const camSpline = new THREE.CatmullRomCurve3(waypoints.map(w => w.cam));
+    const targetSpline = new THREE.CatmullRomCurve3(waypoints.map(w => w.target));
+
+    let scrollProgressDamped = 0;
+    let targetScrollProgress = 0;
+
+    window.addEventListener('scroll', () => {
+      // The 3D story walkthrough spans the first ~2800px of page scroll (Hero + Cloud Pop + Timelines)
+      const scrollY = window.scrollY || window.pageYOffset;
+      const walkthroughEnd = 2800; // Complete walkthrough across the upper story
+      targetScrollProgress = Math.min(Math.max(scrollY / walkthroughEnd, 0), 1);
+    }, { passive: true });
+
     let frameCount = 0;
     let lastTime = performance.now();
     const fpsDisplay = document.getElementById('threeFps');
@@ -813,7 +883,30 @@
     function animate() {
       requestAnimationFrame(animate);
 
-      if (controls) {
+      // Smooth Spline Flythrough Driven by Natural Page Scroll (NO BUTTON CLICK NEEDED)
+      if (!isUserControlling && typeof camSpline !== 'undefined') {
+        scrollProgressDamped += (targetScrollProgress - scrollProgressDamped) * 0.08;
+        const ptCam = camSpline.getPoint(scrollProgressDamped);
+        const ptTarget = targetSpline.getPoint(scrollProgressDamped);
+        camera.position.lerp(ptCam, 0.12);
+        if (controls) {
+          controls.target.lerp(ptTarget, 0.12);
+          controls.update();
+        }
+
+        // Automatic Dynamic Teak Entrance Door Swing (opens as scroll reaches entrance)
+        if (typeof doorPivot !== 'undefined') {
+          const doorOpen = Math.min(Math.max((scrollProgressDamped - 0.12) / 0.18, 0), 1);
+          doorPivot.rotation.y = -doorOpen * (Math.PI / 2.1);
+        }
+
+        // Dynamically update HUD Room Badge on scroll
+        const activeIdx = Math.min(Math.floor(scrollProgressDamped * waypoints.length), waypoints.length - 1);
+        if (activeIdx !== currentWaypointIdx) {
+          currentWaypointIdx = activeIdx;
+          setRoomHUD(waypoints[activeIdx]);
+        }
+      } else if (controls) {
         controls.update();
       }
 
